@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<ProjectData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ProjectName>DatabaseDesign1</ProjectName>
+  <ProjectPath>D:\Hoc\ERD Project\ERDesignerNewInterface\ERDesignerNewInterface\bin\Debug/DatabaseDesign1</ProjectPath>
+  <Models>
+    <Model>
+      <ModelName>ConceptualModel3</ModelName>
+      <ModelType>ConceptualModel</ModelType>
+    </Model>
+  </Models>
+  <OpeningModel />
+  <Focusing>0</Focusing>
+</ProjectData>

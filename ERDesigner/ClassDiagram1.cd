@@ -1,0 +1,276 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Font Name="Tahoma" Size="8.25" />
+  <Class Name="ERDesigner.GeneratePhysicalModel" Collapsed="true">
+    <Position X="15" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Classes\GeneratePhysicalModel.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAEAAAACAIACAAAACAACAAAAAAoAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.JSerializer" Collapsed="true">
+    <Position X="21" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Classes\JSerializer.cs</FileName>
+      <HashCode>AAUABAAAIAAAAAAAAAAAAAAAgAAAAAAACACAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.ScriptSQL" Collapsed="true">
+    <Position X="18" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Classes\ScriptSQL.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAIgQAAAAQIEAAAABAQAAAIgAQA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.ThongSo" Collapsed="true">
+    <Position X="10" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Classes\ThongSo.cs</FileName>
+      <HashCode>AAAEAAAAAAAEBAAAAAAAAAAIAAAAEAAAAAAgAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.EntityType" Collapsed="true">
+    <Position X="10" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Classes\ThongSo.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.AttributeType" Collapsed="true">
+    <Position X="10" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Classes\ThongSo.cs</FileName>
+      <HashCode>AAAAAEAACAAAAIQAAAAAAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.RelationshipType" Collapsed="true">
+    <Position X="10" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Classes\ThongSo.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAIIAAAAAAAQAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.ModelType" Collapsed="true">
+    <Position X="10" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Classes\ThongSo.cs</FileName>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAAQAIAAgAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.DataTypeComboBox" Collapsed="true">
+    <Position X="13.5" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Controls\DataTypeComboBox.cs</FileName>
+      <HashCode>AAAAAABAACAAABAkAACAAAACQAAAAEAAAABAAFAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.PanelDoubleBuffered" Collapsed="true">
+    <Position X="13.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Controls\PanelDoubleBuffered.cs</FileName>
+      <HashCode>AgiJEFDIAABAogAACBYUiAWCQVIASQIAIoEBAAACGEg=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.PanelPhysical" Collapsed="true">
+    <Position X="16.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Controls\PanelPhysical.cs</FileName>
+      <HashCode>AACBgAAAAEgAAAAEgAAgSIAAAAAJCgQAICABACAAAAI=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.AddCardinality" Collapsed="true">
+    <Position X="13.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Forms\AddCardinality.cs</FileName>
+      <HashCode>ACAAAABkACQBAGlgAACAAYASAAkAAEACAAAFAAIAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.frmDrawBoard" Collapsed="true">
+    <Position X="13.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Forms\frmDrawBoard.cs</FileName>
+      <HashCode>AAAAAAAAACAAAAAAAACQCAACAAAEIAAQCAQAAABAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.frmPhysicalDrawBoard" Collapsed="true">
+    <Position X="16.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Forms\frmPhysicalDrawBoard.cs</FileName>
+      <HashCode>AAAAAAAAACAAAAAAAACAAAACAAAACAAAQAQAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.GenerateScriptSQL" Collapsed="true">
+    <Position X="19.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Forms\GenerateScriptSQL.cs</FileName>
+      <HashCode>AAAACABAASgBABEAIACABUACCAAAYAAAACAAAIAgIQA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.MainForm" Collapsed="true">
+    <Position X="11.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Forms\MainForm.cs</FileName>
+      <HashCode>thmgRBGEJCKBGwBSqQSOVgAnajzGoJa1W8i8AAIFaRQ=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.New_Project" Collapsed="true">
+    <Position X="11.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Forms\New Project.cs</FileName>
+      <HashCode>AAAAAAAAACAIABEAAQCAAMACAAAAAEAAACAgAABAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.SplashScreen" Collapsed="true">
+    <Position X="10" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Forms\SplashScreen.cs</FileName>
+      <HashCode>AAAAAAAAACAAAAAAAACAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.EntityData" Collapsed="true">
+    <Position X="13.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MetaData.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAFAAAAQAhgAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.AttributeData" Collapsed="true">
+    <Position X="13.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MetaData.cs</FileName>
+      <HashCode>AAAAAAABAAIAAAAAAAAAAIBQAAAFAAAAQAhgAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.CardinalityData" Collapsed="true">
+    <Position X="13.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MetaData.cs</FileName>
+      <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACCAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.RelationshipData" Collapsed="true">
+    <Position X="13.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MetaData.cs</FileName>
+      <HashCode>AAAAAAAQAAAAAAAAAAAAAAAQAAAFAAAAQAhgAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.MetaData" Collapsed="true">
+    <Position X="13.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MetaData.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAEAAAIAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.Table" Collapsed="true">
+    <Position X="16.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MetaDataPhysical.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAgAAIgAAABAEAAAEAAAASAhgAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.Column" Collapsed="true">
+    <Position X="16.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MetaDataPhysical.cs</FileName>
+      <HashCode>AAACAAAEAAIAAAAAAAAAAARAAAIAAACAAAAAAAAAgBA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.ForeignKey" Collapsed="true">
+    <Position X="16.5" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MetaDataPhysical.cs</FileName>
+      <HashCode>AAAAAAAAAIAgAAAAAAAAAAQAAAAAAAQAAEAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.MetaDataPhysical" Collapsed="true">
+    <Position X="16.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>MetaDataPhysical.cs</FileName>
+      <HashCode>AAEAAAAAAAAAAAAAAAAAQAAAAAAAiAAAAAAggAAQAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.Model" Collapsed="true">
+    <Position X="11.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ProjectData.cs</FileName>
+      <HashCode>AAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAIAAAAAgAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.ProjectData" Collapsed="true">
+    <Position X="11.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ProjectData.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAEgCAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.FKShape">
+    <Position X="6.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ShapePhysical\FKShape.cs</FileName>
+      <HashCode>AAAAAACAAAAAAASAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.ShapBase">
+    <Position X="6.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ShapePhysical\ShapBase.cs</FileName>
+      <HashCode>EACAAAAAACAAAAAAAACCAAACAAAAAAAAAAAAABAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.ShapeSetting" Collapsed="true">
+    <Position X="10" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ShapePhysical\ShapeSetting.cs</FileName>
+      <HashCode>AAAAAAAAAAAAEAAABAAAAAAAgAAAAAIAAAAgEAAICAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.TableShape">
+    <Position X="6.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>ShapePhysical\TableShape.cs</FileName>
+      <HashCode>EAAAAAAAAAAAAABAQAACAAAiAAEAEAAAAAAAABAAAAA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.Shape.AttributeShape">
+    <Position X="1.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Shape\AttributeShape.cs</FileName>
+      <HashCode>AAAAAhAQAAAAQQAAAAAAAIACAggBACAAAAAAAAEAQFA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.Shape.EntityShape">
+    <Position X="1.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Shape\EntityShape.cs</FileName>
+      <HashCode>ABAgQBAAAAAAQAAAAAAAAAACAAgBEAAAAAAAAAAAQlA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.Shape.CardinalityShape">
+    <Position X="3.25" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Shape\RelationshipShape.cs</FileName>
+      <HashCode>AAAAEBAAAAAAAAAAAAAAAAACAAAAAAEAAAAAAACCABA=</HashCode>
+    </TypeIdentifier>
+    <InheritanceLine Type="ERDesigner.Shape.ShapeBase" FixedToPoint="true">
+      <Path>
+        <Point X="4" Y="5.106" />
+        <Point X="4" Y="5.75" />
+      </Path>
+    </InheritanceLine>
+  </Class>
+  <Class Name="ERDesigner.Shape.RelationshipShape">
+    <Position X="5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Shape\RelationshipShape.cs</FileName>
+      <HashCode>ABAARBAAAAACRABAAAAAAQAAAAgBEgAAAAACAAAAQFA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ERDesigner.Shape.ShapeBase">
+    <Position X="3.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <FileName>Shape\ShapeBase.cs</FileName>
+      <HashCode>AACAEBIIAAIAAAAASAACgIACACAAAAAABEAAAAAAQVQ=</HashCode>
+    </TypeIdentifier>
+  </Class>
+</ClassDiagram>
