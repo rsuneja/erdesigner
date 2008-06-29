@@ -1,9 +1,0 @@
-bin\Debug\ERDesignerNewInterface.exe
-bin\Debug\ERDesignerNewInterface.pdb
-obj\Debug\ResolveAssemblyReference.cache
-obj\Debug\ERDesignerNewInterface.MainForm.resources
-obj\Debug\ERDesignerNewInterface.Properties.Resources.resources
-obj\Debug\ERDesignerNewInterface.SplashScreen.resources
-obj\Debug\ERDesignerNewInterface.csproj.GenerateResource.Cache
-obj\Debug\ERDesignerNewInterface.exe
-obj\Debug\ERDesignerNewInterface.pdb
