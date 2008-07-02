@@ -34,20 +34,21 @@ namespace ERDesigner
         public bool isDrawing = false;
         public bool isNaming = false;
 
-        
+        public string DrawingShapeState;
+
+        public int degreeOfRelationship = 2;
 
         public PanelDoubleBuffered()
         {
             this.DoubleBuffered = true;
             this.SetStyle(ControlStyles.AllPaintingInWmPaint|ControlStyles.UserPaint|ControlStyles.OptimizedDoubleBuffer,true);
             saveUndoList();
-
-            //UpdateStyles();
         }
 
         //Panel Event
         protected override void OnMouseDown(MouseEventArgs e)
         {
+            //Click vô panel khi đang sửa tên -> dừng sửa
             if (isNaming)
             {
                 AffectingShape.endEditName();
@@ -64,7 +65,7 @@ namespace ERDesigner
 
                 if (isDrawingAtt && AffectingShape != null)
                 {
-                    if (AffectingShape.GetType().Name == "AttributeShape" && ((AttributeShape)AffectingShape).isComposite && ((AttributeShape)AffectingShape).type != AttributeType.Derived && DrawingShapeState == AttributeType.Child)
+                    if (AffectingShape is AttributeShape && ((AttributeShape)AffectingShape).isComposite && ((AttributeShape)AffectingShape).type != AttributeType.Derived && DrawingShapeState == AttributeType.Child)
                     {
                         currentShape = new AttributeShape();
 
@@ -75,7 +76,7 @@ namespace ERDesigner
                     }
                     else
                     {
-                        if ((AffectingShape.GetType().Name == "EntityShape" || AffectingShape.GetType().Name == "RelationshipShape") && DrawingShapeState != AttributeType.Child)
+                        if ((AffectingShape is EntityShape || AffectingShape is RelationshipShape) && DrawingShapeState != AttributeType.Child)
                         {
                             currentShape = new AttributeShape();
 
@@ -83,14 +84,14 @@ namespace ERDesigner
                                 ((AttributeShape)currentShape).allowNull = false;
                             ((AttributeShape)currentShape).type = DrawingShapeState;
                             
-                            if (AffectingShape.GetType().Name == "EntityShape")
+                            if (AffectingShape is EntityShape)
                             {
                                 ((EntityShape)AffectingShape).addAttribute((AttributeShape)currentShape);
                             }
-                            else if (AffectingShape.GetType().Name == "RelationshipShape")
+                            else if (AffectingShape is RelationshipShape)
                             {
                                 RelationshipShape relshape = (RelationshipShape)AffectingShape;
-                                if ((relshape.cardinalities[0].MaxCardinality != -1 || relshape.cardinalities[0].MaxCardinality != -1) && ((AttributeShape)currentShape).type == AttributeType.Key)
+                                if ((relshape.cardinalities[0].MaxCardinality != -1 || relshape.cardinalities[1].MaxCardinality != -1) && ((AttributeShape)currentShape).type == AttributeType.Key)
                                 {
                                     MessageBox.Show("Relationship couldn't have an Identifier Attribute");
                                     currentShape = null;
