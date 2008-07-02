@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace ERDesigner
 {
+//bao sua
     public class Table
     {
         public string name;
