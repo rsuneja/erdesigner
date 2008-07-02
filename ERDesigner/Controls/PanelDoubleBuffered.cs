@@ -34,7 +34,7 @@ namespace ERDesigner
         public bool isDrawing = false;
         public bool isNaming = false;
 
-        public string DrawingShapeState;
+        
 
         public PanelDoubleBuffered()
         {
