@@ -9,6 +9,7 @@ using System.Drawing.Drawing2D;
 
 namespace ERDesigner
 {
+//Edit Mr.Bao
     public class PanelDoubleBuffered: Panel
     {
         public List<MetaData> UndoList = new List<MetaData>();
