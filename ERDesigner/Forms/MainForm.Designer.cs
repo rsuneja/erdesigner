@@ -93,9 +93,14 @@ namespace ERDesigner
             this.btnNorRel = new DevExpress.XtraNavBar.NavBarItem();
             this.btnIdenRel = new DevExpress.XtraNavBar.NavBarItem();
             this.btnAssEn = new DevExpress.XtraNavBar.NavBarItem();
+            this.navBarGroupControlContainer1 = new DevExpress.XtraNavBar.NavBarGroupControlContainer();
+            this.radTernary = new System.Windows.Forms.RadioButton();
+            this.radBinary = new System.Windows.Forms.RadioButton();
+            this.radUnary = new System.Windows.Forms.RadioButton();
             this.navBarEntity = new DevExpress.XtraNavBar.NavBarGroup();
             this.btnStrongEntity = new DevExpress.XtraNavBar.NavBarItem();
             this.btnWeakEntity = new DevExpress.XtraNavBar.NavBarItem();
+            this.navBarDegree = new DevExpress.XtraNavBar.NavBarGroup();
             this.navBarAttribute = new DevExpress.XtraNavBar.NavBarGroup();
             this.btnSimAtt = new DevExpress.XtraNavBar.NavBarItem();
             this.btnKeyAtt = new DevExpress.XtraNavBar.NavBarItem();
@@ -104,6 +109,9 @@ namespace ERDesigner
             this.btnComAtt = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarOther = new DevExpress.XtraNavBar.NavBarGroup();
             this.btnPointer = new DevExpress.XtraNavBar.NavBarItem();
+            this.navBarItem1 = new DevExpress.XtraNavBar.NavBarItem();
+            this.navBarItem2 = new DevExpress.XtraNavBar.NavBarItem();
+            this.navBarItem3 = new DevExpress.XtraNavBar.NavBarItem();
             this.imageCollection3 = new DevExpress.Utils.ImageCollection(this.components);
             this.dockExplorer = new DevExpress.XtraBars.Docking.DockPanel();
             this.dockPanel1_Container = new DevExpress.XtraBars.Docking.ControlContainer();
@@ -115,6 +123,10 @@ namespace ERDesigner
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.navBarGroup1 = new DevExpress.XtraNavBar.NavBarGroup();
+            this.navBarGroup2 = new DevExpress.XtraNavBar.NavBarGroup();
+            this.navBarGroup3 = new DevExpress.XtraNavBar.NavBarGroup();
+            this.xtraTabPage2 = new DevExpress.XtraTab.XtraTabPage();
             ((System.ComponentModel.ISupportInitialize)(this.StartMenu)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gddColor)).BeginInit();
@@ -125,6 +137,8 @@ namespace ERDesigner
             this.dockToolBox.SuspendLayout();
             this.controlContainer2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.navBarToolBox)).BeginInit();
+            this.navBarToolBox.SuspendLayout();
+            this.navBarGroupControlContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection3)).BeginInit();
             this.dockExplorer.SuspendLayout();
             this.dockPanel1_Container.SuspendLayout();
@@ -185,7 +199,7 @@ namespace ERDesigner
             this.ribbon.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemZoomTrackBar1,
             this.repositoryItemCheckEdit1});
-            this.ribbon.SelectedPage = this.ribbonHome;
+            this.ribbon.SelectedPage = this.ribbonTool;
             this.ribbon.Size = new System.Drawing.Size(792, 149);
             this.ribbon.Toolbar.ItemLinks.Add(this.btnOpenProject);
             this.ribbon.Toolbar.ItemLinks.Add(this.btnSaveModelAs);
@@ -693,9 +707,11 @@ namespace ERDesigner
             this.navBarToolBox.ActiveGroup = this.navBarRelationship;
             this.navBarToolBox.AllowSelectedLink = true;
             this.navBarToolBox.ContentButtonHint = null;
+            this.navBarToolBox.Controls.Add(this.navBarGroupControlContainer1);
             this.navBarToolBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.navBarToolBox.Groups.AddRange(new DevExpress.XtraNavBar.NavBarGroup[] {
             this.navBarEntity,
+            this.navBarDegree,
             this.navBarRelationship,
             this.navBarAttribute,
             this.navBarOther});
@@ -710,20 +726,24 @@ namespace ERDesigner
             this.btnKeyAtt,
             this.btnDerAtt,
             this.btnComAtt,
-            this.btnPointer});
+            this.btnPointer,
+            this.navBarItem1,
+            this.navBarItem2,
+            this.navBarItem3});
             this.navBarToolBox.Location = new System.Drawing.Point(0, 0);
             this.navBarToolBox.Name = "navBarToolBox";
-            this.navBarToolBox.OptionsNavPane.ExpandedWidth = 169;
+            this.navBarToolBox.OptionsNavPane.ExpandedWidth = 196;
             this.navBarToolBox.Size = new System.Drawing.Size(196, 395);
             this.navBarToolBox.SmallImages = this.imageCollection3;
             this.navBarToolBox.TabIndex = 0;
-            this.navBarToolBox.View = new DevExpress.XtraNavBar.ViewInfo.SkinExplorerBarViewInfoRegistrator();
+            this.navBarToolBox.View = new DevExpress.XtraNavBar.ViewInfo.StandardSkinExplorerBarViewInfoRegistrator("Black");
             // 
             // navBarRelationship
             // 
             this.navBarRelationship.Caption = "Relationship";
             this.navBarRelationship.Expanded = true;
-            this.navBarRelationship.GroupStyle = DevExpress.XtraNavBar.NavBarGroupStyle.SmallIconsList;
+            this.navBarRelationship.GroupCaptionUseImage = DevExpress.XtraNavBar.NavBarImage.Large;
+            this.navBarRelationship.GroupStyle = DevExpress.XtraNavBar.NavBarGroupStyle.SmallIconsText;
             this.navBarRelationship.ItemLinks.AddRange(new DevExpress.XtraNavBar.NavBarItemLink[] {
             new DevExpress.XtraNavBar.NavBarItemLink(this.btnNorRel),
             new DevExpress.XtraNavBar.NavBarItemLink(this.btnIdenRel),
@@ -740,6 +760,7 @@ namespace ERDesigner
             this.btnNorRel.AppearanceHotTracked.Options.UseFont = true;
             this.btnNorRel.AppearancePressed.Font = new System.Drawing.Font("Tahoma", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnNorRel.AppearancePressed.ForeColor = System.Drawing.Color.Red;
+            this.btnNorRel.AppearancePressed.GradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
             this.btnNorRel.AppearancePressed.Options.UseFont = true;
             this.btnNorRel.AppearancePressed.Options.UseForeColor = true;
             this.btnNorRel.Caption = "Normal Relationship";
@@ -780,6 +801,53 @@ namespace ERDesigner
             this.btnAssEn.Name = "btnAssEn";
             this.btnAssEn.SmallImageIndex = 4;
             this.btnAssEn.LinkPressed += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.btnStrongEntity_LinkPressed);
+            // 
+            // navBarGroupControlContainer1
+            // 
+            this.navBarGroupControlContainer1.Controls.Add(this.radTernary);
+            this.navBarGroupControlContainer1.Controls.Add(this.radBinary);
+            this.navBarGroupControlContainer1.Controls.Add(this.radUnary);
+            this.navBarGroupControlContainer1.Name = "navBarGroupControlContainer1";
+            this.navBarGroupControlContainer1.Size = new System.Drawing.Size(195, 45);
+            this.navBarGroupControlContainer1.TabIndex = 0;
+            // 
+            // radTernary
+            // 
+            this.radTernary.AutoSize = true;
+            this.radTernary.BackColor = System.Drawing.Color.Transparent;
+            this.radTernary.Location = new System.Drawing.Point(128, 14);
+            this.radTernary.Name = "radTernary";
+            this.radTernary.Size = new System.Drawing.Size(63, 17);
+            this.radTernary.TabIndex = 0;
+            this.radTernary.Text = "Ternary";
+            this.radTernary.UseVisualStyleBackColor = false;
+            this.radTernary.CheckedChanged += new System.EventHandler(this.DegreeChecked_Change);
+            // 
+            // radBinary
+            // 
+            this.radBinary.AutoSize = true;
+            this.radBinary.BackColor = System.Drawing.Color.Transparent;
+            this.radBinary.Checked = true;
+            this.radBinary.Location = new System.Drawing.Point(67, 14);
+            this.radBinary.Name = "radBinary";
+            this.radBinary.Size = new System.Drawing.Size(55, 17);
+            this.radBinary.TabIndex = 0;
+            this.radBinary.TabStop = true;
+            this.radBinary.Text = "Binary";
+            this.radBinary.UseVisualStyleBackColor = false;
+            this.radBinary.CheckedChanged += new System.EventHandler(this.DegreeChecked_Change);
+            // 
+            // radUnary
+            // 
+            this.radUnary.AutoSize = true;
+            this.radUnary.BackColor = System.Drawing.Color.Transparent;
+            this.radUnary.Location = new System.Drawing.Point(7, 14);
+            this.radUnary.Name = "radUnary";
+            this.radUnary.Size = new System.Drawing.Size(54, 17);
+            this.radUnary.TabIndex = 0;
+            this.radUnary.Text = "Unary";
+            this.radUnary.UseVisualStyleBackColor = false;
+            this.radUnary.CheckedChanged += new System.EventHandler(this.DegreeChecked_Change);
             // 
             // navBarEntity
             // 
@@ -824,6 +892,15 @@ namespace ERDesigner
             this.btnWeakEntity.Name = "btnWeakEntity";
             this.btnWeakEntity.SmallImageIndex = 1;
             this.btnWeakEntity.LinkPressed += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.btnStrongEntity_LinkPressed);
+            // 
+            // navBarDegree
+            // 
+            this.navBarDegree.Caption = "Degree Of Relationship";
+            this.navBarDegree.ControlContainer = this.navBarGroupControlContainer1;
+            this.navBarDegree.Expanded = true;
+            this.navBarDegree.GroupClientHeight = 48;
+            this.navBarDegree.GroupStyle = DevExpress.XtraNavBar.NavBarGroupStyle.ControlContainer;
+            this.navBarDegree.Name = "navBarDegree";
             // 
             // navBarAttribute
             // 
@@ -929,7 +1006,6 @@ namespace ERDesigner
             this.navBarOther.ItemLinks.AddRange(new DevExpress.XtraNavBar.NavBarItemLink[] {
             new DevExpress.XtraNavBar.NavBarItemLink(this.btnPointer)});
             this.navBarOther.Name = "navBarOther";
-            this.navBarOther.SelectedLinkIndex = 0;
             // 
             // btnPointer
             // 
@@ -946,7 +1022,22 @@ namespace ERDesigner
             this.btnPointer.Caption = "Pointer";
             this.btnPointer.Name = "btnPointer";
             this.btnPointer.SmallImageIndex = 10;
-            this.btnPointer.LinkPressed += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.btnPointer_LinkPressed);
+            this.btnPointer.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.btnStrongEntity_LinkPressed);
+            // 
+            // navBarItem1
+            // 
+            this.navBarItem1.Caption = "navBarItem1";
+            this.navBarItem1.Name = "navBarItem1";
+            // 
+            // navBarItem2
+            // 
+            this.navBarItem2.Caption = "navBarItem2";
+            this.navBarItem2.Name = "navBarItem2";
+            // 
+            // navBarItem3
+            // 
+            this.navBarItem3.Caption = "navBarItem3";
+            this.navBarItem3.Name = "navBarItem3";
             // 
             // imageCollection3
             // 
@@ -993,7 +1084,7 @@ namespace ERDesigner
             this.dockErrorList.Location = new System.Drawing.Point(202, 451);
             this.dockErrorList.Name = "dockErrorList";
             this.dockErrorList.Size = new System.Drawing.Size(401, 125);
-            this.dockErrorList.Text = "Error List";
+            this.dockErrorList.Text = "Ouput";
             // 
             // dockPanel2_Container
             // 
@@ -1039,6 +1130,41 @@ namespace ERDesigner
             this.deleteToolStripMenuItem.Text = "Delete Model";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
+            // navBarGroup1
+            // 
+            this.navBarGroup1.Caption = "Binary Relationship";
+            this.navBarGroup1.GroupStyle = DevExpress.XtraNavBar.NavBarGroupStyle.SmallIconsList;
+            this.navBarGroup1.ItemLinks.AddRange(new DevExpress.XtraNavBar.NavBarItemLink[] {
+            new DevExpress.XtraNavBar.NavBarItemLink(this.btnNorRel),
+            new DevExpress.XtraNavBar.NavBarItemLink(this.btnIdenRel),
+            new DevExpress.XtraNavBar.NavBarItemLink(this.btnAssEn)});
+            this.navBarGroup1.Name = "navBarGroup1";
+            // 
+            // navBarGroup2
+            // 
+            this.navBarGroup2.Caption = "Binary Relationship";
+            this.navBarGroup2.GroupStyle = DevExpress.XtraNavBar.NavBarGroupStyle.SmallIconsList;
+            this.navBarGroup2.ItemLinks.AddRange(new DevExpress.XtraNavBar.NavBarItemLink[] {
+            new DevExpress.XtraNavBar.NavBarItemLink(this.btnNorRel),
+            new DevExpress.XtraNavBar.NavBarItemLink(this.btnIdenRel),
+            new DevExpress.XtraNavBar.NavBarItemLink(this.btnAssEn)});
+            this.navBarGroup2.Name = "navBarGroup2";
+            // 
+            // navBarGroup3
+            // 
+            this.navBarGroup3.Caption = "Binary Relationship";
+            this.navBarGroup3.GroupStyle = DevExpress.XtraNavBar.NavBarGroupStyle.SmallIconsList;
+            this.navBarGroup3.ItemLinks.AddRange(new DevExpress.XtraNavBar.NavBarItemLink[] {
+            new DevExpress.XtraNavBar.NavBarItemLink(this.btnNorRel),
+            new DevExpress.XtraNavBar.NavBarItemLink(this.btnIdenRel),
+            new DevExpress.XtraNavBar.NavBarItemLink(this.btnAssEn)});
+            this.navBarGroup3.Name = "navBarGroup3";
+            // 
+            // xtraTabPage2
+            // 
+            this.xtraTabPage2.Name = "xtraTabPage2";
+            this.xtraTabPage2.Size = new System.Drawing.Size(195, 77);
+            // 
             // MainForm
             // 
             this.Appearance.BackColor = System.Drawing.SystemColors.Control;
@@ -1071,6 +1197,9 @@ namespace ERDesigner
             this.dockToolBox.ResumeLayout(false);
             this.controlContainer2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.navBarToolBox)).EndInit();
+            this.navBarToolBox.ResumeLayout(false);
+            this.navBarGroupControlContainer1.ResumeLayout(false);
+            this.navBarGroupControlContainer1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection3)).EndInit();
             this.dockExplorer.ResumeLayout(false);
             this.dockPanel1_Container.ResumeLayout(false);
@@ -1167,5 +1296,17 @@ namespace ERDesigner
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
+        private DevExpress.XtraNavBar.NavBarGroup navBarGroup1;
+        private DevExpress.XtraNavBar.NavBarGroup navBarGroup2;
+        private DevExpress.XtraNavBar.NavBarGroup navBarGroup3;
+        private DevExpress.XtraNavBar.NavBarItem navBarItem1;
+        private DevExpress.XtraNavBar.NavBarItem navBarItem2;
+        private DevExpress.XtraNavBar.NavBarItem navBarItem3;
+        private DevExpress.XtraTab.XtraTabPage xtraTabPage2;
+        private DevExpress.XtraNavBar.NavBarGroup navBarDegree;
+        private DevExpress.XtraNavBar.NavBarGroupControlContainer navBarGroupControlContainer1;
+        private System.Windows.Forms.RadioButton radUnary;
+        private System.Windows.Forms.RadioButton radTernary;
+        private System.Windows.Forms.RadioButton radBinary;
     }
 }

@@ -24,12 +24,12 @@ namespace ERDesigner
             return daspen;
         }
     }
-    static class EntityType
+    public class EntityType
     {
         public const string Strong = "Strong Entity";
         public const string Weak = "Weak Entity";
     }
-    static class AttributeType
+    public class AttributeType
     {
         public const string Simple = "Simple Attribute";
         public const string Key = "Key Attribute";
@@ -37,13 +37,13 @@ namespace ERDesigner
         public const string Derived = "Derived Attribute";
         public const string Child = "Child Attribute";
     }
-    static class RelationshipType
+    public class RelationshipType
     {
         public const string Normal = "Normal Relationship";
         public const string Identifier = "Identify Relationship";
         public const string AssociativeEntity = "Associative Entity";
     }
-    static class ModelType
+    public class ModelType
     {
         public const string Conceptual = "ConceptualModel";
         public const string Physical = "PhysicalModel";
