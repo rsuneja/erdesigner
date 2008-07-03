@@ -119,14 +119,10 @@ namespace ERDesigner
         }
         private void btnStrongEntity_LinkPressed(object sender, DevExpress.XtraNavBar.NavBarLinkEventArgs e)
         {
-            if (ActiveMdiChild != null && ActiveMdiChild.GetType().Name == "frmDrawBoard")
+            if (ActiveMdiChild != null && ActiveMdiChild is frmDrawBoard)
             {
                 ((frmDrawBoard)ActiveMdiChild).prepairDrawing(((DevExpress.XtraNavBar.NavBarItem)sender).Caption);
             }
-        }
-        private void btnPointer_LinkPressed(object sender, DevExpress.XtraNavBar.NavBarLinkEventArgs e)
-        {
-            UncheckAll();
         }
         private void btnGeneratePhysical_ItemClick(object sender, ItemClickEventArgs e)
         {
@@ -148,7 +144,7 @@ namespace ERDesigner
         }
 
         //My function
-        public void UncheckAll()
+        public void CancelDrawing()
         {
             if (ActiveMdiChild != null)
             {
@@ -605,6 +601,28 @@ namespace ERDesigner
             {
                 ((frmDrawBoard)ActiveMdiChild).pnlDrawBoard.doRedo();
                 
+            }
+        }
+
+        private void DegreeChecked_Change(object sender, EventArgs e)
+        {
+            if (ActiveMdiChild != null)
+            {
+                if (radUnary.Checked)
+                {
+                    ((frmDrawBoard)ActiveMdiChild).changeDegree(1);
+                    return;
+                }
+                if (radBinary.Checked)
+                {
+                    ((frmDrawBoard)ActiveMdiChild).changeDegree(2);
+                    return;
+                }
+                if (radTernary.Checked)
+                {
+                    ((frmDrawBoard)ActiveMdiChild).changeDegree(3);
+                    return;
+                }
             }
         }
 

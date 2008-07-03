@@ -7,35 +7,50 @@ using System.Text;
 using System.Windows.Forms;
 
 using ERDesigner.Shape;
+using DevExpress.XtraEditors;
 
 namespace ERDesigner
 {
     public partial class AddCardinality : Form
     {
         public EntityShape SelectedEntity1 = null;
-        public int Min1, Max1;
         public EntityShape SelectedEntity2 = null;
-        public int Min2, Max2;
         Control.ControlCollection Control;
         RelationshipShape Relationship;
-        CardinalityShape cardi1 = new CardinalityShape();
-        CardinalityShape cardi2 = new CardinalityShape();
+        public CardinalityShape cardi1;
+        public CardinalityShape cardi2;
 
-        public AddCardinality(Control.ControlCollection control, RelationshipShape relationship)
+        public AddCardinality(RelationshipShape relationship)
         {
             InitializeComponent();
 
-            Control = control;
-            Relationship = relationship;
-            
-            drawPreview();
+            Relationship = new RelationshipShape(relationship.sName, new Point(160, 15), relationship.type);
+            SelectedEntity1 = new EntityShape(relationship.cardinalities[0].entity.sName, new Point(20, 15), relationship.cardinalities[0].entity.type);
+            SelectedEntity2 = new EntityShape(relationship.cardinalities[1].entity.sName, new Point(300, 15), relationship.cardinalities[1].entity.type);
+
+            cardi1 = new CardinalityShape(SelectedEntity1);
+            cardi1.setValue(relationship.cardinalities[0].MinCardinality, relationship.cardinalities[0].MaxCardinality);
+
+            cardi2 = new CardinalityShape(SelectedEntity2);
+            cardi2.setValue(relationship.cardinalities[1].MinCardinality, relationship.cardinalities[1].MaxCardinality);
+
+            Relationship.addCardinality(cardi1);
+            Relationship.addCardinality(cardi2);
+
+            //SelectedEntity1.insertCardinality(1, 0, cardi1); //0,1,2,3
+            //SelectedEntity2.insertCardinality(3, 0, cardi2);
+
+            panelDoubleBuffered1.Controls.Add(Relationship);
+            panelDoubleBuffered1.Controls.Add(SelectedEntity1);
+            panelDoubleBuffered1.Controls.Add(SelectedEntity2);
+            panelDoubleBuffered1.Refresh();
 
             int min1, max1, min2, max2;
-            min1 = relationship.cardinalities[0].MinCardinality;
-            max1 = relationship.cardinalities[0].MaxCardinality;
+            min1 = Relationship.cardinalities[0].MinCardinality;
+            max1 = Relationship.cardinalities[0].MaxCardinality;
 
-            min2 = relationship.cardinalities[1].MinCardinality;
-            max2 = relationship.cardinalities[1].MaxCardinality;
+            min2 = Relationship.cardinalities[1].MinCardinality;
+            max2 = Relationship.cardinalities[1].MaxCardinality;
 
             if (min1 == 0 && max1 == 1)
                 imageComboBoxEdit1.SelectedIndex = 0;
@@ -59,74 +74,9 @@ namespace ERDesigner
             showText();
         }
 
-        private void drawPreview()
-        {
-            RelationshipShape rel = new RelationshipShape();
-            rel.sName = Relationship.sName;
-            rel.Location = new Point(160, 15);
-            rel.type = Relationship.type;
-
-            EntityShape en1 = new EntityShape();
-            en1.sName = Relationship.cardinalities[0].entity.sName;
-            en1.type = Relationship.cardinalities[0].entity.type;
-            en1.Location = new Point(20, 15);
-
-            EntityShape en2 = new EntityShape();
-            en2.sName = Relationship.cardinalities[1].entity.sName;
-            en2.type = Relationship.cardinalities[1].entity.type;
-            en2.Location = new Point(300, 15);
-
-            
-            cardi1.entity = en1;
-            cardi1.MinCardinality = Relationship.cardinalities[0].MinCardinality;
-            cardi1.MaxCardinality = Relationship.cardinalities[0].MaxCardinality;
-
-            
-            cardi2.entity = en2;
-            cardi2.MinCardinality = Relationship.cardinalities[1].MinCardinality;
-            cardi2.MaxCardinality = Relationship.cardinalities[1].MaxCardinality;
-
-            rel.addCardinality(cardi1);
-            rel.addCardinality(cardi2);
-
-            en1.insertCardinality(1, 0, cardi1);
-            en2.insertCardinality(3, 0, cardi2);
-            
-            panelDoubleBuffered1.Controls.Add(rel);
-            panelDoubleBuffered1.Controls.Add(en1);
-            panelDoubleBuffered1.Controls.Add(en2);
-            panelDoubleBuffered1.Refresh();
-        }
-
         private void btnOK_Click(object sender, EventArgs e)
         {
-            SelectedEntity1 = Relationship.cardinalities[0].entity;
-            SelectedEntity2 = Relationship.cardinalities[1].entity;
-
-            switch (imageComboBoxEdit1.EditValue.ToString())
-            {
-                case "0, 1": Min1 = 0; Max1 = 1;
-                    break;
-                case "1, 1": Min1 = 1; Max1 = 1;
-                    break;
-                case "0, n": Min1 = 0; Max1 = -1;
-                    break;
-                case "1, n": Min1 = 1; Max1 = -1;
-                    break;
-            }
-            switch (imageComboBoxEdit2.EditValue.ToString())
-            {
-                case "0, 1": Min2 = 0; Max2 = 1;
-                    break;
-                case "1, 1": Min2 = 1; Max2 = 1;
-                    break;
-                case "0, n": Min2 = 0; Max2 = -1;
-                    break;
-                case "1, n": Min2 = 1; Max2 = -1;
-                    break;
-            }
-
-
+            
         }
 
         void showText()
@@ -148,36 +98,29 @@ namespace ERDesigner
 
         private void imageComboBoxEdit2_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (imageComboBoxEdit2.EditValue.ToString())
-            {
-                case "0, 1": cardi2.MinCardinality = 0; cardi2.MaxCardinality = 1;
-                    break;
-                case "1, 1": cardi2.MinCardinality = 1; cardi2.MaxCardinality = 1;
-                    break;
-                case "0, n": cardi2.MinCardinality = 0; cardi2.MaxCardinality = -1;
-                    break;
-                case "1, n": cardi2.MinCardinality = 1; cardi2.MaxCardinality = -1;
-                    break;
-            }
-
-            panelDoubleBuffered1.Refresh();
+            RenderPreview(imageComboBoxEdit2, cardi2);
         }
-
         private void imageComboBoxEdit1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            switch (imageComboBoxEdit1.EditValue.ToString())
+            RenderPreview(imageComboBoxEdit1, cardi1);
+        }
+        private void RenderPreview(ComboBoxEdit imageComboBox, CardinalityShape cardi)
+        {
+            switch (imageComboBox.EditValue.ToString())
             {
-                case "0, 1": cardi1.MinCardinality = 0; cardi1.MaxCardinality = 1;
+                case "0, 1": cardi.setValue(0, 1);
                     break;
-                case "1, 1": cardi1.MinCardinality = 1; cardi1.MaxCardinality = 1;
+                case "1, 1": cardi.setValue(1, 1);
                     break;
-                case "0, n": cardi1.MinCardinality = 0; cardi1.MaxCardinality = -1;
+                case "0, n": cardi.setValue(0, -1);
                     break;
-                case "1, n": cardi1.MinCardinality = 1; cardi1.MaxCardinality = -1;
+                case "1, n": cardi.setValue(1, -1);
                     break;
             }
 
             panelDoubleBuffered1.Refresh();
         }
+
+        
     }
 }

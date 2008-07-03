@@ -52,15 +52,24 @@ namespace ERDesigner
                     pnlDrawBoard.isDrawEntity = true;
                     break;
                 case "Normal Relationship":
-                    pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Cross;
+                    if(pnlDrawBoard.degreeOfRelationship == 2)
+                        pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Cross;
+                    else
+                        pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Hand;
                     pnlDrawBoard.isDrawRelationship = true;
                     break;
                 case "Identify Relationship":
-                    pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Cross;
+                    if (pnlDrawBoard.degreeOfRelationship == 2)
+                        pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Cross;
+                    else
+                        pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Hand;
                     pnlDrawBoard.isDrawRelationship = true;
                     break;
                 case "Associative Entity":
-                    pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Cross;
+                    if (pnlDrawBoard.degreeOfRelationship == 2)
+                        pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Cross;
+                    else
+                        pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Hand;
                     pnlDrawBoard.isDrawRelationship = true;
                     break;
                 case "Simple Attribute":
@@ -83,10 +92,23 @@ namespace ERDesigner
                     pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Hand;
                     pnlDrawBoard.isDrawingAtt = true;
                     break;
+                case "Pointer": pnlDrawBoard.CancelDrawing();
+                    break;
             }
             
         }
+        public void changeDegree(int degree)
+        {
+            pnlDrawBoard.degreeOfRelationship = degree;
 
+            if (pnlDrawBoard.isDrawRelationship)
+            {
+                if (degree == 2)
+                    pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Cross;
+                else
+                    pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Hand;
+            }
+        }
         public void AutoLayout()
         {
             pnlDrawBoard.AutoLayout();

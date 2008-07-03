@@ -30,7 +30,23 @@ namespace ERDesigner.Shape
             this.Disposed += new EventHandler(EntityShape_Disposed);
             refreshPath();
         }
+        public EntityShape(string name, Point loc, string t)
+        {
+            type = t;
+            attributes = new List<AttributeShape>();
+            cardinalities = new List<CardinalityShape>[4];
+            cardinalities[0] = new List<CardinalityShape>();
+            cardinalities[1] = new List<CardinalityShape>();
+            cardinalities[2] = new List<CardinalityShape>();
+            cardinalities[3] = new List<CardinalityShape>();
 
+            Size = new Size(ThongSo.ShapeW, ThongSo.ShapeH);
+            sName = name;
+            this.Location = loc;
+
+            this.Disposed += new EventHandler(EntityShape_Disposed);
+            refreshPath();
+        }
         public AttributeShape Attributes
         {
             get

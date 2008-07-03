@@ -8,24 +8,28 @@ using ERDesigner;
 
 namespace ERDesigner.Shape
 {
-    public class CardinalityShape:ShapeBase
+    public class CardinalityShape : ShapeBase
     {
         public EntityShape entity;
         public int MinCardinality;
         public int MaxCardinality;
         public RelationshipShape relationship;
 
-        public EntityShape Entity
+        public CardinalityShape(){}
+        public CardinalityShape(EntityShape en)
         {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
-        }
+            //Lại áp dụng cách này
+            entity = en;
+            entity.Disposed += new EventHandler(entity_Disposed);
 
+            //Add đại cardi vô List[cạnh] của entity
+            entity.insertCardinality(0, 0, this);
+        }
+        public void setValue(int min, int max)
+        {
+            MinCardinality = min;
+            MaxCardinality = max;
+        }
         public override ShapeBase Clone()
         {
             CardinalityShape cardi = new CardinalityShape();
@@ -35,15 +39,6 @@ namespace ERDesigner.Shape
             cardi.relationship = relationship;
 
             return (ShapeBase)cardi;
-        }
-        //Lại áp dụng cách này
-        public void addEntity(EntityShape en)
-        {
-            entity = en;
-            entity.Disposed += new EventHandler(entity_Disposed);
-
-            //Add đại cardi vô List[cạnh] của entity
-            entity.insertCardinality(0, 0, this);
         }
 
         void entity_Disposed(object sender, EventArgs e)
@@ -65,7 +60,7 @@ namespace ERDesigner.Shape
         }
 
     }
-    public class RelationshipShape:ShapeBase
+    public class RelationshipShape : ShapeBase
     {
         public List<AttributeShape> attributes;
         public List<CardinalityShape> cardinalities;
@@ -92,7 +87,26 @@ namespace ERDesigner.Shape
             this.Disposed += new EventHandler(RelationshipShape_Disposed);
             refreshPath();
         }
+        public RelationshipShape(string name, Point loc, string t)
+        {
+            type = t;
+            attributes = new List<AttributeShape>();
+            cardinalities = new List<CardinalityShape>();
 
+            cardiplaces = new List<CardinalityShape>[4];
+            cardiplaces[0] = new List<CardinalityShape>();
+            cardiplaces[1] = new List<CardinalityShape>();
+            cardiplaces[2] = new List<CardinalityShape>();
+            cardiplaces[3] = new List<CardinalityShape>();
+
+            sName = name;
+
+            this.Size = new Size(ThongSo.ShapeW, ThongSo.ShapeH);
+            this.Location = loc;
+
+            this.Disposed += new EventHandler(RelationshipShape_Disposed);
+            refreshPath();
+        }
         public CardinalityShape Cardinalities
         {
             get
@@ -114,7 +128,7 @@ namespace ERDesigner.Shape
             {
             }
         }
-    
+
         void RelationshipShape_Disposed(object sender, EventArgs e)
         {
             clearCardinalities();
@@ -190,7 +204,7 @@ namespace ERDesigner.Shape
         public void clearCardinalities()
         {
             //Xóa cardi trên những entity liên quan
-            foreach(CardinalityShape cardi in cardinalities)
+            foreach (CardinalityShape cardi in cardinalities)
                 for (int j = 0; j < 4; j++)
                 {
                     cardi.entity.cardinalities[j].Remove(cardi);
@@ -199,7 +213,7 @@ namespace ERDesigner.Shape
 
             for (int i = 0; i < 4; i++)
                 cardiplaces[i].Clear();
-            
+
         }
 
         public void addAttribute(AttributeShape att)
@@ -261,11 +275,11 @@ namespace ERDesigner.Shape
         protected override void refreshPath()
         {
             path = new GraphicsPath();
-            Rectangle rect = new Rectangle(this.ClientRectangle.X,this.ClientRectangle.Y,this.ClientRectangle.Width, this.ClientRectangle.Height);
-            Point p1 = new Point(rect.Width/2, 0);
-            Point p2 = new Point(rect.Width, rect.Height/2);
-            Point p3 = new Point(rect.Width/2, rect.Height);
-            Point p4 = new Point(0, rect.Height/2);
+            Rectangle rect = new Rectangle(this.ClientRectangle.X, this.ClientRectangle.Y, this.ClientRectangle.Width, this.ClientRectangle.Height);
+            Point p1 = new Point(rect.Width / 2, 0);
+            Point p2 = new Point(rect.Width, rect.Height / 2);
+            Point p3 = new Point(rect.Width / 2, rect.Height);
+            Point p4 = new Point(0, rect.Height / 2);
 
             if (type == RelationshipType.AssociativeEntity)
             {
@@ -277,7 +291,7 @@ namespace ERDesigner.Shape
                 path.ClearMarkers();
                 path.AddPolygon(new Point[] { p1, p2, p3, p4 });
             }
-                                   
+
             this.Region = new Region(path);
         }
 
@@ -286,9 +300,9 @@ namespace ERDesigner.Shape
             refreshPath();
 
             Rectangle rect = new Rectangle(this.ClientRectangle.X + 1, this.ClientRectangle.Y + 1, this.ClientRectangle.Width - 2, this.ClientRectangle.Height - 2);
-            
+
             Point p1 = new Point(rect.Width / 2, rect.Y);
-            Point p2 = new Point(rect.Width , rect.Height / 2 + 1);
+            Point p2 = new Point(rect.Width, rect.Height / 2 + 1);
             Point p3 = new Point(rect.Width / 2, rect.Height);
             Point p4 = new Point(rect.X, rect.Height / 2 + 1);
 
@@ -296,7 +310,7 @@ namespace ERDesigner.Shape
             Point p6 = new Point(p2.X - 8, p2.Y);
             Point p7 = new Point(p3.X, p3.Y - 5);
             Point p8 = new Point(p4.X + 8, p4.Y);
-            
+
             if (type == RelationshipType.Normal)
                 g.DrawPolygon(ThongSo.JPen, new Point[] { p1, p2, p3, p4 });
             else if (type == RelationshipType.Identifier)
@@ -317,7 +331,7 @@ namespace ERDesigner.Shape
             txtName.Location = new Point(0, this.ClientRectangle.Height / 2 - txtName.Size.Height / 2);
             txtName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             txtName.Size = new Size(this.ClientRectangle.Width, this.ClientRectangle.Height);
-            if(type == RelationshipType.AssociativeEntity)
+            if (type == RelationshipType.AssociativeEntity)
                 txtName.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
         }
     }

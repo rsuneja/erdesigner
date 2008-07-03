@@ -9,8 +9,7 @@ using System.Drawing.Drawing2D;
 
 namespace ERDesigner
 {
-//Edit Vodacbao
-    public class PanelDoubleBuffered: Panel
+    public class PanelDoubleBuffered : Panel
     {
         public List<MetaData> UndoList = new List<MetaData>();
         public int currentUndoState = -1;
@@ -24,7 +23,7 @@ namespace ERDesigner
 
         private bool isMoving = false;
         private bool isResizing = false;
-        
+
         private bool isSelecting = false;
 
         public bool isDrawingAtt = false;
@@ -41,7 +40,7 @@ namespace ERDesigner
         public PanelDoubleBuffered()
         {
             this.DoubleBuffered = true;
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint|ControlStyles.UserPaint|ControlStyles.OptimizedDoubleBuffer,true);
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint | ControlStyles.OptimizedDoubleBuffer, true);
             saveUndoList();
         }
 
@@ -54,13 +53,18 @@ namespace ERDesigner
                 AffectingShape.endEditName();
                 return;
             }
-
+            if(e.Button == MouseButtons.Right)
+            {
+                CancelDrawing();
+                return;
+            }
             if (isDrawing)
             {
                 if (isDrawEntity)
                 {
                     currentShape = new EntityShape();
                     ((EntityShape)currentShape).type = DrawingShapeState;
+                    
                 }
 
                 if (isDrawingAtt && AffectingShape != null)
@@ -70,7 +74,7 @@ namespace ERDesigner
                         currentShape = new AttributeShape();
 
                         ((AttributeShape)currentShape).type = AttributeType.Simple;
-                        
+
                         ((AttributeShape)currentShape).isComposite = false;
                         ((AttributeShape)AffectingShape).addAttribute((AttributeShape)currentShape);
                     }
@@ -83,7 +87,7 @@ namespace ERDesigner
                             if (DrawingShapeState == AttributeType.Key)
                                 ((AttributeShape)currentShape).allowNull = false;
                             ((AttributeShape)currentShape).type = DrawingShapeState;
-                            
+
                             if (AffectingShape is EntityShape)
                             {
                                 ((EntityShape)AffectingShape).addAttribute((AttributeShape)currentShape);
@@ -101,7 +105,7 @@ namespace ERDesigner
                             }
                         }
                     }
-                    
+
                 }
 
                 if (isDrawEntity || (isDrawingAtt && AffectingShape != null) && currentShape != null)
@@ -110,31 +114,18 @@ namespace ERDesigner
                     currentShape.setLocation(mouse);
                     this.Controls.Add(currentShape);
                     beginRename(currentShape);
-
-                    
                 }
                 else
                 {
                     //đang vẽ relationship (không vẽ shape, vẽ đoạn nối 2 entity)
-                    //click lên panel thì sai, không cho vẽ nữa
-
-                    First_Mouse_Pos.X = -1;
-                    First_Mouse_Pos.Y = -1;
-
-                    Last_Mouse_Pos.X = -1;
-                    Last_Mouse_Pos.Y = -1;
-
-                    UncheckAll();
-
-                    if (AffectingShape != null)
-                    {
-                        AffectingShape.Invalidate();
-                        AffectingShape = null;
-                    }
+                    //phải click lên control, click lên panel thì sai, không cho vẽ nữa
+                    CancelDrawing();
                 }
             }
-            else
+            //click panel mà không phải là đang drawing
+            else 
             {
+                //mark flag để vẽ rubber band
                 isSelecting = true;
 
                 First_Mouse_Pos.X = e.X;
@@ -156,7 +147,7 @@ namespace ERDesigner
         {
             Point ptCurrent = new Point(e.X, e.Y);
 
-            if (isDrawing && isDrawRelationship && First_Mouse_Pos.X != -1) // vẽ đường relationship
+            if (isDrawing && isDrawRelationship && First_Mouse_Pos.X != -1 && degreeOfRelationship == 2) // vẽ đường relationship
             {
                 if (Last_Mouse_Pos.X != -1)
                     JDrawReversibleLine(First_Mouse_Pos, Last_Mouse_Pos);
@@ -184,15 +175,7 @@ namespace ERDesigner
         {
             if (isDrawing)
             {
-                if (isDrawRelationship)
-                {
-                    First_Mouse_Pos.X = -1;
-                    First_Mouse_Pos.Y = -1;
-                    Last_Mouse_Pos.X = -1;
-                    Last_Mouse_Pos.Y = -1;
-                }
-                UncheckAll();
-
+                CancelDrawing();
                 currentShape = null;
             }
             if (isSelecting)
@@ -213,7 +196,7 @@ namespace ERDesigner
         protected override void OnPaint(PaintEventArgs e)
         {
             Graphics g = e.Graphics;
-            ControlPaint.DrawGrid(g, this.ClientRectangle,new Size(5,5), Color.Black);
+            ControlPaint.DrawGrid(g, this.ClientRectangle, new Size(5, 5), Color.Black);
             //ControlPaint.DrawGrid(g, new Rectangle(this.Location, this.Size), new Size(50, 50), Color.Black);
 
             //Vẽ đường kết nối giữa các Shape
@@ -240,16 +223,17 @@ namespace ERDesigner
                 //Nếu chưa có điểm đầu
                 if (First_Mouse_Pos.X == -1)
                 {
-                    if (currentCtrl.GetType().Name == "EntityShape")
+                    if (currentCtrl is EntityShape)
                     {
                         First_Mouse_Pos.X = currentCtrl.Location.X + e.X;
                         First_Mouse_Pos.Y = currentCtrl.Location.Y + e.Y;
                     }
                     else
-                        UncheckAll();
+                        CancelDrawing();
                 }
                 else
                 {
+                    //Đã có điểm đầu, click lần thứ 2
                     //tạo relationship
 
                     if (AffectingShape.GetType().Name == "EntityShape" && currentCtrl.GetType().Name == "EntityShape")
@@ -269,17 +253,14 @@ namespace ERDesigner
                         rel.Location = new Point(center.X - rel.Width / 2, center.Y - rel.Height / 2);
 
                         if (entity1 == entity2)
-                            rel.Location = new Point(entity1.Location.X + entity1.Width + ThongSo.ShapeW, entity1.Location.Y);  
+                            rel.Location = new Point(entity1.Location.X + entity1.Width + ThongSo.ShapeW, entity1.Location.Y);
 
-                        CardinalityShape car1 = new CardinalityShape();
-                        CardinalityShape car2 = new CardinalityShape();
+                        CardinalityShape car1 = new CardinalityShape(entity1);
+                        CardinalityShape car2 = new CardinalityShape(entity2);
 
-                        //Bắt buộc phải add vô rel trước để tính toán vị trí (rel phải có location rồi)
+                        //Bắt buộc phải add vô rel trước để tính toán vị trí (nhưng rel phải có location rồi)
                         rel.addCardinality(car1);
                         rel.addCardinality(car2);
-
-                        car1.addEntity(entity1);
-                        car2.addEntity(entity2);
 
                         if (entity1.type != entity2.type)
                             rel.type = RelationshipType.Identifier;
@@ -290,45 +271,33 @@ namespace ERDesigner
                             {
                                 if (entity1.type == EntityType.Strong)
                                 {
-                                    car1.MinCardinality = 1;
-                                    car1.MaxCardinality = 1;
-                                    car2.MinCardinality = 0;
-                                    car2.MaxCardinality = -1;
+                                    car1.setValue(1, 1);
+                                    car2.setValue(0, -1);
                                 }
                                 else
                                 {
-                                    car1.MinCardinality = 0;
-                                    car1.MaxCardinality = -1;
-                                    car2.MinCardinality = 1;
-                                    car2.MaxCardinality = 1;
+                                    car1.setValue(0, -1);
+                                    car2.setValue(1, 1);
                                 }
                             }
                             else
                             {
-                                car1.MinCardinality = 1;
-                                car1.MaxCardinality = 1;
-                                car2.MinCardinality = 0;
-                                car2.MaxCardinality = -1;
+                                car1.setValue(1, 1);
+                                car2.setValue(0, -1);
                             }
                         }
                         else
                         {
-                            car1.MinCardinality = 0;
-                            car1.MaxCardinality = -1;
-                            car2.MinCardinality = 0;
-                            car2.MaxCardinality = -1;
+                            car1.setValue(0, -1);
+                            car2.setValue(0, -1);
                         }
 
                         this.Controls.Add(rel);
                     }
 
                     //Nếu 2 Shape đang chọn không phải entity thì cancel hết
-                    UncheckAll();
-                    First_Mouse_Pos.X = -1;
-                    First_Mouse_Pos.Y = -1;
-                    Last_Mouse_Pos.X = -1;
-                    Last_Mouse_Pos.Y = -1;
-
+                    CancelDrawing();
+                    
                     AffectingShape.Invalidate();
                     currentCtrl.Invalidate();
                     this.Invalidate();
@@ -336,105 +305,28 @@ namespace ERDesigner
                 }
             }
 
-            AffectingShape = currentCtrl; //Lưu vết lại Shape đang được tác động (Click)
-            //Set cho shape đó nằm trên cùng
+            //Lưu vết lại Shape đang được tác động (Click)
+            //và set cho shape đó nằm trên cùng
+            AffectingShape = currentCtrl;
             this.Controls.SetChildIndex(AffectingShape, 0);
 
-            if (e.Button == MouseButtons.Left && !isDrawing) //click trái: Resizing hoặc Moving hoặc Select
+            // click trái: Resizing hoặc Moving hoặc Selecting
+            // Nếu chuột ở mép (border) của Shape thì là resizing
+            // bình thường thì moving
+            if (e.Button == MouseButtons.Left && !isDrawing)
             {
                 Last_Mouse_Pos.X = e.X;
                 Last_Mouse_Pos.Y = e.Y;
 
-                // Nếu chuột ở mép Shape thì là resizing
                 if ((e.X + 5) > currentCtrl.Width || (e.Y + 5) > currentCtrl.Height)
-                {
                     isResizing = true;
-                }
-                else // bình thường thì moving
-                {
+                else
                     isMoving = true;
-                }
             }
-            else if (e.Button == MouseButtons.Right) //click phải lên shape: hiện context menu
+            // click phải: hiện context menu
+            else if (e.Button == MouseButtons.Right) 
             {
-                ContextMenu ctmn = new ContextMenu();
-
-                MenuItem del = new MenuItem("Delete");
-                del.Click += new EventHandler(del_Click);
-
-                MenuItem addCardi = new MenuItem("Edit Cardinalitiy");
-                addCardi.Click += new EventHandler(editCardi_Click);
-
-                MenuItem ChangeType = new MenuItem("Change type");
-
-                if (currentCtrl.GetType().Name == "EntityShape")
-                {
-                    ChangeType.MenuItems.Clear();
-
-                    MenuItem StrongEntity = new MenuItem("Strong Entity Type");
-                    StrongEntity.Click += new EventHandler(Change_Type_Click);
-
-                    MenuItem WeakEntity = new MenuItem("Weak Entity Type");
-                    WeakEntity.Click += new EventHandler(Change_Type_Click);
-
-                    ChangeType.MenuItems.Add(StrongEntity);
-                    ChangeType.MenuItems.Add(WeakEntity);
-                }
-
-                if (currentCtrl.GetType().Name == "RelationshipShape")
-                {
-                    ctmn.MenuItems.Add(addCardi);
-
-                    ChangeType.MenuItems.Clear();
-
-                    MenuItem NormalRelation = new MenuItem("Normal Relationship");
-                    NormalRelation.Click += new EventHandler(Change_Type_Click);
-
-                    MenuItem IdRelation = new MenuItem("Identifier Relationship");
-                    IdRelation.Click += new EventHandler(Change_Type_Click);
-
-                    MenuItem AssoRelation = new MenuItem("Associative Entity");
-                    AssoRelation.Click += new EventHandler(Change_Type_Click);
-
-                    ChangeType.MenuItems.Add(NormalRelation);
-                    ChangeType.MenuItems.Add(IdRelation);
-                    ChangeType.MenuItems.Add(AssoRelation);
-                }
-
-                ctmn.MenuItems.Add(ChangeType);
-
-                if (currentCtrl.GetType().Name == "AttributeShape" && ((AttributeShape)currentCtrl).isComposite)
-                {
-                    ChangeType.MenuItems.Clear();
-
-                    MenuItem KeyAtt = new MenuItem("Key Attribute");
-                    KeyAtt.Click += new EventHandler(Change_Type_Click);
-
-                    MenuItem SimpleAtt = new MenuItem("Simple Attribute");
-                    SimpleAtt.Click += new EventHandler(Change_Type_Click);
-
-                    MenuItem MultiAtt = new MenuItem("Multi-Valued Attribute");
-                    MultiAtt.Click += new EventHandler(Change_Type_Click);
-
-                    if (((AttributeShape)currentCtrl).attributeChilds.Count == 0)
-                    {
-                        MenuItem DerivedAtt = new MenuItem("Derived Attribute");
-                        DerivedAtt.Click += new EventHandler(Change_Type_Click);
-                        ChangeType.MenuItems.Add(DerivedAtt);
-                    }
-
-                    ChangeType.MenuItems.Add(KeyAtt);
-                    ChangeType.MenuItems.Add(SimpleAtt);
-                    ChangeType.MenuItems.Add(MultiAtt);
-                    
-                }
-                if (currentCtrl.GetType().Name == "AttributeShape" && !((AttributeShape)currentCtrl).isComposite)
-                {
-                    ctmn.MenuItems.Remove(ChangeType);
-                }
-                ctmn.MenuItems.Add(del);
-                
-
+                ContextMenu ctmn = getContexMenuForControl(currentCtrl);
                 ctmn.Show(currentCtrl, new Point(e.X, e.Y));
             }
             this.Invalidate();
@@ -444,7 +336,8 @@ namespace ERDesigner
             if (!isNaming)
             {
                 Control currentCtrl = (Control)sender;
-                if (isDrawing && isDrawRelationship && First_Mouse_Pos.X != -1)
+
+                if (isDrawing && isDrawRelationship && First_Mouse_Pos.X != -1 && degreeOfRelationship == 2)
                 {
                     Point ptCurrent = new Point(currentCtrl.Location.X + e.X, currentCtrl.Location.Y + e.Y);
                     if (Last_Mouse_Pos.X != -1)
@@ -465,7 +358,7 @@ namespace ERDesigner
                         int right = left + currentCtrl.Width;
                         int bottom = top + currentCtrl.Height;
 
-                        if(left > 0 && right < this.Width)
+                        if (left > 0 && right < this.Width)
                             currentCtrl.Left = currentCtrl.Left + (e.X - Last_Mouse_Pos.X);
                         if (top > 0 && bottom < this.Height)
                             currentCtrl.Top = currentCtrl.Top + (e.Y - Last_Mouse_Pos.Y);
@@ -486,7 +379,7 @@ namespace ERDesigner
                     {
                         if (currentCtrl.Cursor == Cursors.SizeNWSE)
                         {
-                            if (e.X > ThongSo.ShapeW && e.X >nameSize.Width)
+                            if (e.X > ThongSo.ShapeW && e.X > nameSize.Width)
                                 currentCtrl.Width = e.X;
                             if (e.Y > ThongSo.ShapeH)
                                 currentCtrl.Height = e.Y;
@@ -538,7 +431,7 @@ namespace ERDesigner
             }
             isMoving = false;
             isResizing = false;
-            
+
         }
         void shapeDoubleClick(object sender, MouseEventArgs e)
         {
@@ -587,33 +480,20 @@ namespace ERDesigner
             if (AffectingShape != null && AffectingShape.GetType().Name == "RelationshipShape")
             {
                 relationship = (RelationshipShape)AffectingShape;
-                AddCardinality addCardiDialog = new AddCardinality(this.Controls, relationship);
+                AddCardinality addCardiDialog = new AddCardinality(relationship);
 
                 if (addCardiDialog.ShowDialog() == DialogResult.OK)
                 {
-                    relationship.clearCardinalities();
+                    relationship.cardinalities[0].setValue(addCardiDialog.cardi1.MinCardinality, addCardiDialog.cardi1.MaxCardinality);
+                    relationship.cardinalities[1].setValue(addCardiDialog.cardi2.MinCardinality, addCardiDialog.cardi2.MaxCardinality);
 
-                    CardinalityShape cardi1 = new CardinalityShape();
-                    relationship.addCardinality(cardi1);
-
-                    cardi1.addEntity(addCardiDialog.SelectedEntity1);
-                    cardi1.MinCardinality = addCardiDialog.Min1;
-                    cardi1.MaxCardinality = addCardiDialog.Max1;
-
-                    CardinalityShape cardi2 = new CardinalityShape();
-                    relationship.addCardinality(cardi2);
-
-                    cardi2.addEntity(addCardiDialog.SelectedEntity2);
-                    cardi2.MinCardinality = addCardiDialog.Min2;
-                    cardi2.MaxCardinality = addCardiDialog.Max2;
-
-                    if ((cardi1.MaxCardinality != -1 || cardi2.MaxCardinality != -1) && relationship.type == RelationshipType.AssociativeEntity)
-                        if(cardi1.entity.type != cardi2.entity.type)
+                    if ((relationship.cardinalities[0].MaxCardinality != -1 || relationship.cardinalities[1].MaxCardinality != -1) && relationship.type == RelationshipType.AssociativeEntity)
+                        if (relationship.cardinalities[0].entity.type != relationship.cardinalities[1].entity.type)
                             relationship.type = RelationshipType.Identifier;
                         else
                             relationship.type = RelationshipType.Normal;
 
-                    if (cardi1.MaxCardinality == -1 && cardi2.MaxCardinality == -1 && relationship.attributes.Count > 0)
+                    if (relationship.cardinalities[0].MaxCardinality == -1 && relationship.cardinalities[1].MaxCardinality == -1 && relationship.attributes.Count > 0)
                         relationship.type = RelationshipType.AssociativeEntity;
 
                     this.Invalidate();
@@ -623,7 +503,7 @@ namespace ERDesigner
         }
         void addAtt_Click(object sender, EventArgs e)
         {
-            UncheckAll();
+            CancelDrawing();
             this.Cursor = System.Windows.Forms.Cursors.Hand;
             isDrawing = true;
             isDrawingAtt = true;
@@ -703,7 +583,7 @@ namespace ERDesigner
 
                 ControlPaint.DrawSelectionFrame(g, true, selectOutRect, selectRect, Color.Empty);
                 ControlPaint.DrawVisualStyleBorder(g, selectOutRect);
-                ControlPaint.DrawVisualStyleBorder(g,selectRect);
+                ControlPaint.DrawVisualStyleBorder(g, selectRect);
 
                 g.FillRectangle(Brushes.Black, node1);
                 g.FillRectangle(Brushes.Black, node2);
@@ -718,7 +598,7 @@ namespace ERDesigner
                 //ControlPaint.DrawLockedFrame(g, selectRect, false);
                 //ControlPaint.DrawFocusRectangle(g, new Rectangle(selectRect.X - 5, selectRect.Y - 5, selectRect.Width + 10, selectRect.Height + 10));
                 //ControlPaint.DrawSizeGrip(g, Color.Empty, new Rectangle(selectRect.X - 5, selectRect.Y - 5, selectRect.Width + 10, selectRect.Height + 10));
-                
+
             }
         }
         private void DrawConnectiveLines(Graphics g)
@@ -803,7 +683,7 @@ namespace ERDesigner
             currentUndoState++;
             //UndoList.RemoveRange(currentUndoState, UndoList.Count - currentUndoState);
             UndoList.Add(ERD);
-            
+
         }
         public bool doUndo()
         {
@@ -822,9 +702,9 @@ namespace ERDesigner
         }
         public bool doRedo()
         {
-            if (UndoList.Count > 0 && UndoList.Count-1 > currentUndoState)
+            if (UndoList.Count > 0 && UndoList.Count - 1 > currentUndoState)
             {
-                this.drawMetaData(UndoList[currentUndoState+1]);
+                this.drawMetaData(UndoList[currentUndoState + 1]);
                 currentUndoState++;
 
                 if (currentUndoState == UndoList.Count)
@@ -882,7 +762,7 @@ namespace ERDesigner
                             }
                             else //Nếu vẫn là vị trí cũ, thì tính lại thứ tự trong vị trí đó
                             {
-                                for(int k=0; k<entity.cardinalities[oldEdgeCardiPlace - 1].Count-1; k++)
+                                for (int k = 0; k < entity.cardinalities[oldEdgeCardiPlace - 1].Count - 1; k++)
                                 {
                                     if (oldEdgeCardiPlace == 1 || oldEdgeCardiPlace == 3) //Up hoặc down thì so sánh x
                                     {
@@ -891,7 +771,7 @@ namespace ERDesigner
                                     }
                                     else //right hoặc left thì so sánh y
                                     {
-                                        if (entity.cardinalities[oldEdgeCardiPlace - 1][k].relationship.Location.Y > entity.cardinalities[oldEdgeCardiPlace - 1][k+1].relationship.Location.Y)
+                                        if (entity.cardinalities[oldEdgeCardiPlace - 1][k].relationship.Location.Y > entity.cardinalities[oldEdgeCardiPlace - 1][k + 1].relationship.Location.Y)
                                             entity.cardinalities[oldEdgeCardiPlace - 1].Reverse(k, 1);
                                     }
                                 }
@@ -1004,8 +884,7 @@ namespace ERDesigner
 
                 //cardi 1, 1
                 CardinalityShape cardi1 = new CardinalityShape();
-                cardi1.MaxCardinality = 1;
-                cardi1.MinCardinality = 1;
+                cardi1.setValue(1, 1);
 
                 //lấy cardi của đầu bên kia Relationship
                 CardinalityShape cardi2 = new CardinalityShape();
@@ -1017,7 +896,7 @@ namespace ERDesigner
 
                 Bitmap CardiAtEn = GetCardinalitiesShape(cardi1, edgeCardiPlace);
                 Bitmap CardiAtRel = GetCardinalitiesShape(cardi2, newEdgeCardiPlace);
-                
+
                 //Vẽ cardi cho En
                 switch (edgeCardiPlace)
                 {
@@ -1043,7 +922,7 @@ namespace ERDesigner
                     case 4: g.DrawImage(CardiAtRel, TopLeftRel.X - CardiAtRel.Width, TopLeftRel.Y + stepYRel - CardiAtRel.Height / 2 + 1);
                         break;
                 }
-                
+
                 //Vẽ Line
                 switch (edgeCardiPlace)
                 {
@@ -1092,7 +971,7 @@ namespace ERDesigner
                         }
                         break;
                 }
-   
+
             }
         }
         public static int CalculateEdgePlace(ShapeBase entity, Point centerRelationship, Point centerEntity)
@@ -1179,7 +1058,7 @@ namespace ERDesigner
             }
             return carshape;
         }
-        void UncheckAll()
+        public void CancelDrawing()
         {
             isDrawing = false;
             isDrawEntity = false;
@@ -1187,7 +1066,13 @@ namespace ERDesigner
             isDrawRelationship = false;
             this.Cursor = System.Windows.Forms.Cursors.Default;
 
-            ((MainForm)TopLevelControl).UncheckAll();
+            First_Mouse_Pos.X = -1;
+            First_Mouse_Pos.Y = -1;
+            Last_Mouse_Pos.X = -1;
+            Last_Mouse_Pos.Y = -1;
+
+            ((MainForm)TopLevelControl).CancelDrawing();
+            this.Refresh();
         }
         public void AutoLayout()
         {
@@ -1199,7 +1084,7 @@ namespace ERDesigner
                 if (c.GetType().Name == "EntityShape")
                 {
                     int bac = degreeOfEntity((EntityShape)c);
-                    
+
                     if (bac > maxbac)
                     {
                         maxbac = bac;
@@ -1207,18 +1092,18 @@ namespace ERDesigner
                     }
                 }
             }
-            
+
             //B2: Vẽ con của nó
-            SetLocationTree(MaxEntity,maxbac, 1);
+            SetLocationTree(MaxEntity, maxbac, 1);
             this.Refresh();
-            
+
         }
         void SetLocationTree(EntityShape entity, int degree, int line)
         {
             entity.Location = new Point(this.Width / 2 - entity.Width / 2, 150 * line);
 
-            int stepX = this.Width/(degree + 1);
-            
+            int stepX = this.Width / (degree + 1);
+
             for (int i = 0; i < 4; i++)
             {
                 for (int j = 0; j < entity.cardinalities[i].Count; j++)
@@ -1435,13 +1320,11 @@ namespace ERDesigner
                     {
                         if (s.GetType().Name == "EntityShape" && s.sName == cardi.Entity)
                         {
-                            CardinalityShape cardinality = new CardinalityShape();
+                            CardinalityShape cardinality = new CardinalityShape((EntityShape)s);
                             //Bắt buộc add vô rel trước
                             relationship.addCardinality(cardinality);
 
-                            cardinality.addEntity((EntityShape)s);
-                            cardinality.MaxCardinality = cardi.MaxCardinality;
-                            cardinality.MinCardinality = cardi.MinCardinality;
+                            cardinality.setValue(cardi.MaxCardinality, cardi.MinCardinality);
                             break;
                         }
                     }
@@ -1470,14 +1353,14 @@ namespace ERDesigner
                                 if (att.type == AttributeType.Key)
                                     isError = false;
 
-                            if(isError)
+                            if (isError)
                                 errorList.Add("Entity '" + entity.sName + "' must have a key attribute");
                         }
 
                         //Thực thể yếu phải nối với identify relationship
                         if (entity.type == EntityType.Weak)
                         {
-                            for(int i=0; i<4; i++)
+                            for (int i = 0; i < 4; i++)
                                 foreach (CardinalityShape cardi in entity.cardinalities[i])
                                 {
                                     if (cardi.relationship.type != RelationshipType.Identifier)
@@ -1499,7 +1382,7 @@ namespace ERDesigner
                                 errorList.Add("Identify Relationship '" + rel.sName + "' must connect weak entity anh strong entity");
                             else
                             {
-                                if(entity1.type == EntityType.Strong && rel.cardinalities[0].MaxCardinality != 1)
+                                if (entity1.type == EntityType.Strong && rel.cardinalities[0].MaxCardinality != 1)
                                     errorList.Add("Max Cardinality of '" + rel.sName + "' with Strong Entity " + entity1.sName + " must be one");
                                 if (entity2.type == EntityType.Strong && rel.cardinalities[1].MaxCardinality != 1)
                                     errorList.Add("Max Cardinality of '" + rel.sName + "' with Strong Entity " + entity2.sName + " must be one");
@@ -1514,7 +1397,7 @@ namespace ERDesigner
                         //thực thể kết hợp phải có thuộc tính
                         if (rel.type == RelationshipType.AssociativeEntity)
                         {
-                            if(rel.attributes.Count==0)
+                            if (rel.attributes.Count == 0)
                                 errorList.Add("Associative Entity '" + rel.sName + "' doesn't have attribute yet");
 
                             if (rel.cardinalities[0].MaxCardinality != -1 || rel.cardinalities[1].MaxCardinality != -1)
@@ -1545,6 +1428,87 @@ namespace ERDesigner
                 ((ShapeBase)AffectingShape).endEditName();
             }
         }
+        private ContextMenu getContexMenuForControl(ShapeBase currentCtrl)
+        {
+            ContextMenu ctmn = new ContextMenu();
+
+            MenuItem del = new MenuItem("Delete");
+            del.Click += new EventHandler(del_Click);
+
+            MenuItem addCardi = new MenuItem("Edit Cardinalitiy");
+            addCardi.Click += new EventHandler(editCardi_Click);
+
+            MenuItem ChangeType = new MenuItem("Change type");
+
+            if (currentCtrl is EntityShape)
+            {
+                ChangeType.MenuItems.Clear();
+
+                MenuItem StrongEntity = new MenuItem("Strong Entity Type");
+                StrongEntity.Click += new EventHandler(Change_Type_Click);
+
+                MenuItem WeakEntity = new MenuItem("Weak Entity Type");
+                WeakEntity.Click += new EventHandler(Change_Type_Click);
+
+                ChangeType.MenuItems.Add(StrongEntity);
+                ChangeType.MenuItems.Add(WeakEntity);
+            }
+
+            if (currentCtrl is RelationshipShape)
+            {
+                ctmn.MenuItems.Add(addCardi);
+
+                ChangeType.MenuItems.Clear();
+
+                MenuItem NormalRelation = new MenuItem("Normal Relationship");
+                NormalRelation.Click += new EventHandler(Change_Type_Click);
+
+                MenuItem IdRelation = new MenuItem("Identifier Relationship");
+                IdRelation.Click += new EventHandler(Change_Type_Click);
+
+                MenuItem AssoRelation = new MenuItem("Associative Entity");
+                AssoRelation.Click += new EventHandler(Change_Type_Click);
+
+                ChangeType.MenuItems.Add(NormalRelation);
+                ChangeType.MenuItems.Add(IdRelation);
+                ChangeType.MenuItems.Add(AssoRelation);
+            }
+
+            ctmn.MenuItems.Add(ChangeType);
+
+            if (currentCtrl is AttributeShape && ((AttributeShape)currentCtrl).isComposite)
+            {
+                ChangeType.MenuItems.Clear();
+
+                MenuItem KeyAtt = new MenuItem("Key Attribute");
+                KeyAtt.Click += new EventHandler(Change_Type_Click);
+
+                MenuItem SimpleAtt = new MenuItem("Simple Attribute");
+                SimpleAtt.Click += new EventHandler(Change_Type_Click);
+
+                MenuItem MultiAtt = new MenuItem("Multi-Valued Attribute");
+                MultiAtt.Click += new EventHandler(Change_Type_Click);
+
+                if (((AttributeShape)currentCtrl).attributeChilds.Count == 0)
+                {
+                    MenuItem DerivedAtt = new MenuItem("Derived Attribute");
+                    DerivedAtt.Click += new EventHandler(Change_Type_Click);
+                    ChangeType.MenuItems.Add(DerivedAtt);
+                }
+
+                ChangeType.MenuItems.Add(KeyAtt);
+                ChangeType.MenuItems.Add(SimpleAtt);
+                ChangeType.MenuItems.Add(MultiAtt);
+
+            }
+            if (currentCtrl.GetType().Name == "AttributeShape" && !((AttributeShape)currentCtrl).isComposite)
+            {
+                ctmn.MenuItems.Remove(ChangeType);
+            }
+            ctmn.MenuItems.Add(del);
+
+            return ctmn;
+        }
 
         private void InitializeComponent()
         {
@@ -1564,7 +1528,7 @@ namespace ERDesigner
                 shape.MouseDoubleClick += new MouseEventHandler(shapeDoubleClick);
                 shape.KeyDown += new KeyEventHandler(shape_KeyDown);
 
-                if(isDrawing)
+                if (isDrawing)
                     saveUndoList();
             }
         }
