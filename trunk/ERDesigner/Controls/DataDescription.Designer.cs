@@ -1,6 +1,6 @@
 namespace ERDesigner
 {
-    partial class DataTypeComboBox
+    partial class DataDescription
     {
         /// <summary> 
         /// Required designer variable.
@@ -103,7 +103,7 @@ namespace ERDesigner
             this.chkNull.Location = new System.Drawing.Point(1, 75);
             this.chkNull.Name = "chkNull";
             this.chkNull.Properties.Caption = "Allow Null";
-            this.chkNull.Size = new System.Drawing.Size(75, 19);
+            this.chkNull.Size = new System.Drawing.Size(75, 18);
             this.chkNull.TabIndex = 4;
             // 
             // btnOK
@@ -125,7 +125,7 @@ namespace ERDesigner
             this.label1.Text = "Data Description";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // DataTypeComboBox
+            // DataDescription
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -137,7 +137,7 @@ namespace ERDesigner
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lbLength);
             this.Controls.Add(this.cboDataType);
-            this.Name = "DataTypeComboBox";
+            this.Name = "DataDescription";
             this.Size = new System.Drawing.Size(136, 98);
             ((System.ComponentModel.ISupportInitialize)(this.cboDataType.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtLength.Properties)).EndInit();
