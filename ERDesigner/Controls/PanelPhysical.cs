@@ -17,7 +17,7 @@ namespace ERDesigner
         TableShape tShapeRenamed;
         bool renamedTableName = false;
         bool renamedShape = false;
-        DataTypeComboBox cbxDataType;
+        DataDescription cbxDataType;
 
         //Constructor
         public PanelPhysical()
@@ -171,7 +171,7 @@ namespace ERDesigner
                 colRenamed = shape.table.columns[indexColumn - 1]; //Lấy Column đang được Rename
                 
                 //Tạo Combox DataType
-                cbxDataType = new DataTypeComboBox();
+                cbxDataType = new DataDescription();
                 cbxDataType.Location = new Point(shape.Location.X + shape.Width, shape.Location.Y+(indexColumn*ShapeSetting.heightPieceShape));
                 this.Controls.Add(cbxDataType);
 

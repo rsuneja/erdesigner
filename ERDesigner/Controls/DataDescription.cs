@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace ERDesigner
 {
-    public partial class DataTypeComboBox : UserControl
+    public partial class DataDescription : UserControl
     {
-        public DataTypeComboBox()
+        public DataDescription()
         {
             InitializeComponent();
         }

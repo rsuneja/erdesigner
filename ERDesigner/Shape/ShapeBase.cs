@@ -93,7 +93,7 @@ namespace ERDesigner.Shape
         public virtual void dinhviTextBox(TextBox txtName) { } //Để cho class con định vị
 
         ShapeBase namingShape;
-        DataTypeComboBox cboData;
+        DataDescription cboData;
 
         public void xulyDoubleClick(PanelDoubleBuffered fmain, ShapeBase ns)
         {
@@ -122,7 +122,7 @@ namespace ERDesigner.Shape
             {
                 if (((AttributeShape)this).attributeChilds.Count == 0)
                 {
-                    cboData = new DataTypeComboBox();
+                    cboData = new DataDescription();
                     cboData.Location = new Point(this.Location.X + this.Width + 5, this.Location.Y);
                     p.Controls.Add(cboData);
                     
