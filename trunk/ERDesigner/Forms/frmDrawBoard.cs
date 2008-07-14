@@ -40,56 +40,61 @@ namespace ERDesigner
         {
             pnlDrawBoard.isDrawing = true;
             pnlDrawBoard.DrawingShapeState = shape;
+            pnlDrawBoard.setAllControlToNoCursor();
 
             switch (shape)
             {
                 case "Strong Entity":
-                    pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Hand;
+                    pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Hand, "");
                     pnlDrawBoard.isDrawEntity = true;
                     break;
                 case "Weak Entity":
-                    pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Hand;
+                    pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Hand, "");
                     pnlDrawBoard.isDrawEntity = true;
                     break;
                 case "Normal Relationship":
                     if(pnlDrawBoard.degreeOfRelationship == 2)
-                        pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Cross;
+                        pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Cross, "EntityShape");
                     else
-                        pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Hand;
+                        pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Hand, "EntityShape");
                     pnlDrawBoard.isDrawRelationship = true;
                     break;
                 case "Identify Relationship":
                     if (pnlDrawBoard.degreeOfRelationship == 2)
-                        pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Cross;
+                        pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Cross, "EntityShape");
                     else
-                        pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Hand;
+                        pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Hand, "EntityShape");
                     pnlDrawBoard.isDrawRelationship = true;
                     break;
                 case "Associative Entity":
                     if (pnlDrawBoard.degreeOfRelationship == 2)
-                        pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Cross;
+                        pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Cross, "EntityShape");
                     else
-                        pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Hand;
+                        pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Hand, "EntityShape");
                     pnlDrawBoard.isDrawRelationship = true;
                     break;
                 case "Simple Attribute":
-                    pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Hand;
+                    pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Hand, "EntityShape");
+                    pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Hand, "RelationshipShape");
                     pnlDrawBoard.isDrawingAtt = true;
                     break;
                 case "Key Attribute":
-                    pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Hand;
+                    pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Hand, "EntityShape");
+                    pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Hand, "RelationshipShape");
                     pnlDrawBoard.isDrawingAtt = true;
                     break;
                 case "Multivalued Attribute":
-                    pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Hand;
+                    pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Hand, "EntityShape");
+                    pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Hand, "RelationshipShape");
                     pnlDrawBoard.isDrawingAtt = true;
                     break;
                 case "Derived Attribute":
-                    pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Hand;
+                    pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Hand, "EntityShape");
+                    pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Hand, "RelationshipShape");
                     pnlDrawBoard.isDrawingAtt = true;
                     break;
                 case "Child Attribute":
-                    pnlDrawBoard.Cursor = System.Windows.Forms.Cursors.Hand;
+                    pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Hand, "AttributeShape");
                     pnlDrawBoard.isDrawingAtt = true;
                     break;
                 case "Pointer": pnlDrawBoard.CancelDrawing();
