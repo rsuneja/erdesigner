@@ -93,7 +93,7 @@ namespace ERDesigner.Shape
         public virtual void dinhviTextBox(TextBox txtName) { } //Để cho class con định vị
 
         ShapeBase namingShape;
-        DataDescription cboData;
+        DataDescription ucDataDescription;
 
         public void xulyDoubleClick(PanelDoubleBuffered fmain, ShapeBase ns)
         {
@@ -118,28 +118,31 @@ namespace ERDesigner.Shape
             txtName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(txtName_KeyPress);
 
             //Data type cho attribute
-            if (this.GetType().Name == "AttributeShape")
+            if (this is AttributeShape)
             {
                 if (((AttributeShape)this).attributeChilds.Count == 0)
                 {
-                    cboData = new DataDescription();
-                    cboData.Location = new Point(this.Location.X + this.Width + 5, this.Location.Y);
-                    p.Controls.Add(cboData);
+                    ucDataDescription = new DataDescription();
+                    ucDataDescription.Location = new Point(this.Location.X + this.Width + 5, this.Location.Y);
+                    p.Controls.Add(ucDataDescription);
                     
                     //Cho USC nằm lên trên.
-                    p.Controls.SetChildIndex(cboData, 0);
+                    p.Controls.SetChildIndex(ucDataDescription, 0);
 
                     if (((AttributeShape)this).type == AttributeType.Key)
-                        cboData.chkNull.Enabled = false;
+                        ucDataDescription.chkNull.Enabled = false;
 
                     if(((AttributeShape)this).dataType != null)
-                        cboData.cboDataType.SelectedItem = ((AttributeShape)this).dataType;
+                        ucDataDescription.cboDataType.SelectedItem = ((AttributeShape)this).dataType;
                     if(((AttributeShape)this).dataLength != 0)
-                        cboData.txtLength.Text = ((AttributeShape)this).dataLength.ToString();
+                        ucDataDescription.txtLength.Text = ((AttributeShape)this).dataLength.ToString();
 
-                    cboData.chkNull.Checked = ((AttributeShape)this).allowNull;
+                    ucDataDescription.chkNull.Checked = ((AttributeShape)this).allowNull;
 
-                    cboData.btnOK.Click += new EventHandler(btnOK_Click);
+                    if (((AttributeShape)this).description != "")
+                        ucDataDescription.txtDescription.Text = ((AttributeShape)this).description;
+
+                    ucDataDescription.btnOK.Click += new EventHandler(btnOK_Click);
                 }
             }
         }
@@ -187,16 +190,16 @@ namespace ERDesigner.Shape
             if (!isDuplicate)
             {
                 //nếu nó là attribute (viết tạm ở đây)
-                if (this.GetType().Name == "AttributeShape")
+                if (this is AttributeShape)
                 {
                     if (((AttributeShape)this).attributeChilds.Count == 0)
                     {
-                        ((AttributeShape)this).dataType = cboData.cboDataType.SelectedItem.ToString();
-                        if (cboData.txtLength.Text != "")
+                        ((AttributeShape)this).dataType = ucDataDescription.cboDataType.SelectedItem.ToString();
+                        if (ucDataDescription.txtLength.Text != "")
                         {
                             try
                             {
-                                int l = int.Parse(cboData.txtLength.Text);
+                                int l = int.Parse(ucDataDescription.txtLength.Text);
                                 if ((((AttributeShape)this).dataType == "nvarchar" || ((AttributeShape)this).dataType == "nchar") && (l < 1 || l > 4000))
                                 {
                                     MessageBox.Show("Please enter Length between 1 and 4000.", "Warning");
@@ -218,9 +221,10 @@ namespace ERDesigner.Shape
                         else
                             ((AttributeShape)this).dataLength = 0;
 
-                        ((AttributeShape)this).allowNull = cboData.chkNull.Checked;
+                        ((AttributeShape)this).allowNull = ucDataDescription.chkNull.Checked;
+                        ((AttributeShape)this).description = ucDataDescription.txtDescription.Text;
 
-                        cboData.Dispose();
+                        ucDataDescription.Dispose();
                     }
                 }
                 this.sName = txtName.Text;

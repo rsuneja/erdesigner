@@ -4,7 +4,6 @@ using System.Text;
 
 namespace ERDesigner
 {
-//bao sua
     public class Table
     {
         public string name;
@@ -29,9 +28,9 @@ namespace ERDesigner
             col.isSimpleKey();
             this.columns.Add(col);
         }
-        public void addColumn(string name, string dataType, int lenght, bool allowNull)
+        public void addColumn(string name, string dataType, int lenght, bool allowNull, string description)
         {
-            Column col = new Column(name, dataType, lenght, allowNull);
+            Column col = new Column(name, dataType, lenght, allowNull, description);
             this.columns.Add(col);
         }
         public void addColumn(List<Column> listColumn)
@@ -49,9 +48,9 @@ namespace ERDesigner
             col.isForeignKey();
             this.columns.Add(col);
         }
-        public void addColumnFK(string name, string dataType, int lenght, bool allowNull)
+        public void addColumnFK(string name, string dataType, int lenght, bool allowNull, string description)
         {
-            this.columns.Add(new Column(name,dataType,lenght,allowNull,false,true));
+            this.columns.Add(new Column(name, dataType, lenght, allowNull, false, true, description));
         }
         public void addColumnFK(List<Column> listCol)
         {
@@ -67,9 +66,9 @@ namespace ERDesigner
             col.isPrimaryKey();
             this.columns.Add(col);
         }
-        public void addPrimaryKey(string name, string dataType, int lenght)
+        public void addPrimaryKey(string name, string dataType, int lenght, string description)
         {
-            this.columns.Add(new Column(name, dataType, lenght, false,true,false));
+            this.columns.Add(new Column(name, dataType, lenght, false, true, false, description));
         }
         public void addPrimaryKey(List<Column> listCol)
         {
@@ -87,9 +86,9 @@ namespace ERDesigner
             col.isPrimaryKey();
             this.columns.Add(col);            
         }
-        public void addPrimaryKeyForeignKey(string name, string dataType, int lenght)
+        public void addPrimaryKeyForeignKey(string name, string dataType, int lenght, string description)
         {
-            this.columns.Add(new Column(name,dataType,lenght,false,true,true));
+            this.columns.Add(new Column(name, dataType, lenght, false, true, true, description));
         }
         public void addPrimaryKeyForeignKey(List<Column> listCol)
         {
@@ -116,7 +115,7 @@ namespace ERDesigner
             List<Column> temp = new List<Column>();
             foreach (Column c in columns)            
                 if (c.PrimaryKey)               
-                    temp.Add(new Column(c.Name,c.DataType,c.Length,c.AlowNull,c.PrimaryKey,false));                       
+                    temp.Add(new Column(c.Name,c.DataType,c.Length,c.AlowNull,c.PrimaryKey,false,c.Description));                       
             return temp;
         }
         public List<Column> getPrimaryKey(EntityData ed)
@@ -128,10 +127,10 @@ namespace ERDesigner
                     if (ad.AttributeChilds.Count > 0)
                     {
                         foreach (AttributeData adChild in ad.AttributeChilds)
-                            listPK.Add(new Column(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, true, false));
+                            listPK.Add(new Column(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, true, false, adChild.Description));
                     }
                     else
-                        listPK.Add(new Column(ad.name, ad.DataType, ad.Length, ad.AllowNull, true, false));
+                        listPK.Add(new Column(ad.name, ad.DataType, ad.Length, ad.AllowNull, true, false, ad.Description));
 
                 }
             return listPK;            
@@ -147,27 +146,30 @@ namespace ERDesigner
         public string DataType;
         public int Length;
         public bool AlowNull = true;
+        public string Description;
         public bool PrimaryKey = false;
         public bool ForeignKey = false;
 
         //Constructors
         public Column() { }  
-        public Column(string name, string dataType, int lenght, bool allowNull)
+        public Column(string name, string dataType, int lenght, bool allowNull, string description)
         {
             Name = name;
             DataType = dataType;
             Length = lenght;
             AlowNull = allowNull;
+            Description = description;
             PrimaryKey = false;
             ForeignKey = false;
         }       
         
-        public Column(string name, string dataType, int lenght, bool allowNull, bool primaryKey, bool foreignKey)
+        public Column(string name, string dataType, int lenght, bool allowNull, bool primaryKey, bool foreignKey, string description)
         {
             Name = name;
             DataType = dataType;
             Length = lenght;
             AlowNull = allowNull;
+            Description = description;
             PrimaryKey = primaryKey;
             ForeignKey = foreignKey;
         }
@@ -201,7 +203,7 @@ namespace ERDesigner
             List<Column> listTemp = new List<Column>();
             foreach (Column c in listCol)
             {
-                Column colTemp = new Column(c.Name, c.DataType, c.Length, c.AlowNull, c.PrimaryKey, c.ForeignKey);
+                Column colTemp = new Column(c.Name, c.DataType, c.Length, c.AlowNull, c.PrimaryKey, c.ForeignKey, c.Description);
                 listTemp.Add(colTemp);
             }
             return listTemp;
@@ -301,9 +303,9 @@ namespace ERDesigner
                     foreach (AttributeData ac in ad.AttributeChilds)
                     {
                         if (!isTypeColumn)//Simple      
-                            t.addColumn(ac.name, ac.DataType, ac.Length, ac.AllowNull);                          
+                            t.addColumn(ac.name, ac.DataType, ac.Length, ac.AllowNull, ac.Description);                          
                         if (isTypeColumn)//PK
-                            t.addPrimaryKey(ac.name, ac.DataType, ac.Length);                        
+                            t.addPrimaryKey(ac.name, ac.DataType, ac.Length, ac.Description);                        
                     }
                 }
                 //Key, Simple, Multi Attribute
@@ -312,10 +314,10 @@ namespace ERDesigner
                     switch (ad.type)
                     {
                         case AttributeType.Key:
-                            t.addPrimaryKey(ad.name, ad.DataType, ad.Length);
+                            t.addPrimaryKey(ad.name, ad.DataType, ad.Length, ad.Description);
                             break;
                         case AttributeType.Simple:
-                            t.addColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull);                            
+                            t.addColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);                            
                             break;
                         case AttributeType.MultiValued:
                             //Xử lý cái Table thứ hai
@@ -331,7 +333,7 @@ namespace ERDesigner
                             List<Column> listPK2 = t2.getPrimaryKey(ed);
                             
                             //Column Multi Value là khóa chính
-                            Column c3 = new Column(ad.name, ad.DataType, ad.Length,false,true,false);
+                            Column c3 = new Column(ad.name, ad.DataType, ad.Length,false,true,false, ad.Description);
                            
                             //Thêm 2 column trên vào Table t2
                             t2.addPrimaryKeyForeignKey(listPK2);

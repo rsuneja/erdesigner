@@ -109,6 +109,7 @@ namespace ERDesigner
                 colRenamed.DataType = cbxDataType.cboDataType.SelectedItem.ToString();
                 colRenamed.Length = int.Parse(cbxDataType.txtLength.Text);
                 colRenamed.AlowNull = cbxDataType.chkNull.Checked;
+                colRenamed.Description = cbxDataType.txtDescription.Text;
                 cbxDataType.Dispose();
             }
             
@@ -185,7 +186,8 @@ namespace ERDesigner
                     cbxDataType.chkNull.Enabled = false;
                     cbxDataType.chkNull.Checked = false;
                 }
-                
+                cbxDataType.txtDescription.Text = shape.table.columns[indexColumn - 1].Description;
+
                 //Sinh Event KeyDown trên textBox
                 txtRename.KeyDown += new KeyEventHandler(txtRename_KeyDown);
                 cbxDataType.btnOK.Click +=new EventHandler(btnOK_Click);
