@@ -16,6 +16,7 @@ namespace ERDesigner.Shape
         public bool allowNull = true;
         public string dataType = "varchar";
         public int dataLength = 50;
+        public string description = "";
         public EntityShape Entity;
         public List<AttributeShape> attributeChilds;
 

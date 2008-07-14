@@ -204,9 +204,9 @@ namespace ERDesigner
                             foreach (AttributeData ac in ad.AttributeChilds)
                             {                                
                                 if (!isTypeColumn)//Simple                   
-                                    weak.addColumn(ac.name, ac.DataType, ac.Length, ac.AllowNull);                                                                    
+                                    weak.addColumn(ac.name, ac.DataType, ac.Length, ac.AllowNull, ac.Description);                                                                    
                                 if (isTypeColumn)//PK
-                                    weak.addPrimaryKey(ac.name, ac.DataType, ac.Length);                                  
+                                    weak.addPrimaryKey(ac.name, ac.DataType, ac.Length, ac.Description);                                  
                             }
                         }
                         //Key, Simple, Multi Attribute
@@ -215,10 +215,10 @@ namespace ERDesigner
                             switch (ad.type)
                             {
                                 case AttributeType.Key:
-                                    weak.addPrimaryKey(ad.name, ad.DataType, ad.Length);                                                               
+                                    weak.addPrimaryKey(ad.name, ad.DataType, ad.Length, ad.Description);                                                               
                                     break;
                                 case AttributeType.Simple:
-                                    weak.addColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull);                                    
+                                    weak.addColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);                                    
                                     break;                               
                             }
                         }
@@ -285,11 +285,11 @@ namespace ERDesigner
                                     if (adChild.AttributeChilds.Count > 0)//Compsite
                                     {
                                         foreach (AttributeData var in adChild.AttributeChilds)
-                                            t1.addColumn(var.name, var.DataType, var.Length, var.AllowNull);
+                                            t1.addColumn(var.name, var.DataType, var.Length, var.AllowNull, var.Description);
                                     }
                                     else//Simple
                                         if (adChild.type == AttributeType.Simple)
-                                            t1.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull);
+                                            t1.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, adChild.Description);
                                 }
                             }//end if
                             List<Column> listFK = new List<Column>();
@@ -326,7 +326,7 @@ namespace ERDesigner
                                 List<Column> pk2 = new List<Column>();
                                 for (int i = 0; i < pk1.Count; i++)
                                 {
-                                    Column c = new Column(pk1[i].Name + "_" + i, pk1[i].DataType, pk1[i].Length, pk1[i].AlowNull, pk1[i].PrimaryKey, pk1[i].ForeignKey);
+                                    Column c = new Column(pk1[i].Name + "_" + i, pk1[i].DataType, pk1[i].Length, pk1[i].AlowNull, pk1[i].PrimaryKey, pk1[i].ForeignKey, pk1[i].Description);
                                     pk2.Add(c);
                                 }
                                 t2.addPrimaryKeyForeignKey(pk2);
@@ -339,14 +339,14 @@ namespace ERDesigner
                                         if (adChild.AttributeChilds.Count > 0)//Compsite
                                         {
                                             foreach (AttributeData var in adChild.AttributeChilds)
-                                                t2.addColumn(var.name, var.DataType, var.Length, var.AllowNull);
+                                                t2.addColumn(var.name, var.DataType, var.Length, var.AllowNull, var.Description);
                                         }
                                         else//Simple
                                             if (adChild.type == AttributeType.Simple)
-                                                t2.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull);
+                                                t2.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, adChild.Description);
                                             else
                                                 if (adChild.type == AttributeType.MultiValued)
-                                                    t2.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull);
+                                                    t2.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, adChild.Description);
                                                 
                                     }
                                 }//end if
@@ -391,13 +391,13 @@ namespace ERDesigner
                                     {
                                         //Simple Attribute
                                         if (ad.type == AttributeType.Simple && ad.AttributeChilds.Count == 0)
-                                            t2.addColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull);
+                                            t2.addColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
 
                                         //Composite Attribute
                                         if (ad.AttributeChilds.Count > 0)
                                         {
                                             foreach (AttributeData adChild in ad.AttributeChilds)
-                                                t2.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull);
+                                                t2.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, adChild.Description);
                                         }
                                     }
                                 }
@@ -419,13 +419,13 @@ namespace ERDesigner
                                     {
                                         //Simple Attribute
                                         if (ad.type == AttributeType.Simple && ad.AttributeChilds.Count == 0)
-                                            t2.addColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull);
+                                            t2.addColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
 
                                         //Composite Attribute
                                         if (ad.AttributeChilds.Count > 0)
                                         {
                                             foreach (AttributeData adChild in ad.AttributeChilds)
-                                                t2.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull);
+                                                t2.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, adChild.Description);
                                         }
                                     }
                                 }
@@ -457,12 +457,12 @@ namespace ERDesigner
                                     {
                                         //Simple Attribute
                                         if (ad.type == AttributeType.Simple && ad.AttributeChilds.Count == 0)
-                                            temp.addColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull);
+                                            temp.addColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
                                         //Composite Attribute
                                         if (ad.AttributeChilds.Count > 0)
                                         {
                                             foreach (AttributeData adChild in ad.AttributeChilds)
-                                                temp.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull);
+                                                temp.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, ad.Description);
                                         }
                                     }
                                 }
@@ -486,12 +486,12 @@ namespace ERDesigner
                                         {
                                             //Simple Attribute
                                             if (ad.type == AttributeType.Simple && ad.AttributeChilds.Count == 0)
-                                                t2.addColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull);
+                                                t2.addColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
                                             //Composite Attribute
                                             if (ad.AttributeChilds.Count > 0)
                                             {
                                                 foreach (AttributeData adChild in ad.AttributeChilds)
-                                                    t2.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull);
+                                                    t2.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, adChild.Description);
                                             }
                                         }
                                     }
@@ -512,12 +512,12 @@ namespace ERDesigner
                                         {
                                             //Simple Attribute
                                             if (ad.type == AttributeType.Simple && ad.AttributeChilds.Count == 0)
-                                                t2.addColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull);
+                                                t2.addColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
                                             //Composite Attribute
                                             if (ad.AttributeChilds.Count > 0)
                                             {
                                                 foreach (AttributeData adChild in ad.AttributeChilds)
-                                                    t2.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull);
+                                                    t2.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, adChild.Description);
                                             }
                                         }
                                     }
@@ -538,12 +538,12 @@ namespace ERDesigner
                                         {
                                             //Simple Attribute
                                             if (ad.type == AttributeType.Simple && ad.AttributeChilds.Count == 0)
-                                                t2.addColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull);
+                                                t2.addColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
                                             //Composite Attribute
                                             if (ad.AttributeChilds.Count > 0)
                                             {
                                                 foreach (AttributeData adChild in ad.AttributeChilds)
-                                                    t2.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull);
+                                                    t2.addColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, adChild.Description);
                                             }
                                         }
                                     }
@@ -584,9 +584,9 @@ namespace ERDesigner
                             if (!hasPK)//Assocaitive Entity ko có PK
                             {
                                 foreach (Column col1 in pk1)
-                                    edTemp.Attributes.Add(new AttributeData(col1.Name, AttributeType.Key, 0, 0, 0, 0, col1.DataType, col1.Length, col1.AlowNull));
+                                    edTemp.Attributes.Add(new AttributeData(col1.Name, AttributeType.Key, 0, 0, 0, 0, col1.DataType, col1.Length, col1.AlowNull, col1.Description));
                                 foreach (Column col2 in pk2)
-                                    edTemp.Attributes.Add(new AttributeData(col2.Name, AttributeType.Key, 0, 0, 0, 0, col2.DataType, col2.Length, col2.AlowNull));
+                                    edTemp.Attributes.Add(new AttributeData(col2.Name, AttributeType.Key, 0, 0, 0, 0, col2.DataType, col2.Length, col2.AlowNull, col2.Description));
 
                             }
                             int numPK = 0;
@@ -620,19 +620,19 @@ namespace ERDesigner
                                 {
                                     AttributeData adTemp = new AttributeData();
                                     if (ad.type == AttributeType.MultiValued)
-                                        adTemp = new AttributeData(ad.name, AttributeType.Simple, ad.x, ad.y, ad.w, ad.h, ad.DataType, ad.Length, ad.AllowNull);
+                                        adTemp = new AttributeData(ad.name, AttributeType.Simple, ad.x, ad.y, ad.w, ad.h, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
                                     else
                                     {
                                         //Xét Associative Enity có Composite Attribute
                                         if (ad.AttributeChilds.Count > 0)
                                         {
-                                            adTemp = new AttributeData(ad.name, ad.type, ad.x, ad.y, ad.w, ad.h, ad.DataType, ad.Length, ad.AllowNull);
+                                            adTemp = new AttributeData(ad.name, ad.type, ad.x, ad.y, ad.w, ad.h, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
                                             adTemp.isComposite = true;
                                             foreach (AttributeData adChild in ad.AttributeChilds)
                                                 adTemp.AttributeChilds.Add(adChild);
                                         }
                                         else
-                                            adTemp = new AttributeData(ad.name, ad.type, ad.x, ad.y, ad.w, ad.h, ad.DataType, ad.Length, ad.AllowNull);
+                                            adTemp = new AttributeData(ad.name, ad.type, ad.x, ad.y, ad.w, ad.h, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
                                     }
                                     edTemp.Attributes.Add(adTemp);
                                 }
@@ -646,13 +646,13 @@ namespace ERDesigner
                                     //Xét Associative Enity có Composite Attribute
                                     if (ad.AttributeChilds.Count > 0)
                                     {
-                                        adTemp = new AttributeData(ad.name, ad.type, ad.x, ad.y, ad.w, ad.h, ad.DataType, ad.Length, ad.AllowNull);
+                                        adTemp = new AttributeData(ad.name, ad.type, ad.x, ad.y, ad.w, ad.h, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
                                         adTemp.isComposite = true;
                                         foreach (AttributeData adChild in ad.AttributeChilds)
                                             adTemp.AttributeChilds.Add(adChild);
                                     }
                                     else
-                                        adTemp = new AttributeData(ad.name, ad.type, ad.x, ad.y, ad.w, ad.h, ad.DataType, ad.Length, ad.AllowNull);
+                                        adTemp = new AttributeData(ad.name, ad.type, ad.x, ad.y, ad.w, ad.h, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
                                     edTemp.Attributes.Add(adTemp);
                                 }
                             }

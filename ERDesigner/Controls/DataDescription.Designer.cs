@@ -34,6 +34,9 @@ namespace ERDesigner
             this.chkNull = new DevExpress.XtraEditors.CheckEdit();
             this.btnOK = new DevExpress.XtraEditors.SimpleButton();
             this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.btnExpand = new DevExpress.XtraEditors.SimpleButton();
+            this.txtDescription = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.cboDataType.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtLength.Properties)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.chkNull.Properties)).BeginInit();
@@ -125,20 +128,52 @@ namespace ERDesigner
             this.label1.Text = "Data Description";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(0, 96);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(63, 13);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Description:";
+            // 
+            // btnExpand
+            // 
+            this.btnExpand.Appearance.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExpand.Appearance.Options.UseFont = true;
+            this.btnExpand.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.btnExpand.Location = new System.Drawing.Point(0, 95);
+            this.btnExpand.Name = "btnExpand";
+            this.btnExpand.Size = new System.Drawing.Size(136, 14);
+            this.btnExpand.TabIndex = 5;
+            this.btnExpand.Text = "...";
+            this.btnExpand.Click += new System.EventHandler(this.btnExpand_Click);
+            // 
+            // txtDescription
+            // 
+            this.txtDescription.Location = new System.Drawing.Point(3, 112);
+            this.txtDescription.Multiline = true;
+            this.txtDescription.Name = "txtDescription";
+            this.txtDescription.Size = new System.Drawing.Size(128, 45);
+            this.txtDescription.TabIndex = 6;
+            // 
             // DataDescription
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.LightGray;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.txtDescription);
+            this.Controls.Add(this.btnExpand);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.chkNull);
             this.Controls.Add(this.txtLength);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.lbLength);
             this.Controls.Add(this.cboDataType);
             this.Name = "DataDescription";
-            this.Size = new System.Drawing.Size(136, 98);
+            this.Size = new System.Drawing.Size(136, 109);
             ((System.ComponentModel.ISupportInitialize)(this.cboDataType.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtLength.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.chkNull.Properties)).EndInit();
@@ -155,6 +190,9 @@ namespace ERDesigner
         public DevExpress.XtraEditors.CheckEdit chkNull;
         public DevExpress.XtraEditors.SimpleButton btnOK;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        public DevExpress.XtraEditors.SimpleButton btnExpand;
+        public System.Windows.Forms.TextBox txtDescription;
 
     }
 }

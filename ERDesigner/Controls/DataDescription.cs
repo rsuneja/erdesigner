@@ -78,5 +78,21 @@ namespace ERDesigner
         {
             changeLengh();
         }
+
+        private void btnExpand_Click(object sender, EventArgs e)
+        {
+            if(btnExpand.Text == "...")
+            {
+                this.Height = 172;
+                btnExpand.Text = "^";
+                txtDescription.Focus();
+            }
+            else
+            {
+                this.Height = 109;
+                btnExpand.Text = "...";
+                btnOK.Focus();
+            }
+        }
     }
 }

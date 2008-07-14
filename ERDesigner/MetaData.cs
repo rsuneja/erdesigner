@@ -39,12 +39,13 @@ namespace ERDesigner
         public string DataType;
         public int Length;
         public bool AllowNull;
+        public string Description;
 
         public AttributeData()
         {
             AttributeChilds = new List<AttributeData>();
         }
-        public AttributeData(string n, string t, int xx, int yy, int ww, int hh, string dt, int l, bool allownull)
+        public AttributeData(string n, string t, int xx, int yy, int ww, int hh, string dt, int l, bool allownull, string des)
         {
             AttributeChilds = new List<AttributeData>();
             name = n;
@@ -57,6 +58,7 @@ namespace ERDesigner
             Length = l;
             AllowNull = allownull;
             isComposite = false;
+            Description = des;
         }
     }
     public class CardinalityData

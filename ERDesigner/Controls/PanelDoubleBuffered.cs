@@ -1156,22 +1156,22 @@ namespace ERDesigner
             MetaData ERD = new MetaData();
             foreach (Control c in this.Controls)
             {
-                if (c.GetType().Name == "EntityShape" || c.GetType().Name == "RelationshipShape")
+                if (c is EntityShape || c is RelationshipShape)
                 {
-                    Shape.ShapeBase s = (Shape.ShapeBase)c;
-                    if (s.GetType().Name == "EntityShape")
+                    ShapeBase s = (ShapeBase)c;
+                    if (s is EntityShape)
                     {
                         EntityData entity = new EntityData(s.sName, ((EntityShape)s).type, s.Location.X, s.Location.Y, s.Width, s.Height);
 
                         foreach (AttributeShape att in ((EntityShape)s).attributes)
                         {
-                            AttributeData attribute = new AttributeData(att.sName, ((AttributeShape)att).type, att.Location.X, att.Location.Y, att.Width, att.Height, att.dataType, att.dataLength, att.allowNull);
+                            AttributeData attribute = new AttributeData(att.sName, ((AttributeShape)att).type, att.Location.X, att.Location.Y, att.Width, att.Height, att.dataType, att.dataLength, att.allowNull, att.description);
                             if (att.isComposite)
                             {
                                 attribute.isComposite = true;
                                 foreach (AttributeShape attchild in ((AttributeShape)att).attributeChilds)
                                 {
-                                    AttributeData attributechild = new AttributeData(attchild.sName, ((AttributeShape)attchild).type, attchild.Location.X, attchild.Location.Y, attchild.Width, attchild.Height, attchild.dataType, attchild.dataLength, attchild.allowNull);
+                                    AttributeData attributechild = new AttributeData(attchild.sName, ((AttributeShape)attchild).type, attchild.Location.X, attchild.Location.Y, attchild.Width, attchild.Height, attchild.dataType, attchild.dataLength, attchild.allowNull, att.description);
 
                                     attribute.AttributeChilds.Add(attributechild);
                                 }
@@ -1180,19 +1180,19 @@ namespace ERDesigner
                         }
                         ERD.Entities.Add(entity);
                     }
-                    if (s.GetType().Name == "RelationshipShape")
+                    if (s is RelationshipShape)
                     {
                         RelationshipData relationship = new RelationshipData(s.sName, ((RelationshipShape)s).type, s.Location.X, s.Location.Y, s.Width, s.Height);
 
                         foreach (AttributeShape att in ((RelationshipShape)s).attributes)
                         {
-                            AttributeData attribute = new AttributeData(att.sName, ((AttributeShape)att).type, att.Location.X, att.Location.Y, att.Width, att.Height, att.dataType, att.dataLength, att.allowNull);
+                            AttributeData attribute = new AttributeData(att.sName, ((AttributeShape)att).type, att.Location.X, att.Location.Y, att.Width, att.Height, att.dataType, att.dataLength, att.allowNull, att.description);
                             if (att.isComposite)
                             {
                                 attribute.isComposite = true;
                                 foreach (AttributeShape attchild in ((AttributeShape)att).attributeChilds)
                                 {
-                                    AttributeData attributechild = new AttributeData(attchild.sName, ((AttributeShape)attchild).type, attchild.Location.X, attchild.Location.Y, attchild.Width, attchild.Height, attchild.dataType, attchild.dataLength, attchild.allowNull);
+                                    AttributeData attributechild = new AttributeData(attchild.sName, ((AttributeShape)attchild).type, attchild.Location.X, attchild.Location.Y, attchild.Width, attchild.Height, attchild.dataType, attchild.dataLength, attchild.allowNull, att.description);
 
                                     attribute.AttributeChilds.Add(attributechild);
                                 }
@@ -1239,6 +1239,7 @@ namespace ERDesigner
                     attribute.dataType = att.DataType;
                     attribute.dataLength = att.Length;
                     attribute.allowNull = att.AllowNull;
+                    attribute.description = att.Description;
 
                     if (att.isComposite)
                     {
@@ -1251,9 +1252,10 @@ namespace ERDesigner
                             attributeChild.Location = new Point(attChild.x, attChild.y);
                             attributeChild.Size = new Size(attChild.w, attChild.h);
                             attributeChild.isComposite = false;
-                            attributeChild.dataType = att.DataType;
-                            attributeChild.dataLength = att.Length;
-                            attributeChild.allowNull = att.AllowNull;
+                            attributeChild.dataType = attChild.DataType;
+                            attributeChild.dataLength = attChild.Length;
+                            attributeChild.allowNull = attChild.AllowNull;
+                            attributeChild.description = attChild.Description;
 
                             attribute.addAttribute(attributeChild);
 
@@ -1295,6 +1297,7 @@ namespace ERDesigner
                     attribute.dataType = att.DataType;
                     attribute.dataLength = att.Length;
                     attribute.allowNull = att.AllowNull;
+                    attribute.description = att.Description;
                     //relationship.attributes.Add(attribute);
 
                     if (att.isComposite)
@@ -1308,9 +1311,10 @@ namespace ERDesigner
                             attributeChild.Location = new Point(attChild.x, attChild.y);
                             attributeChild.Size = new Size(attChild.w, attChild.h);
                             attributeChild.isComposite = false;
-                            attributeChild.dataType = att.DataType;
-                            attributeChild.dataLength = att.Length;
-                            attributeChild.allowNull = att.AllowNull;
+                            attributeChild.dataType = attChild.DataType;
+                            attributeChild.dataLength = attChild.Length;
+                            attributeChild.allowNull = attChild.AllowNull;
+                            attributeChild.description = attChild.Description;
 
                             attribute.addAttribute(attributeChild);
 
