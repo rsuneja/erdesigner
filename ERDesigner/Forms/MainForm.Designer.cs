@@ -199,7 +199,7 @@ namespace ERDesigner
             this.ribbon.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemZoomTrackBar1,
             this.repositoryItemCheckEdit1});
-            this.ribbon.SelectedPage = this.ribbonTool;
+            this.ribbon.SelectedPage = this.ribbonHome;
             this.ribbon.Size = new System.Drawing.Size(792, 149);
             this.ribbon.Toolbar.ItemLinks.Add(this.btnOpenProject);
             this.ribbon.Toolbar.ItemLinks.Add(this.btnSaveModelAs);

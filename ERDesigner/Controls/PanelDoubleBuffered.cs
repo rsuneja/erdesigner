@@ -11,6 +11,16 @@ namespace ERDesigner
 {
     public class PanelDoubleBuffered : Panel
     {
+        //This object variable for tracking Drawing Relationship
+        private EntityShape FirstEntity;
+        private EntityShape SecondEntity;
+        private EntityShape ThirdEntity;
+
+        bool First_Mouse_Click = false;
+        bool Second_Mouse_Click = false;
+        bool Third_Mouse_Click = false;
+        //End Declare
+
         public List<MetaData> UndoList = new List<MetaData>();
         public int currentUndoState = -1;
 
@@ -53,7 +63,7 @@ namespace ERDesigner
                 AffectingShape.endEditName();
                 return;
             }
-            if(e.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Right)
             {
                 CancelDrawing();
                 return;
@@ -64,7 +74,7 @@ namespace ERDesigner
                 {
                     currentShape = new EntityShape();
                     ((EntityShape)currentShape).type = DrawingShapeState;
-                    
+
                 }
 
                 if (isDrawingAtt && AffectingShape != null)
@@ -111,7 +121,7 @@ namespace ERDesigner
                 if (isDrawEntity || (isDrawingAtt && AffectingShape != null) && currentShape != null)
                 {
                     Point mouse = this.PointToClient(Control.MousePosition);
-                    currentShape.setLocation(mouse);
+                    currentShape.CenterPoint = mouse;
                     this.Controls.Add(currentShape);
                     beginRename(currentShape);
                 }
@@ -123,7 +133,7 @@ namespace ERDesigner
                 }
             }
             //click panel mà không phải là đang drawing
-            else 
+            else
             {
                 //mark flag để vẽ rubber band
                 isSelecting = true;
@@ -221,89 +231,76 @@ namespace ERDesigner
             if (e.Button == MouseButtons.Left && isDrawing && isDrawRelationship)
             {
                 //Nếu chưa có điểm đầu
-                if (First_Mouse_Pos.X == -1)
+                if (First_Mouse_Click == false)
                 {
                     if (currentCtrl is EntityShape)
                     {
-                        First_Mouse_Pos.X = currentCtrl.Location.X + e.X;
-                        First_Mouse_Pos.Y = currentCtrl.Location.Y + e.Y;
+                        First_Mouse_Click = true;
+
+                        //Tracking First position for Drawing Virtual Line
+                        First_Mouse_Pos.X = e.X + currentCtrl.Location.X;
+                        First_Mouse_Pos.Y = e.Y + currentCtrl.Location.Y;
+
+                        FirstEntity = (EntityShape)currentCtrl;
+
+                        if (degreeOfRelationship == 1)
+                        {
+                            //Create Unary Relationship
+                            CreateUnaryRelationship();
+                            CancelDrawing();
+                            return;
+                        }
                     }
                     else
                         CancelDrawing();
                 }
                 else
                 {
-                    //Đã có điểm đầu, click lần thứ 2
-                    //tạo relationship
-
-                    if (AffectingShape.GetType().Name == "EntityShape" && currentCtrl.GetType().Name == "EntityShape")
+                    //Ðã có điểm đầu, click lần thứ 2
+                    if (Second_Mouse_Click == false)
                     {
-                        EntityShape entity1 = (EntityShape)AffectingShape;
-                        EntityShape entity2 = (EntityShape)currentCtrl;
-
-                        RelationshipShape rel = new RelationshipShape();
-                        rel.type = DrawingShapeState;
-
-                        //Gán location của relationship mới tạo là điểm giữa của 2 Entity
-                        Point centerEntity1 = new Point(entity1.Location.X + entity1.Width / 2, entity1.Location.Y + entity1.Height / 2);
-                        Point centerEntity2 = new Point(entity2.Location.X + entity2.Width / 2, entity2.Location.Y + entity2.Height / 2);
-
-                        Point center = new Point(Math.Abs(centerEntity1.X + centerEntity2.X) / 2, Math.Abs(centerEntity1.Y + centerEntity2.Y) / 2);
-
-                        rel.Location = new Point(center.X - rel.Width / 2, center.Y - rel.Height / 2);
-
-                        if (entity1 == entity2)
-                            rel.Location = new Point(entity1.Location.X + entity1.Width + ThongSo.ShapeW, entity1.Location.Y);
-
-                        CardinalityShape car1 = new CardinalityShape(entity1);
-                        CardinalityShape car2 = new CardinalityShape(entity2);
-
-                        //Bắt buộc phải add vô rel trước để tính toán vị trí (nhưng rel phải có location rồi)
-                        rel.addCardinality(car1);
-                        rel.addCardinality(car2);
-
-                        if (entity1.type != entity2.type)
-                            rel.type = RelationshipType.Identifier;
-
-                        if (rel.type != RelationshipType.AssociativeEntity)
+                        if (currentCtrl is EntityShape)
                         {
-                            if (rel.type == RelationshipType.Identifier)
+                            Second_Mouse_Click = true;
+                            SecondEntity = (EntityShape)currentCtrl;
+
+                            if (degreeOfRelationship == 2)
                             {
-                                if (entity1.type == EntityType.Strong)
-                                {
-                                    car1.setValue(1, 1);
-                                    car2.setValue(0, -1);
-                                }
-                                else
-                                {
-                                    car1.setValue(0, -1);
-                                    car2.setValue(1, 1);
-                                }
-                            }
-                            else
-                            {
-                                car1.setValue(1, 1);
-                                car2.setValue(0, -1);
+                                //Create Binary Relationship
+                                CreateBinaryRelationship();
+                                CancelDrawing();
+                                return;
                             }
                         }
                         else
-                        {
-                            car1.setValue(0, -1);
-                            car2.setValue(0, -1);
-                        }
-
-                        this.Controls.Add(rel);
+                            CancelDrawing();
                     }
+                    else
+                    {
+                        //Ðã có điểm thứ 1 và 2, click lần 3
+                        if (Third_Mouse_Click == false)
+                        {
+                            if (currentCtrl is EntityShape)
+                            {
+                                Third_Mouse_Click = true;
+                                ThirdEntity = (EntityShape)currentCtrl;
 
-                    //Nếu 2 Shape đang chọn không phải entity thì cancel hết
-                    CancelDrawing();
-                    
-                    AffectingShape.Invalidate();
-                    currentCtrl.Invalidate();
-                    this.Invalidate();
-                    return;
+                                if (degreeOfRelationship == 3)
+                                {
+                                    //Create Ternary Relationship
+                                    CreateTernaryRelationship();
+                                    CancelDrawing();
+                                    return;
+                                }
+                            }
+                            else
+                                CancelDrawing();
+                        }
+                        else
+                            CancelDrawing();
+                    }
                 }
-            }
+            }//End Ðang vẽ relationship
 
             //Lưu vết lại Shape đang được tác động (Click)
             //và set cho shape đó nằm trên cùng
@@ -324,7 +321,7 @@ namespace ERDesigner
                     isMoving = true;
             }
             // click phải: hiện context menu
-            else if (e.Button == MouseButtons.Right) 
+            else if (e.Button == MouseButtons.Right)
             {
                 ContextMenu ctmn = getContexMenuForControl(currentCtrl);
                 ctmn.Show(currentCtrl, new Point(e.X, e.Y));
@@ -401,22 +398,27 @@ namespace ERDesigner
                 else
                 {
                     //đang rê chuột tính resize
-                    if (e.X + 5 > currentCtrl.Width && e.Y + 5 > currentCtrl.Height) // góc
+                    if (!isDrawing)
                     {
-                        currentCtrl.Cursor = Cursors.SizeNWSE;
+                        if (e.X + 5 > currentCtrl.Width && e.Y + 5 > currentCtrl.Height) // góc
+                        {
+                            currentCtrl.Cursor = Cursors.SizeNWSE;
+                        }
+                        else if ((e.X + 5) > currentCtrl.Width) // dọc
+                        {
+                            currentCtrl.Cursor = Cursors.SizeWE;
+                        }
+                        else if ((e.Y + 5) > currentCtrl.Height) // ngang
+                        {
+                            currentCtrl.Cursor = Cursors.SizeNS;
+                        }
+                        else //Bình thường
+                        {
+                            currentCtrl.Cursor = (currentCtrl as ShapeBase).CurrentCursor;
+                        }
                     }
-                    else if ((e.X + 5) > currentCtrl.Width) // dọc
-                    {
-                        currentCtrl.Cursor = Cursors.SizeWE;
-                    }
-                    else if ((e.Y + 5) > currentCtrl.Height) // ngang
-                    {
-                        currentCtrl.Cursor = Cursors.SizeNS;
-                    }
-                    else //Bình thường
-                    {
-                        currentCtrl.Cursor = Cursors.Arrow;
-                    }
+                    else
+                        currentCtrl.Cursor = (currentCtrl as ShapeBase).CurrentCursor;
                 }
             }
         }
@@ -1064,12 +1066,21 @@ namespace ERDesigner
             isDrawEntity = false;
             isDrawingAtt = false;
             isDrawRelationship = false;
-            this.Cursor = System.Windows.Forms.Cursors.Default;
+            this.Cursor = Cursors.Default;
+            setAllControlToDefaultCursor();
 
             First_Mouse_Pos.X = -1;
             First_Mouse_Pos.Y = -1;
             Last_Mouse_Pos.X = -1;
             Last_Mouse_Pos.Y = -1;
+
+            First_Mouse_Click = false;
+            Second_Mouse_Click = false;
+            Third_Mouse_Click = false;
+
+            FirstEntity = null;
+            SecondEntity = null;
+            ThirdEntity = null;
 
             ((MainForm)TopLevelControl).CancelDrawing();
             this.Refresh();
@@ -1508,6 +1519,156 @@ namespace ERDesigner
             ctmn.MenuItems.Add(del);
 
             return ctmn;
+        }
+        public void setAllControlToDefaultCursor()
+        {
+            foreach (Control ctr in this.Controls)
+            {
+                if (ctr is ShapeBase)
+                    (ctr as ShapeBase).CurrentCursor = Cursors.Default;
+            }
+        }
+        public void setAllControlToNoCursor()
+        {
+            foreach (Control ctr in this.Controls)
+            {
+                if (ctr is ShapeBase)
+                    (ctr as ShapeBase).CurrentCursor = Cursors.No;
+            }
+        }
+        public void setCursor(Cursor cursor, string objType)
+        {
+            this.Cursor = cursor;
+            foreach (Control ctr in this.Controls)
+            {
+                if (ctr.GetType().Name == objType)
+                {
+                    (ctr as ShapeBase).CurrentCursor = cursor;
+                }
+            }
+        }
+        private void CreateUnaryRelationship()
+        {
+            RelationshipShape rel = new RelationshipShape();
+            rel.type = DrawingShapeState;
+
+            rel.Location = new Point(FirstEntity.Location.X + FirstEntity.Width + ThongSo.ShapeW, FirstEntity.Location.Y);
+
+            CardinalityShape car1 = new CardinalityShape(FirstEntity);
+            CardinalityShape car2 = new CardinalityShape(FirstEntity);
+
+            //Bắt buộc phải add vô rel trước để tính toán vị trí (nhung rel phải có location rồi)
+            rel.addCardinality(car1);
+            rel.addCardinality(car2);
+
+            if (rel.type != RelationshipType.AssociativeEntity)
+            {
+                car1.setValue(1, 1);
+                car2.setValue(0, -1);
+            }
+            else
+            {
+                car1.setValue(0, -1);
+                car2.setValue(0, -1);
+            }
+
+            this.Controls.Add(rel);
+        }
+        private void CreateBinaryRelationship()
+        {
+            if (FirstEntity == SecondEntity)
+            {
+                return;
+            }
+
+            RelationshipShape rel = new RelationshipShape();
+            rel.type = DrawingShapeState;
+
+            //Gán location của relationship mới tạo là điểm giữa của 2 Entity
+
+            rel.CenterPoint = new Point(Math.Abs(FirstEntity.CenterPoint.X + SecondEntity.CenterPoint.X) / 2, Math.Abs(FirstEntity.CenterPoint.Y + SecondEntity.CenterPoint.Y) / 2);
+
+            CardinalityShape car1 = new CardinalityShape(FirstEntity);
+            CardinalityShape car2 = new CardinalityShape(SecondEntity);
+
+            //Bắt buộc phải add vô rel trước để tính toán vị trí (nhung rel phải có location rồi)
+            rel.addCardinality(car1);
+            rel.addCardinality(car2);
+
+            if (FirstEntity.type != SecondEntity.type)
+                rel.type = RelationshipType.Identifier;
+
+            if (rel.type != RelationshipType.AssociativeEntity)
+            {
+                if (rel.type == RelationshipType.Identifier)
+                {
+                    if (FirstEntity.type == EntityType.Strong)
+                    {
+                        car1.setValue(1, 1);
+                        car2.setValue(0, -1);
+                    }
+                    else
+                    {
+                        car1.setValue(0, -1);
+                        car2.setValue(1, 1);
+                    }
+                }
+                else
+                {
+                    car1.setValue(1, 1);
+                    car2.setValue(0, -1);
+                }
+            }
+            else
+            {
+                car1.setValue(0, -1);
+                car2.setValue(0, -1);
+            }
+
+            this.Controls.Add(rel);
+        }
+        private void CreateTernaryRelationship()
+        {
+            if (FirstEntity == SecondEntity || FirstEntity == ThirdEntity || SecondEntity == ThirdEntity)
+            {
+                return;
+            }
+
+            RelationshipShape rel = new RelationshipShape();
+            rel.type = DrawingShapeState;
+
+            //Gán location của relationship mới tạo là điểm giữa của 3 Entity
+            int MinX = Math.Min(FirstEntity.CenterPoint.X, Math.Min(SecondEntity.CenterPoint.X, ThirdEntity.CenterPoint.X));
+            int MinY = Math.Min(FirstEntity.CenterPoint.Y, Math.Min(SecondEntity.CenterPoint.Y, ThirdEntity.CenterPoint.Y));
+
+            int MaxX = Math.Max(FirstEntity.CenterPoint.X, Math.Max(SecondEntity.CenterPoint.X, ThirdEntity.CenterPoint.X));
+            int MaxY = Math.Max(FirstEntity.CenterPoint.Y, Math.Max(SecondEntity.CenterPoint.Y, ThirdEntity.CenterPoint.Y));
+
+            rel.CenterPoint = new Point(MinX + (MaxX - MinX) / 2, MinY + (MaxY - MinY) / 2);
+
+            CardinalityShape car1 = new CardinalityShape(FirstEntity);
+            CardinalityShape car2 = new CardinalityShape(SecondEntity);
+            CardinalityShape car3 = new CardinalityShape(ThirdEntity);
+
+            //Bắt buộc phải add vô rel trước để tính toán vị trí (nhung rel phải có location rồi)
+            rel.addCardinality(car1);
+            rel.addCardinality(car2);
+            rel.addCardinality(car3);
+
+            if (rel.type != RelationshipType.AssociativeEntity)
+            {
+                car1.setValue(1, 1);
+                car2.setValue(1, 1); 
+                car3.setValue(1, 1);
+            }
+            else
+            {
+                car1.setValue(0, -1);
+                car2.setValue(0, -1);
+                car3.setValue(0, -1);
+            }
+
+            this.Controls.Add(rel);
         }
 
         private void InitializeComponent()

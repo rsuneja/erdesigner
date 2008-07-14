@@ -15,9 +15,10 @@ namespace ERDesigner.Shape
         protected GraphicsPath path = null;
         public String sName = "";
         public static bool skin = true;
+        public Cursor CurrentCursor = Cursors.Default;
         PanelDoubleBuffered p;
         TextBox txtName;
-
+        
         //override: lớp con sẽ tự vẽ
         protected virtual void refreshPath(){}
         
@@ -28,9 +29,16 @@ namespace ERDesigner.Shape
             this.Invalidate();
         }
 
-        public void setLocation(Point p)
+        public Point CenterPoint
         {
-            Location = new Point(p.X - this.Width / 2, p.Y - this.Height / 2);
+            get
+            {
+                return new Point(this.Location.X + this.Width / 2, this.Location.Y + this.Height / 2);
+            }
+            set
+            {
+                this.Location = new Point(value.X - this.Width / 2, value.Y - this.Height / 2);
+            }
         }
 
         public ShapeBase()
