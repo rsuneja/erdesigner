@@ -479,27 +479,49 @@ namespace ERDesigner
         {
             //hiển thị Dialog
             RelationshipShape relationship = null;
-            if (AffectingShape != null && AffectingShape.GetType().Name == "RelationshipShape")
+            if (AffectingShape != null && AffectingShape is RelationshipShape)
             {
                 relationship = (RelationshipShape)AffectingShape;
-                AddCardinality addCardiDialog = new AddCardinality(relationship);
-
-                if (addCardiDialog.ShowDialog() == DialogResult.OK)
+                if(relationship.cardinalities.Count < 3)
                 {
-                    relationship.cardinalities[0].setValue(addCardiDialog.cardi1.MinCardinality, addCardiDialog.cardi1.MaxCardinality);
-                    relationship.cardinalities[1].setValue(addCardiDialog.cardi2.MinCardinality, addCardiDialog.cardi2.MaxCardinality);
+                    AddCardinality addCardiDialog = new AddCardinality(relationship);
 
-                    if ((relationship.cardinalities[0].MaxCardinality != -1 || relationship.cardinalities[1].MaxCardinality != -1) && relationship.type == RelationshipType.AssociativeEntity)
-                        if (relationship.cardinalities[0].entity.type != relationship.cardinalities[1].entity.type)
-                            relationship.type = RelationshipType.Identifier;
+                    if (addCardiDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        relationship.cardinalities[0].setValue(addCardiDialog.cardi1.MinCardinality, addCardiDialog.cardi1.MaxCardinality);
+                        relationship.cardinalities[1].setValue(addCardiDialog.cardi2.MinCardinality, addCardiDialog.cardi2.MaxCardinality);
+
+                        if ((relationship.cardinalities[0].MaxCardinality != -1 || relationship.cardinalities[1].MaxCardinality != -1) && relationship.type == RelationshipType.AssociativeEntity)
+                            if (relationship.cardinalities[0].entity.type != relationship.cardinalities[1].entity.type)
+                                relationship.type = RelationshipType.Identifier;
+                            else
+                                relationship.type = RelationshipType.Normal;
+
+                        if (relationship.cardinalities[0].MaxCardinality == -1 && relationship.cardinalities[1].MaxCardinality == -1 && relationship.attributes.Count > 0)
+                            relationship.type = RelationshipType.AssociativeEntity;
+
+                        this.Invalidate();
+                    }
+                }
+                else
+                {
+                    EditTernaryRelationship editRelDialog = new EditTernaryRelationship(relationship);
+
+                    if (editRelDialog.ShowDialog() == DialogResult.OK)
+                    {
+                        relationship.cardinalities[0].setValue(editRelDialog.cardi1.MinCardinality, editRelDialog.cardi1.MaxCardinality);
+                        relationship.cardinalities[1].setValue(editRelDialog.cardi2.MinCardinality, editRelDialog.cardi2.MaxCardinality);
+                        relationship.cardinalities[2].setValue(editRelDialog.cardi3.MinCardinality, editRelDialog.cardi3.MaxCardinality);
+
+                        if (relationship.cardinalities[0].MaxCardinality == -1 && relationship.cardinalities[1].MaxCardinality == -1 && relationship.cardinalities[2].MaxCardinality == -1 && relationship.attributes.Count > 0)
+                            relationship.type = RelationshipType.AssociativeEntity;
                         else
                             relationship.type = RelationshipType.Normal;
 
-                    if (relationship.cardinalities[0].MaxCardinality == -1 && relationship.cardinalities[1].MaxCardinality == -1 && relationship.attributes.Count > 0)
-                        relationship.type = RelationshipType.AssociativeEntity;
-
-                    this.Invalidate();
+                        this.Invalidate();
+                    }
                 }
+                
             }
 
         }
@@ -1339,7 +1361,7 @@ namespace ERDesigner
                             //Bắt buộc add vô rel trước
                             relationship.addCardinality(cardinality);
 
-                            cardinality.setValue(cardi.MaxCardinality, cardi.MinCardinality);
+                            cardinality.setValue(cardi.MinCardinality, cardi.MaxCardinality);
                             break;
                         }
                     }

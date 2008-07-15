@@ -42,7 +42,7 @@ namespace ERDesigner.Shape
 
             Size = new Size(ThongSo.ShapeW, ThongSo.ShapeH);
             sName = name;
-            this.Location = loc;
+            this.CenterPoint = loc;
 
             this.Disposed += new EventHandler(EntityShape_Disposed);
             refreshPath();
