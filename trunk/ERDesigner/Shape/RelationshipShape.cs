@@ -102,7 +102,7 @@ namespace ERDesigner.Shape
             sName = name;
 
             this.Size = new Size(ThongSo.ShapeW, ThongSo.ShapeH);
-            this.Location = loc;
+            this.CenterPoint = loc;
 
             this.Disposed += new EventHandler(RelationshipShape_Disposed);
             refreshPath();
