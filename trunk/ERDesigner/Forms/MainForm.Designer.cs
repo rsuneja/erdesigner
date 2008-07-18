@@ -127,6 +127,12 @@ namespace ERDesigner
             this.navBarGroup2 = new DevExpress.XtraNavBar.NavBarGroup();
             this.navBarGroup3 = new DevExpress.XtraNavBar.NavBarGroup();
             this.xtraTabPage2 = new DevExpress.XtraTab.XtraTabPage();
+            this.btnConnect = new DevExpress.XtraBars.BarButtonItem();
+            this.ribbonDataSetting = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.barEditItem1 = new DevExpress.XtraBars.BarEditItem();
+            this.repositoryItemCheckEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
+            this.barEditItem2 = new DevExpress.XtraBars.BarEditItem();
+            this.repositoryItemCheckEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             ((System.ComponentModel.ISupportInitialize)(this.StartMenu)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gddColor)).BeginInit();
@@ -147,6 +153,8 @@ namespace ERDesigner
             ((System.ComponentModel.ISupportInitialize)(this.listErrorList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabbedMdiManager1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).BeginInit();
             this.SuspendLayout();
             // 
             // ribbon
@@ -187,10 +195,13 @@ namespace ERDesigner
             this.btnNewProject,
             this.subOpen,
             this.btnOpenModel,
-            this.btnCloseProject});
+            this.btnCloseProject,
+            this.btnConnect,
+            this.barEditItem1,
+            this.barEditItem2});
             this.ribbon.LargeImages = this.imageCollection1;
             this.ribbon.Location = new System.Drawing.Point(0, 0);
-            this.ribbon.MaxItemId = 50;
+            this.ribbon.MaxItemId = 55;
             this.ribbon.Name = "ribbon";
             this.ribbon.PageHeaderItemLinks.Add(this.btnAbout);
             this.ribbon.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
@@ -198,7 +209,9 @@ namespace ERDesigner
             this.ribbonTool});
             this.ribbon.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemZoomTrackBar1,
-            this.repositoryItemCheckEdit1});
+            this.repositoryItemCheckEdit1,
+            this.repositoryItemCheckEdit2,
+            this.repositoryItemCheckEdit3});
             this.ribbon.SelectedPage = this.ribbonHome;
             this.ribbon.Size = new System.Drawing.Size(792, 149);
             this.ribbon.Toolbar.ItemLinks.Add(this.btnOpenProject);
@@ -617,6 +630,7 @@ namespace ERDesigner
             // ribbonTool
             // 
             this.ribbonTool.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
+            this.ribbonDataSetting,
             this.ribbonPhysical});
             this.ribbonTool.KeyTip = "";
             this.ribbonTool.Name = "ribbonTool";
@@ -1165,6 +1179,51 @@ namespace ERDesigner
             this.xtraTabPage2.Name = "xtraTabPage2";
             this.xtraTabPage2.Size = new System.Drawing.Size(195, 77);
             // 
+            // btnConnect
+            // 
+            this.btnConnect.Caption = "Connect to Database...";
+            this.btnConnect.Id = 50;
+            this.btnConnect.ImageIndex = 31;
+            this.btnConnect.LargeImageIndex = 16;
+            this.btnConnect.LargeWidth = 100;
+            this.btnConnect.Name = "btnConnect";
+            // 
+            // ribbonDataSetting
+            // 
+            this.ribbonDataSetting.ItemLinks.Add(this.btnConnect);
+            this.ribbonDataSetting.ItemLinks.Add(this.barEditItem1, true);
+            this.ribbonDataSetting.ItemLinks.Add(this.barEditItem2);
+            this.ribbonDataSetting.KeyTip = "";
+            this.ribbonDataSetting.Name = "ribbonDataSetting";
+            this.ribbonDataSetting.Text = "Database Settings";
+            // 
+            // barEditItem1
+            // 
+            this.barEditItem1.Caption = "Direct";
+            this.barEditItem1.Edit = this.repositoryItemCheckEdit2;
+            this.barEditItem1.EditValue = true;
+            this.barEditItem1.Id = 53;
+            this.barEditItem1.Name = "barEditItem1";
+            // 
+            // repositoryItemCheckEdit2
+            // 
+            this.repositoryItemCheckEdit2.AutoHeight = false;
+            this.repositoryItemCheckEdit2.Name = "repositoryItemCheckEdit2";
+            // 
+            // barEditItem2
+            // 
+            this.barEditItem2.Caption = "SQL File";
+            this.barEditItem2.Edit = this.repositoryItemCheckEdit3;
+            this.barEditItem2.EditValue = true;
+            this.barEditItem2.Id = 54;
+            this.barEditItem2.Name = "barEditItem2";
+            this.barEditItem2.Width = 30;
+            // 
+            // repositoryItemCheckEdit3
+            // 
+            this.repositoryItemCheckEdit3.AutoHeight = false;
+            this.repositoryItemCheckEdit3.Name = "repositoryItemCheckEdit3";
+            // 
             // MainForm
             // 
             this.Appearance.BackColor = System.Drawing.SystemColors.Control;
@@ -1208,6 +1267,8 @@ namespace ERDesigner
             ((System.ComponentModel.ISupportInitialize)(this.listErrorList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabbedMdiManager1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1308,5 +1369,11 @@ namespace ERDesigner
         private System.Windows.Forms.RadioButton radUnary;
         private System.Windows.Forms.RadioButton radTernary;
         private System.Windows.Forms.RadioButton radBinary;
+        private DevExpress.XtraBars.BarButtonItem btnConnect;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonDataSetting;
+        private DevExpress.XtraBars.BarEditItem barEditItem1;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit2;
+        private DevExpress.XtraBars.BarEditItem barEditItem2;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit3;
     }
 }

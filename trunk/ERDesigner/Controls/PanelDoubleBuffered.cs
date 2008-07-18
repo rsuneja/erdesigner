@@ -453,9 +453,9 @@ namespace ERDesigner
             String type = ((MenuItem)sender).Text;
             switch (type)
             {
-                case "Strong Entity Type": ((EntityShape)AffectingShape).type = EntityType.Strong;
+                case "Strong Entity Type": ((EntityShape)AffectingShape).Type = EntityType.Strong;
                     break;
-                case "Weak Entity Type": ((EntityShape)AffectingShape).type = EntityType.Weak;
+                case "Weak Entity Type": ((EntityShape)AffectingShape).Type = EntityType.Weak;
                     break;
                 case "Simple Attribute": ((AttributeShape)AffectingShape).type = AttributeType.Simple; ((AttributeShape)AffectingShape).allowNull = true;
                     break;

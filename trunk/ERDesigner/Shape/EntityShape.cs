@@ -57,7 +57,22 @@ namespace ERDesigner.Shape
             {
             }
         }
-
+        public string Type
+        {
+            get
+            {
+                return type;
+            }
+            set
+            {
+                type = value;
+                foreach (AttributeShape att in this.attributes)
+                {
+                    if (att.type == AttributeType.Key)
+                        att.Invalidate();
+                }
+            }
+        }
         public override ShapeBase Clone()
         {
             EntityShape entity = new EntityShape();
