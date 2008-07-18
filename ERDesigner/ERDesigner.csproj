@@ -43,11 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Forms\AddCardinality.cs">
-      <SubType>Form</SubType>
+    <Compile Include="Controls\DataDescription.cs">
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\AddCardinality.designer.cs">
-      <DependentUpon>AddCardinality.cs</DependentUpon>
+    <Compile Include="Controls\DataDescription.Designer.cs">
+      <DependentUpon>DataDescription.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\BrowseFileControl.cs">
       <SubType>UserControl</SubType>
@@ -55,11 +55,17 @@
     <Compile Include="Controls\BrowseFileControl.Designer.cs">
       <DependentUpon>BrowseFileControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\DataTypeComboBox.cs">
-      <SubType>UserControl</SubType>
+    <Compile Include="Forms\AddCardinality.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Controls\DataTypeComboBox.Designer.cs">
-      <DependentUpon>DataTypeComboBox.cs</DependentUpon>
+    <Compile Include="Forms\AddCardinality.designer.cs">
+      <DependentUpon>AddCardinality.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\EditTernaryRelationship.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\EditTernaryRelationship.designer.cs">
+      <DependentUpon>EditTernaryRelationship.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmDrawBoard.cs">
       <SubType>Form</SubType>
@@ -110,17 +116,21 @@
     <Compile Include="Program.cs" />
     <Compile Include="ProjectData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\AddCardinality.resx">
+    <EmbeddedResource Include="Controls\DataDescription.resx">
+      <DependentUpon>DataDescription.cs</DependentUpon>
       <SubType>Designer</SubType>
-      <DependentUpon>AddCardinality.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\BrowseFileControl.resx">
       <SubType>Designer</SubType>
       <DependentUpon>BrowseFileControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\DataTypeComboBox.resx">
+    <EmbeddedResource Include="Forms\AddCardinality.resx">
+      <DependentUpon>AddCardinality.cs</DependentUpon>
       <SubType>Designer</SubType>
-      <DependentUpon>DataTypeComboBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\EditTernaryRelationship.resx">
+      <DependentUpon>EditTernaryRelationship.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmDrawBoard.resx">
       <SubType>Designer</SubType>
@@ -235,9 +245,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon 3.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
