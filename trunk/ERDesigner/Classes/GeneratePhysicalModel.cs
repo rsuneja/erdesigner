@@ -250,12 +250,16 @@ namespace ERDesigner
                     string cardinalityMax2 = "";
                     string nameTable2 = "";
 
+                    string cardinalityMin3 = "";
+                    string cardinalityMax3 = "";
+                    string nameTable3 = "";
+
                     string nameRelationship = rd.name;
 
                 //Duyệt lấy các giá trị của 1 Relationship
                     for(int i=0; i<rd.Cardinalities.Count; i++)
                     {
-                        if (i % 2 == 0)
+                        if (i == 0)
                         {
                             cardinalityMin1 = rd.Cardinalities[i].MinCardinality.ToString();
                             cardinalityMax1 = rd.Cardinalities[i].MaxCardinality.ToString();
@@ -263,14 +267,26 @@ namespace ERDesigner
                         }
                         else
                         {
-                            cardinalityMin2 = rd.Cardinalities[i].MinCardinality.ToString();
-                            cardinalityMax2 = rd.Cardinalities[i].MaxCardinality.ToString();
-                            nameTable2 = rd.Cardinalities[i].Entity;
+                            if (i == 1)
+                            {
+                                cardinalityMin2 = rd.Cardinalities[i].MinCardinality.ToString();
+                                cardinalityMax2 = rd.Cardinalities[i].MaxCardinality.ToString();
+                                nameTable2 = rd.Cardinalities[i].Entity;
+                            }
+                            else
+                            {
+                                if (i == 2)
+                                {
+                                    cardinalityMin3 = rd.Cardinalities[i].MinCardinality.ToString();
+                                    cardinalityMax3 = rd.Cardinalities[i].MaxCardinality.ToString();
+                                    nameTable3 = rd.Cardinalities[i].Entity;
+                                }
+                            }
                         }
                     }
 
                     #region Trường hợp 1 ngôi
-                    if (nameTable1 == nameTable2)
+                    if (rd.Cardinalities.Count==1)
                     {
                         //Trường hợp 1:n, n:1
                         if ((cardinalityMax1 == "1" && cardinalityMax2 == "-1") || (cardinalityMax1 == "-1" && cardinalityMax2 == "1") || (cardinalityMax1 == "1" && cardinalityMax2 == "1") || (cardinalityMax1 == "0" && cardinalityMax2 == "1") || (cardinalityMax1 == "1" && cardinalityMax2 == "0"))
@@ -364,7 +380,7 @@ namespace ERDesigner
                     #endregion
 
                     #region Trường hợp 2 ngôi
-                    if (nameTable1 != nameTable2)
+                    if (rd.Cardinalities.Count==2)
                     {
                         #region Normal Relationship
                         //Trường hợp relationship bình thường
@@ -682,9 +698,181 @@ namespace ERDesigner
                         #endregion
                     }//End TH 2 ngôi
                     #endregion
-                   
 
-                    
+                    #region Trường hợp 3 ngôi
+                    if (rd.Cardinalities.Count == 3)
+                    {
+                    //Relationship Normal
+                        //TH 1-1-1
+                        //TH 1-1-n
+                        //TH 1-n-m
+                        //TH n-m-l       
+                        if (rd.type == RelationshipType.Normal)
+                        {
+                            if (cardinalityMax1 == "1" && cardinalityMax2 == "1" && cardinalityMax3 == "1")
+                            {
+                                Table t1 = mdp.searchTable(nameTable1);
+                                Table t2 = mdp.searchTable(nameTable2);
+                                Table t3 = mdp.searchTable(nameTable3);
+                                List<Column> pk1 = t1.getPrimaryKey();
+                                List<Column> pk2 = t2.getPrimaryKey();
+                                List<Column> pk3 = t3.getPrimaryKey();
+
+                                Table t4 = new Table(nameRelationship, t3.x + 20, t3.y + 20, t3.w, t3.h);
+                                t4.addPrimaryKeyForeignKey(pk1);
+                                t4.addPrimaryKeyForeignKey(pk2);
+                                t4.addColumnFK(pk3);
+
+                                mdp.addTable(t4);
+                                mdp.addForeignKey(nameRelationship + "1", t1, pk1, t4, pk1);
+                                mdp.addForeignKey(nameRelationship + "2", t2, pk2, t4, pk2);
+                                mdp.addForeignKey(nameRelationship + "3", t3, pk3, t4, pk3);
+                            }
+                            //Th 1-1-n
+                            if (cardinalityMax1 == "1" && cardinalityMax2 == "1" && cardinalityMax3 == "-1")
+                            {
+                                Table t1 = mdp.searchTable(nameTable1);
+                                Table t2 = mdp.searchTable(nameTable2);
+                                Table t3 = mdp.searchTable(nameTable3);
+                                List<Column> pk1 = t1.getPrimaryKey();
+                                List<Column> pk2 = t2.getPrimaryKey();
+                                List<Column> pk3 = t3.getPrimaryKey();
+
+                                Table t4 = new Table(nameRelationship, t3.x + 20, t3.y + 20, t3.w, t3.h);
+                                t4.addPrimaryKeyForeignKey(pk3);
+                                t4.addPrimaryKeyForeignKey(pk1);
+                                t4.addColumnFK(pk2);
+
+                                mdp.addTable(t4);
+                                mdp.addForeignKey(nameRelationship + "1", t1, pk1, t4, pk1);
+                                mdp.addForeignKey(nameRelationship + "2", t2, pk2, t4, pk2);
+                                mdp.addForeignKey(nameRelationship + "3", t3, pk3, t4, pk3);
+                            }
+                            if(cardinalityMax1 == "1" && cardinalityMax2 == "-1" && cardinalityMax3 == "1")
+                            {
+                                Table t1 = mdp.searchTable(nameTable1);
+                                Table t2 = mdp.searchTable(nameTable2);
+                                Table t3 = mdp.searchTable(nameTable3);
+                                List<Column> pk1 = t1.getPrimaryKey();
+                                List<Column> pk2 = t2.getPrimaryKey();
+                                List<Column> pk3 = t3.getPrimaryKey();
+
+                                Table t4 = new Table(nameRelationship, t3.x + 20, t3.y + 20, t3.w, t3.h);
+                                t4.addPrimaryKeyForeignKey(pk2);
+                                t4.addPrimaryKeyForeignKey(pk1);
+                                t4.addColumnFK(pk3);
+
+                                mdp.addTable(t4);
+                                mdp.addForeignKey(nameRelationship + "1", t1, pk1, t4, pk1);
+                                mdp.addForeignKey(nameRelationship + "2", t2, pk2, t4, pk2);
+                                mdp.addForeignKey(nameRelationship + "3", t3, pk3, t4, pk3);
+                            }
+                            if (cardinalityMax1 == "-1" && cardinalityMax2 == "1" && cardinalityMax3 == "1")
+                            {
+                                Table t1 = mdp.searchTable(nameTable1);
+                                Table t2 = mdp.searchTable(nameTable2);
+                                Table t3 = mdp.searchTable(nameTable3);
+                                List<Column> pk1 = t1.getPrimaryKey();
+                                List<Column> pk2 = t2.getPrimaryKey();
+                                List<Column> pk3 = t3.getPrimaryKey();
+
+                                Table t4 = new Table(nameRelationship, t3.x + 20, t3.y + 20, t3.w, t3.h);
+                                t4.addPrimaryKeyForeignKey(pk1);
+                                t4.addPrimaryKeyForeignKey(pk2);
+                                t4.addColumnFK(pk3);
+
+                                mdp.addTable(t4);
+                                mdp.addForeignKey(nameRelationship + "1", t1, pk1, t4, pk1);
+                                mdp.addForeignKey(nameRelationship + "2", t2, pk2, t4, pk2);
+                                mdp.addForeignKey(nameRelationship + "3", t3, pk3, t4, pk3);
+                            }
+
+
+                            if (cardinalityMax1 == "1" && cardinalityMax2 == "-1" && cardinalityMax3 == "-1")
+                            {
+                                Table t1 = mdp.searchTable(nameTable1);
+                                Table t2 = mdp.searchTable(nameTable2);
+                                Table t3 = mdp.searchTable(nameTable3);
+                                List<Column> pk1 = t1.getPrimaryKey();
+                                List<Column> pk2 = t2.getPrimaryKey();
+                                List<Column> pk3 = t3.getPrimaryKey();
+
+                                Table t4 = new Table(nameRelationship, t3.x + 20, t3.y + 20, t3.w, t3.h);
+                                t4.addPrimaryKeyForeignKey(pk2);
+                                t4.addPrimaryKeyForeignKey(pk3);
+                                t4.addColumnFK(pk1);
+
+                                mdp.addTable(t4);
+                                mdp.addForeignKey(nameRelationship + "1", t1, pk1, t4, pk1);
+                                mdp.addForeignKey(nameRelationship + "2", t2, pk2, t4, pk2);
+                                mdp.addForeignKey(nameRelationship + "3", t3, pk3, t4, pk3);
+                            }
+                            if (cardinalityMax1 == "-1" && cardinalityMax2 == "1" && cardinalityMax3 == "-1")
+                            {
+                                Table t1 = mdp.searchTable(nameTable1);
+                                Table t2 = mdp.searchTable(nameTable2);
+                                Table t3 = mdp.searchTable(nameTable3);
+                                List<Column> pk1 = t1.getPrimaryKey();
+                                List<Column> pk2 = t2.getPrimaryKey();
+                                List<Column> pk3 = t3.getPrimaryKey();
+
+                                Table t4 = new Table(nameRelationship, t3.x + 20, t3.y + 20, t3.w, t3.h);
+                                t4.addPrimaryKeyForeignKey(pk1);
+                                t4.addPrimaryKeyForeignKey(pk3);
+                                t4.addColumnFK(pk2);
+
+                                mdp.addTable(t4);
+                                mdp.addForeignKey(nameRelationship + "1", t1, pk1, t4, pk1);
+                                mdp.addForeignKey(nameRelationship + "2", t2, pk2, t4, pk2);
+                                mdp.addForeignKey(nameRelationship + "3", t3, pk3, t4, pk3);
+                            }
+                            if (cardinalityMax1 == "-1" && cardinalityMax2 == "-1" && cardinalityMax3 == "1")
+                            {
+                                Table t1 = mdp.searchTable(nameTable1);
+                                Table t2 = mdp.searchTable(nameTable2);
+                                Table t3 = mdp.searchTable(nameTable3);
+                                List<Column> pk1 = t1.getPrimaryKey();
+                                List<Column> pk2 = t2.getPrimaryKey();
+                                List<Column> pk3 = t3.getPrimaryKey();
+
+                                Table t4 = new Table(nameRelationship, t3.x + 20, t3.y + 20, t3.w, t3.h);
+                                t4.addPrimaryKeyForeignKey(pk1);
+                                t4.addPrimaryKeyForeignKey(pk2);
+                                t4.addColumnFK(pk3);
+
+                                mdp.addTable(t4);
+                                mdp.addForeignKey(nameRelationship + "1", t1, pk1, t4, pk1);
+                                mdp.addForeignKey(nameRelationship + "2", t2, pk2, t4, pk2);
+                                mdp.addForeignKey(nameRelationship + "3", t3, pk3, t4, pk3);
+                            }
+
+                            if (cardinalityMax1 == "-1" && cardinalityMax2 == "-1" && cardinalityMax3 == "-1")
+                            {
+                                Table t1 = mdp.searchTable(nameTable1);
+                                Table t2 = mdp.searchTable(nameTable2);
+                                Table t3 = mdp.searchTable(nameTable3);
+                                List<Column> pk1 = t1.getPrimaryKey();
+                                List<Column> pk2 = t2.getPrimaryKey();
+                                List<Column> pk3 = t3.getPrimaryKey();
+
+                                Table t4 = new Table(nameRelationship, t3.x + 20, t3.y + 20, t3.w, t3.h);
+                                t4.addPrimaryKeyForeignKey(pk1);
+                                t4.addPrimaryKeyForeignKey(pk2);
+                                t4.addPrimaryKeyForeignKey(pk3);
+
+                                mdp.addTable(t4);
+                                mdp.addForeignKey(nameRelationship + "1", t1, pk1, t4, pk1);
+                                mdp.addForeignKey(nameRelationship + "2", t2, pk2, t4, pk2);
+                                mdp.addForeignKey(nameRelationship + "3", t3, pk3, t4, pk3);
+                            }
+                        }
+                    //Relationship Associate
+                        if (rd.type == RelationshipType.AssociativeEntity)
+                        {
+                        }
+                    }
+                    #endregion
+
                 }//End Relationships
             #endregion
 
