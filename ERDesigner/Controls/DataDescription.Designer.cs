@@ -30,11 +30,11 @@ namespace ERDesigner
         {
             this.cboDataType = new DevExpress.XtraEditors.ComboBoxEdit();
             this.txtLength = new DevExpress.XtraEditors.TextEdit();
-            this.lbLength = new System.Windows.Forms.Label();
+            this.lbLength = new DevExpress.XtraEditors.LabelControl();
             this.chkNull = new DevExpress.XtraEditors.CheckEdit();
             this.btnOK = new DevExpress.XtraEditors.SimpleButton();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new DevExpress.XtraEditors.LabelControl();
+            this.label2 = new DevExpress.XtraEditors.LabelControl();
             this.btnExpand = new DevExpress.XtraEditors.SimpleButton();
             this.txtDescription = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.cboDataType.Properties)).BeginInit();
@@ -93,10 +93,9 @@ namespace ERDesigner
             // 
             // lbLength
             // 
-            this.lbLength.AutoSize = true;
-            this.lbLength.Location = new System.Drawing.Point(0, 51);
+            this.lbLength.Location = new System.Drawing.Point(7, 51);
             this.lbLength.Name = "lbLength";
-            this.lbLength.Size = new System.Drawing.Size(40, 13);
+            this.lbLength.Size = new System.Drawing.Size(33, 13);
             this.lbLength.TabIndex = 2;
             this.lbLength.Text = "Length";
             // 
@@ -119,21 +118,25 @@ namespace ERDesigner
             // 
             // label1
             // 
-            this.label1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(3, 2);
+            this.label1.Appearance.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label1.Appearance.ForeColor = System.Drawing.Color.White;
+            this.label1.Appearance.Options.UseBackColor = true;
+            this.label1.Appearance.Options.UseForeColor = true;
+            this.label1.Appearance.Options.UseTextOptions = true;
+            this.label1.Appearance.TextOptions.HAlignment = DevExpress.Utils.HorzAlignment.Center;
+            this.label1.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.None;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label1.Location = new System.Drawing.Point(0, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(128, 17);
+            this.label1.Size = new System.Drawing.Size(136, 16);
             this.label1.TabIndex = 2;
             this.label1.Text = "Data Description";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(0, 96);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(63, 13);
+            this.label2.Size = new System.Drawing.Size(57, 13);
             this.label2.TabIndex = 2;
             this.label2.Text = "Description:";
             // 
@@ -186,11 +189,11 @@ namespace ERDesigner
 
         public DevExpress.XtraEditors.ComboBoxEdit cboDataType;
         public DevExpress.XtraEditors.TextEdit txtLength;
-        private System.Windows.Forms.Label lbLength;
+        private DevExpress.XtraEditors.LabelControl lbLength;
         public DevExpress.XtraEditors.CheckEdit chkNull;
         public DevExpress.XtraEditors.SimpleButton btnOK;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
+        private DevExpress.XtraEditors.LabelControl label1;
+        private DevExpress.XtraEditors.LabelControl label2;
         public DevExpress.XtraEditors.SimpleButton btnExpand;
         public System.Windows.Forms.TextBox txtDescription;
 

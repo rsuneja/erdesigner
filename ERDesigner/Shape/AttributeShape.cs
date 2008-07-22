@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
@@ -7,11 +7,11 @@ using System.Drawing;
 
 namespace ERDesigner.Shape
 {
-    public class AttributeShape:ShapeBase
+    public class AttributeShape : ShapeBase, INotation
     {
         public String type;
         static int number = 0;
-        StringFormat st;
+        StringFormat st; //chữ gạch dưới
         public bool isComposite;
         public bool allowNull = true;
         public string dataType = "varchar";
@@ -20,6 +20,19 @@ namespace ERDesigner.Shape
         public EntityShape Entity;
         public List<AttributeShape> attributeChilds;
 
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // AttributeShape
+            // 
+            this.BackColor = System.Drawing.Color.Transparent;
+            this.DoubleBuffered = true;
+            this.Name = "AttributeShape";
+            this.Size = new System.Drawing.Size(130, 60);
+            this.ResumeLayout(false);
+
+        }
         public AttributeShape()
         {
             sName = "Attribute_" + number++;
@@ -35,6 +48,14 @@ namespace ERDesigner.Shape
             this.Size = new Size(ThongSo.ShapeW, ThongSo.ShapeH);
             this.Disposed += new EventHandler(AttributeShape_Disposed);
             refreshPath();
+        }
+        void AttributeShape_Disposed(object sender, EventArgs e)
+        {
+            for (int i = 0; i < attributeChilds.Count; i++)
+            {
+                attributeChilds[i].Dispose();
+                i--;
+            }
         }
         public override ShapeBase Clone()
         {
@@ -56,21 +77,11 @@ namespace ERDesigner.Shape
             return (ShapeBase)att;
         }
 
-        void AttributeShape_Disposed(object sender, EventArgs e)
-        {
-            for (int i = 0; i < attributeChilds.Count; i++)
-            {
-                attributeChilds[i].Dispose();
-                i--;
-            }
-        }
-
         public void addAttribute(AttributeShape att)
         {
             attributeChilds.Add(att);
             att.Disposed += new EventHandler(att_Disposed);
         }
-
         void att_Disposed(object sender, EventArgs e)
         {
             attributeChilds.Remove((AttributeShape)sender);
@@ -79,9 +90,9 @@ namespace ERDesigner.Shape
         protected override void refreshPath()
         {
             path = new GraphicsPath();
-            Rectangle rect = new Rectangle(this.ClientRectangle.X,this.ClientRectangle.Y,this.ClientRectangle.Width, this.ClientRectangle.Height);
+            Rectangle rect = new Rectangle(this.ClientRectangle.X, this.ClientRectangle.Y, this.ClientRectangle.Width, this.ClientRectangle.Height);
             path.AddEllipse(rect);
-                       
+
             this.Region = new Region(path);
         }
         public override void DrawSelf(Graphics g)
@@ -105,7 +116,7 @@ namespace ERDesigner.Shape
                 g.DrawEllipse(ThongSo.JPen, rect);
 
                 Font uFont = new Font(ThongSo.JFont.Name, ThongSo.JFont.Size, FontStyle.Underline);
-                
+
                 g.DrawString(sName, uFont, ThongSo.JBrush, new RectangleF(rect.Location.X + 10, rect.Y, rect.Width - 20, rect.Height), st);
 
                 if (Entity != null && Entity.type == EntityType.Weak)
@@ -115,31 +126,25 @@ namespace ERDesigner.Shape
                     g.DrawLine(ThongSo.JPen, CenterShape.X - nameSize.Width / 2 + 3, CenterShape.Y + nameSize.Height / 2 + 2, CenterShape.X + nameSize.Width / 2 - 3, CenterShape.Y + nameSize.Height / 2 + 2);
                 }
             }
-            
+
         }
         public override void dinhviTextBox(TextBox txtName)
         {
-            txtName.Location = new Point(0, this.ClientRectangle.Height/2 - txtName.Size.Height/2);
+            txtName.Location = new Point(0, this.ClientRectangle.Height / 2 - txtName.Size.Height / 2);
             txtName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             txtName.Size = new Size(this.ClientRectangle.Width, this.ClientRectangle.Height);
         }
 
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            // 
-            // AttributeShape
-            // 
-            this.BackColor = System.Drawing.Color.Transparent;
-            this.DoubleBuffered = true;
-            this.Name = "AttributeShape";
-            this.Size = new System.Drawing.Size(130, 60);
-            this.ResumeLayout(false);
+        #region INotation Members
 
+        public void DrawConnectiveLines(Graphics g)
+        {
+            foreach (AttributeShape att in this.attributeChilds)
+            {
+                g.DrawLine(new Pen(Color.Black, 1), this.CenterPoint, att.CenterPoint);
+            }
         }
 
-        
-
-        
+        #endregion
     }
 }

@@ -30,7 +30,7 @@ namespace ERDesigner
         {
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.txtFileName = new System.Windows.Forms.TextBox();
-            this.btnBrowse = new System.Windows.Forms.Button();
+            this.btnBrowse = new DevExpress.XtraEditors.SimpleButton();
             this.SuspendLayout();
             // 
             // txtFileName
@@ -47,7 +47,6 @@ namespace ERDesigner
             this.btnBrowse.Size = new System.Drawing.Size(75, 23);
             this.btnBrowse.TabIndex = 1;
             this.btnBrowse.Text = "Browse";
-            this.btnBrowse.UseVisualStyleBackColor = true;
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
             // BrowseFileControl
@@ -67,6 +66,6 @@ namespace ERDesigner
 
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         public System.Windows.Forms.TextBox txtFileName;
-        private System.Windows.Forms.Button btnBrowse;
+        private DevExpress.XtraEditors.SimpleButton btnBrowse;
     }
 }

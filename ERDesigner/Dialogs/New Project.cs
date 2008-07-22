@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace ERDesigner
 {
-    public partial class New_Project : Form
+    public partial class New_Project : DevExpress.XtraEditors.XtraForm
     {
         public New_Project()
         {
@@ -37,7 +37,7 @@ namespace ERDesigner
 
             if (error != "")
             {
-                MessageBox.Show("Please specify " + error, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                DevExpress.XtraEditors.XtraMessageBox.Show("Please specify " + error, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return false;
             }
             else

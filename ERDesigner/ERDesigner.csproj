@@ -30,6 +30,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DevExpress.Data.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=63213b87812c7912, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.OfficeSkins.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=95fc6c5621878f0a, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.Utils.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=63213b87812c7912, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraBars.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=63213b87812c7912, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraEditors.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=63213b87812c7912, processorArchitecture=MSIL" />
@@ -43,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\DrawingSupport.cs" />
     <Compile Include="Controls\DataDescription.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -55,16 +57,28 @@
     <Compile Include="Controls\BrowseFileControl.Designer.cs">
       <DependentUpon>BrowseFileControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AddCardinality.cs">
+    <Compile Include="Dialogs\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\AddCardinality.designer.cs">
+    <Compile Include="Dialogs\AboutBox.Designer.cs">
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\AddCardinality.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\AddCardinality.designer.cs">
       <DependentUpon>AddCardinality.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\EditTernaryRelationship.cs">
+    <Compile Include="Dialogs\AddConnection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\EditTernaryRelationship.designer.cs">
+    <Compile Include="Dialogs\AddConnection.Designer.cs">
+      <DependentUpon>AddConnection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\EditTernaryRelationship.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\EditTernaryRelationship.designer.cs">
       <DependentUpon>EditTernaryRelationship.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmDrawBoard.cs">
@@ -101,10 +115,10 @@
     </Compile>
     <Compile Include="MetaData.cs" />
     <Compile Include="MetaDataPhysical.cs" />
-    <Compile Include="Forms\New Project.cs">
+    <Compile Include="Dialogs\New Project.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\New Project.Designer.cs">
+    <Compile Include="Dialogs\New Project.Designer.cs">
       <DependentUpon>New Project.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\PanelDoubleBuffered.cs">
@@ -124,11 +138,19 @@
       <SubType>Designer</SubType>
       <DependentUpon>BrowseFileControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AddCardinality.resx">
+    <EmbeddedResource Include="Dialogs\AboutBox.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\AddCardinality.resx">
       <DependentUpon>AddCardinality.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\EditTernaryRelationship.resx">
+    <EmbeddedResource Include="Dialogs\AddConnection.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>AddConnection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\EditTernaryRelationship.resx">
       <DependentUpon>EditTernaryRelationship.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -152,7 +174,7 @@
       <SubType>Designer</SubType>
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\New Project.resx">
+    <EmbeddedResource Include="Dialogs\New Project.resx">
       <SubType>Designer</SubType>
       <DependentUpon>New Project.cs</DependentUpon>
     </EmbeddedResource>
@@ -189,7 +211,7 @@
       <DependentUpon>ShapeBase.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SplashScreen.resx">
+    <EmbeddedResource Include="Dialogs\SplashScreen.resx">
       <SubType>Designer</SubType>
       <DependentUpon>SplashScreen.cs</DependentUpon>
     </EmbeddedResource>
@@ -198,6 +220,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -229,16 +252,17 @@
     <Compile Include="Shape\EntityShape.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Shape\INotation.cs" />
     <Compile Include="Shape\RelationshipShape.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Shape\ShapeBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Forms\SplashScreen.cs">
+    <Compile Include="Dialogs\SplashScreen.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SplashScreen.Designer.cs">
+    <Compile Include="Dialogs\SplashScreen.Designer.cs">
       <DependentUpon>SplashScreen.cs</DependentUpon>
     </Compile>
     <Compile Include="ThongSo.cs" />

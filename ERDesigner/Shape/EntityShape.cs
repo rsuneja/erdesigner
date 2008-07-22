@@ -7,13 +7,26 @@ using System.Windows.Forms;
 
 namespace ERDesigner.Shape
 {
-    public class EntityShape:ShapeBase
+    public class EntityShape : ShapeBase, INotation
     {
         public string type;
         static int number = 0;
         public List<AttributeShape> attributes;
         public List<CardinalityShape>[] cardinalities;
 
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // EntityShape
+            // 
+            this.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.DoubleBuffered = true;
+            this.Name = "EntityShape";
+            this.Size = new System.Drawing.Size(130, 60);
+            this.ResumeLayout(false);
+
+        }
         public EntityShape()
         {
             type = EntityType.Strong;
@@ -47,16 +60,15 @@ namespace ERDesigner.Shape
             this.Disposed += new EventHandler(EntityShape_Disposed);
             refreshPath();
         }
-        public AttributeShape Attributes
+        void EntityShape_Disposed(object sender, EventArgs e)
         {
-            get
+            for (int i = 0; i < attributes.Count; i++)
             {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
+                attributes[i].Dispose();
+                i--;
             }
         }
+
         public string Type
         {
             get
@@ -66,6 +78,7 @@ namespace ERDesigner.Shape
             set
             {
                 type = value;
+                //auto change attribute display key if this is weak entity
                 foreach (AttributeShape att in this.attributes)
                 {
                     if (att.type == AttributeType.Key)
@@ -87,36 +100,13 @@ namespace ERDesigner.Shape
                 entity.addAttribute((AttributeShape)att.Clone());
             }
 
-            for(int i=0; i<4; i++)
+            for (int i = 0; i < 4; i++)
                 foreach (CardinalityShape cardi in cardinalities[i])
                 {
-                    entity.insertCardinality(i, 0, (CardinalityShape)cardi.Clone());
+                    entity.AddCardiPlace((CardinalityShape)cardi.Clone());
                 }
 
-           return (ShapeBase)entity;
-        }
-
-        void EntityShape_Disposed(object sender, EventArgs e)
-        {
-            for (int i = 0; i < attributes.Count; i++)
-            {
-                attributes[i].Dispose();
-                i--;
-            }
-        }
-
-        public void insertCardinality(int edgePlace, int i, CardinalityShape cardi)
-        {
-            cardinalities[edgePlace].Insert(i, cardi);
-            cardi.Disposed += new EventHandler(cardi_Disposed);
-        }
-
-        void cardi_Disposed(object sender, EventArgs e)
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                cardinalities[i].Remove((CardinalityShape)sender);
-            }
+            return (ShapeBase)entity;
         }
 
         //Đoạn này nhìn vậy thực ra kiếm cả ngày mới ra
@@ -133,30 +123,40 @@ namespace ERDesigner.Shape
         //--> Final Solution: Event + Callback Function, wá ngắn
         //www.msdner.com
         //Key: Can I dispose of instances without explicitly removing all references to them?
-
+        public void AddCardiPlace(CardinalityShape cardi)
+        {
+            int EdgeCardiPlace = DrawingSupport.CalculateCardiDirection(this, cardi.Relationship);
+            int index = CalculateCardiPosition(cardi, EdgeCardiPlace);
+            cardinalities[EdgeCardiPlace - 1].Insert(index, cardi);
+            cardi.Disposed += new EventHandler(cardi_Disposed);
+        }
+        void cardi_Disposed(object sender, EventArgs e)
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                cardinalities[i].Remove((CardinalityShape)sender);
+            }
+        }
         public void addAttribute(AttributeShape att)
         {
             attributes.Add(att);
             att.Entity = this;
             att.Disposed += new EventHandler(att_Disposed);
         }
-
         void att_Disposed(object sender, EventArgs e)
         {
             attributes.Remove((AttributeShape)sender);
         }
-        //end
 
         protected override void refreshPath()
         {
             path = new GraphicsPath();
-            Rectangle rect = new Rectangle(this.ClientRectangle.X,this.ClientRectangle.Y,this.ClientRectangle.Width, this.ClientRectangle.Height);
+            Rectangle rect = new Rectangle(this.ClientRectangle.X, this.ClientRectangle.Y, this.ClientRectangle.Width, this.ClientRectangle.Height);
 
             path.AddRectangle(rect);
-                                               
+
             this.Region = new Region(path);
         }
-
         public override void DrawSelf(Graphics g)
         {
             Rectangle rect = new Rectangle(this.ClientRectangle.X, this.ClientRectangle.Y, this.ClientRectangle.Width - 1, this.ClientRectangle.Height - 1);
@@ -170,7 +170,6 @@ namespace ERDesigner.Shape
                 g.DrawRectangle(ThongSo.JPen, rect1);
             }
         }
-
         public override void dinhviTextBox(TextBox txtName)
         {
             txtName.Location = new Point(0, this.ClientRectangle.Height / 2 - txtName.Size.Height / 2);
@@ -179,18 +178,88 @@ namespace ERDesigner.Shape
             txtName.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
         }
 
-        private void InitializeComponent()
+        public void UpdateCardinalityPosition()
         {
-            this.SuspendLayout();
-            // 
-            // EntityShape
-            // 
-            this.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.DoubleBuffered = true;
-            this.Name = "EntityShape";
-            this.Size = new System.Drawing.Size(130, 60);
-            this.ResumeLayout(false);
+            for (int i = 0; i < 4; i++)
+            {
+                //update all cardinality of this entity
+                for (int j = 0; j < this.cardinalities[i].Count; j++)
+                {
+                    CardinalityShape cardi = this.cardinalities[i][j];
 
+                    RelationshipShape rel = cardi.Relationship;
+
+                    int oldEdgeCardiPlace = i + 1;
+                    int newEdgeCardiPlace = DrawingSupport.CalculateCardiDirection(this, rel);
+
+                    //Chổ này làm kỹ, không remove ra rồi add đại vô được
+                    //không thôi nó giựt wài ghét lắm
+
+                    //Nếu vị trí mới tính được khác vị trí cũ
+                    if (oldEdgeCardiPlace != newEdgeCardiPlace)
+                    {
+                        //remove old and add new
+                        this.cardinalities[oldEdgeCardiPlace - 1].Remove(cardi);
+
+                        int index = CalculateCardiPosition(cardi, newEdgeCardiPlace);
+                        this.cardinalities[newEdgeCardiPlace - 1].Insert(index, cardi);
+                    }
+                    else //Nếu vẫn là vị trí cũ, thì tính lại thứ tự trong vị trí đó
+                    {
+                        //just update the position
+                        for (int k = 0; k < this.cardinalities[oldEdgeCardiPlace - 1].Count - 1; k++)
+                        {
+                            if (oldEdgeCardiPlace == 1 || oldEdgeCardiPlace == 3) //Up hoặc down thì so sánh x
+                            {
+                                if (this.cardinalities[oldEdgeCardiPlace - 1][k].Relationship.Location.X > this.cardinalities[oldEdgeCardiPlace - 1][k + 1].Relationship.Location.X)
+                                    this.cardinalities[oldEdgeCardiPlace - 1].Reverse(k, 2);
+                            }
+                            else //right hoặc left thì so sánh y
+                            {
+                                if (this.cardinalities[oldEdgeCardiPlace - 1][k].Relationship.Location.Y > this.cardinalities[oldEdgeCardiPlace - 1][k + 1].Relationship.Location.Y)
+                                    this.cardinalities[oldEdgeCardiPlace - 1].Reverse(k, 2);
+                            }
+                        }
+                    }
+                }
+            }
         }
+        private int CalculateCardiPosition(CardinalityShape cardi, int newEdgeCardiPlace)
+        {
+            int index = 0;
+            foreach (CardinalityShape cardiInEntity in this.cardinalities[newEdgeCardiPlace - 1])
+            {
+                if (newEdgeCardiPlace == 1 || newEdgeCardiPlace == 3) //Up hoặc down thì so sánh x
+                {
+                    if (cardi.Relationship.Location.X > cardiInEntity.Relationship.Location.X)
+                        index++;
+                }
+                else //right hoặc left thì so sánh y
+                {
+                    if (cardi.Relationship.Location.Y > cardiInEntity.Relationship.Location.Y)
+                        index++;
+                }
+            }
+            return index;
+        }
+
+        #region INotation Members
+
+        public void DrawConnectiveLines(Graphics g)
+        {
+            foreach (AttributeShape att in this.attributes)
+            {
+                g.DrawLine(new Pen(Color.Black, 1), this.CenterPoint, att.CenterPoint);
+            }
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = 0; j < this.cardinalities[i].Count; j++)
+                {
+                    DrawingSupport.DrawCardinalitiesLine(g, this.cardinalities[i][j], i + 1, j + 1, this.cardinalities[i].Count);
+                }
+            }
+        }
+
+        #endregion
     }
 }

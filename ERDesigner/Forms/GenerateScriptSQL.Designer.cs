@@ -29,20 +29,20 @@ namespace ERDesigner
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnReset = new System.Windows.Forms.Button();
-            this.btnBrowser = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnGenerate = new System.Windows.Forms.Button();
+            this.btnReset = new DevExpress.XtraEditors.SimpleButton();
+            this.btnBrowser = new DevExpress.XtraEditors.SimpleButton();
+            this.btnCancel = new DevExpress.XtraEditors.SimpleButton();
+            this.btnGenerate = new DevExpress.XtraEditors.SimpleButton();
             this.txtDirectory = new System.Windows.Forms.TextBox();
             this.txtDBName = new System.Windows.Forms.TextBox();
             this.txtFileName = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.label5 = new DevExpress.XtraEditors.LabelControl();
+            this.label4 = new DevExpress.XtraEditors.LabelControl();
+            this.label3 = new DevExpress.XtraEditors.LabelControl();
+            this.label2 = new DevExpress.XtraEditors.LabelControl();
+            this.label1 = new DevExpress.XtraEditors.LabelControl();
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
-            this.btnPreview = new System.Windows.Forms.Button();
+            this.btnPreview = new DevExpress.XtraEditors.SimpleButton();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -75,7 +75,7 @@ namespace ERDesigner
             this.btnReset.Size = new System.Drawing.Size(75, 23);
             this.btnReset.TabIndex = 9;
             this.btnReset.Text = "Reset";
-            this.btnReset.UseVisualStyleBackColor = true;
+
             this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // btnBrowser
@@ -85,7 +85,7 @@ namespace ERDesigner
             this.btnBrowser.Size = new System.Drawing.Size(65, 23);
             this.btnBrowser.TabIndex = 8;
             this.btnBrowser.Text = "Browse...";
-            this.btnBrowser.UseVisualStyleBackColor = true;
+
             this.btnBrowser.Click += new System.EventHandler(this.btnBrowser_Click);
             // 
             // btnCancel
@@ -95,7 +95,7 @@ namespace ERDesigner
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 7;
             this.btnCancel.Text = "Close";
-            this.btnCancel.UseVisualStyleBackColor = true;
+
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnGenerate
@@ -105,7 +105,7 @@ namespace ERDesigner
             this.btnGenerate.Size = new System.Drawing.Size(75, 23);
             this.btnGenerate.TabIndex = 7;
             this.btnGenerate.Text = "Generate";
-            this.btnGenerate.UseVisualStyleBackColor = true;
+
             this.btnGenerate.Click += new System.EventHandler(this.btnGenerate_Click);
             // 
             // txtDirectory
@@ -182,7 +182,7 @@ namespace ERDesigner
             this.btnPreview.Size = new System.Drawing.Size(114, 23);
             this.btnPreview.TabIndex = 7;
             this.btnPreview.Text = "Preview && Edit";
-            this.btnPreview.UseVisualStyleBackColor = true;
+
             this.btnPreview.Click += new System.EventHandler(this.btnPreview_Click);
             // 
             // GenerateScriptSQL
@@ -203,19 +203,19 @@ namespace ERDesigner
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
+        private DevExpress.XtraEditors.LabelControl label1;
+        private DevExpress.XtraEditors.LabelControl label4;
+        private DevExpress.XtraEditors.LabelControl label3;
+        private DevExpress.XtraEditors.LabelControl label2;
         private System.Windows.Forms.TextBox txtFileName;
-        private System.Windows.Forms.Label label5;
+        private DevExpress.XtraEditors.LabelControl label5;
         private System.Windows.Forms.TextBox txtDBName;
-        private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Button btnGenerate;
+        private DevExpress.XtraEditors.SimpleButton btnCancel;
+        private DevExpress.XtraEditors.SimpleButton btnGenerate;
         private System.Windows.Forms.TextBox txtDirectory;
-        private System.Windows.Forms.Button btnBrowser;
+        private DevExpress.XtraEditors.SimpleButton btnBrowser;
         private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
-        private System.Windows.Forms.Button btnReset;
-        private System.Windows.Forms.Button btnPreview;
+        private DevExpress.XtraEditors.SimpleButton btnReset;
+        private DevExpress.XtraEditors.SimpleButton btnPreview;
     }
 }

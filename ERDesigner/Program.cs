@@ -12,6 +12,8 @@ namespace ERDesigner
         [STAThread]
         static void Main()
         {
+            DevExpress.UserSkins.OfficeSkins.Register();
+            DevExpress.Skins.SkinManager.EnableFormSkins();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());

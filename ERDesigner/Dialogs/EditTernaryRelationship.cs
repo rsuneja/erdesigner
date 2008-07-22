@@ -11,14 +11,11 @@ using DevExpress.XtraEditors;
 
 namespace ERDesigner
 {
-    public partial class EditTernaryRelationship : Form
+    public partial class EditTernaryRelationship : DevExpress.XtraEditors.XtraForm
     {
         public EntityShape SelectedEntity1 = null;
         public EntityShape SelectedEntity2 = null;
         public EntityShape SelectedEntity3 = null;
-
-        Control.ControlCollection Control;
-
         RelationshipShape Relationship;
 
         public CardinalityShape cardi1;
@@ -30,23 +27,14 @@ namespace ERDesigner
             InitializeComponent();
 
             Relationship = new RelationshipShape(relationship.sName, new Point(panelDoubleBuffered1.Width / 2, panelDoubleBuffered1.Height / 2), relationship.type);
-            SelectedEntity1 = new EntityShape(relationship.cardinalities[0].entity.sName, new Point(panelDoubleBuffered1.Width / 2, ThongSo.ShapeH / 2), relationship.cardinalities[0].entity.type);
-            SelectedEntity2 = new EntityShape(relationship.cardinalities[1].entity.sName, new Point(panelDoubleBuffered1.Width / 2 - ThongSo.ShapeW * 3/2, panelDoubleBuffered1.Height - ThongSo.ShapeH/2), relationship.cardinalities[1].entity.type);
-            SelectedEntity3 = new EntityShape(relationship.cardinalities[2].entity.sName, new Point(panelDoubleBuffered1.Width / 2 + ThongSo.ShapeW * 3/2, panelDoubleBuffered1.Height - ThongSo.ShapeH/2), relationship.cardinalities[2].entity.type);
+            SelectedEntity1 = new EntityShape(relationship.cardinalities[0].Entity.sName, new Point(panelDoubleBuffered1.Width / 2, ThongSo.ShapeH / 2), relationship.cardinalities[0].Entity.type);
+            SelectedEntity2 = new EntityShape(relationship.cardinalities[1].Entity.sName, new Point(panelDoubleBuffered1.Width / 2 - ThongSo.ShapeW * 3/2, panelDoubleBuffered1.Height - ThongSo.ShapeH/2), relationship.cardinalities[1].Entity.type);
+            SelectedEntity3 = new EntityShape(relationship.cardinalities[2].Entity.sName, new Point(panelDoubleBuffered1.Width / 2 + ThongSo.ShapeW * 3/2, panelDoubleBuffered1.Height - ThongSo.ShapeH/2), relationship.cardinalities[2].Entity.type);
 
-            cardi1 = new CardinalityShape(SelectedEntity1);
-            cardi1.setValue(relationship.cardinalities[0].MinCardinality, relationship.cardinalities[0].MaxCardinality);
-
-            cardi2 = new CardinalityShape(SelectedEntity2);
-            cardi2.setValue(relationship.cardinalities[1].MinCardinality, relationship.cardinalities[1].MaxCardinality);
-
-            cardi3 = new CardinalityShape(SelectedEntity3);
-            cardi3.setValue(relationship.cardinalities[2].MinCardinality, relationship.cardinalities[2].MaxCardinality);
-
-            Relationship.addCardinality(cardi1);
-            Relationship.addCardinality(cardi2);
-            Relationship.addCardinality(cardi3);
-
+            cardi1 = Relationship.CreateCardinality(SelectedEntity1, relationship.cardinalities[0].MinCardinality, relationship.cardinalities[0].MaxCardinality);
+            cardi2 = Relationship.CreateCardinality(SelectedEntity2, relationship.cardinalities[1].MinCardinality, relationship.cardinalities[1].MaxCardinality);
+            cardi3 = Relationship.CreateCardinality(SelectedEntity3, relationship.cardinalities[2].MinCardinality, relationship.cardinalities[2].MaxCardinality);
+            
             panelDoubleBuffered1.Controls.Add(Relationship);
             panelDoubleBuffered1.Controls.Add(SelectedEntity1);
             panelDoubleBuffered1.Controls.Add(SelectedEntity2);
@@ -81,22 +69,11 @@ namespace ERDesigner
             if (min == 1 && max == -1)
                 imageComboBox.SelectedIndex = 3;
         }
-
-        private void btnOK_Click(object sender, EventArgs e)
-        {
-            
-        }
-
         void showText()
         {
-            labEntity1.Text = Relationship.cardinalities[0].entity.sName;
-            labEntity2.Text = Relationship.cardinalities[1].entity.sName;
-            labEntity3.Text = Relationship.cardinalities[2].entity.sName;
-        }
-
-        private void AddCardinality_Load(object sender, EventArgs e)
-        {
-
+            labEntity1.Text = Relationship.cardinalities[0].Entity.sName;
+            labEntity2.Text = Relationship.cardinalities[1].Entity.sName;
+            labEntity3.Text = Relationship.cardinalities[2].Entity.sName;
         }
 
         private void imageComboBoxEdit2_SelectedIndexChanged(object sender, EventArgs e)
