@@ -29,8 +29,8 @@ namespace ERDesigner
         private void InitializeComponent()
         {
             this.txtUrl = new System.Windows.Forms.TextBox();
-            this.btnEdit = new System.Windows.Forms.Button();
-            this.btnClose = new System.Windows.Forms.Button();
+            this.btnEdit = new DevExpress.XtraEditors.SimpleButton();
+            this.btnClose = new DevExpress.XtraEditors.SimpleButton();
             this.SuspendLayout();
             // 
             // txtUrl
@@ -48,7 +48,6 @@ namespace ERDesigner
             this.btnEdit.Size = new System.Drawing.Size(75, 23);
             this.btnEdit.TabIndex = 1;
             this.btnEdit.Text = "Edit";
-            this.btnEdit.UseVisualStyleBackColor = true;
             this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
             // btnClose
@@ -58,7 +57,6 @@ namespace ERDesigner
             this.btnClose.Size = new System.Drawing.Size(75, 23);
             this.btnClose.TabIndex = 2;
             this.btnClose.Text = "Close";
-            this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // frmEditDDLScript
@@ -80,7 +78,7 @@ namespace ERDesigner
         #endregion
 
         private System.Windows.Forms.TextBox txtUrl;
-        private System.Windows.Forms.Button btnEdit;
-        private System.Windows.Forms.Button btnClose;
+        private DevExpress.XtraEditors.SimpleButton btnEdit;
+        private DevExpress.XtraEditors.SimpleButton btnClose;
     }
 }

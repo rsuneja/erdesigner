@@ -29,13 +29,13 @@ namespace ERDesigner
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(New_Project));
-            this.label1 = new System.Windows.Forms.Label();
+            this.label1 = new DevExpress.XtraEditors.LabelControl();
             this.txtProjectName = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.btnOK = new System.Windows.Forms.Button();
+            this.btnOK = new DevExpress.XtraEditors.SimpleButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.label2 = new System.Windows.Forms.Label();
+            this.btnCancel = new DevExpress.XtraEditors.SimpleButton();
+            this.label2 = new DevExpress.XtraEditors.LabelControl();
             this.browseFileControl1 = new ERDesigner.BrowseFileControl();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
@@ -72,7 +72,6 @@ namespace ERDesigner
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 5;
             this.btnOK.Text = "OK";
-            this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // groupBox1
@@ -92,7 +91,6 @@ namespace ERDesigner
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 5;
             this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // label2
@@ -138,14 +136,14 @@ namespace ERDesigner
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
+        private DevExpress.XtraEditors.LabelControl label1;
         public System.Windows.Forms.TextBox txtProjectName;
         
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button btnOK;
+        private DevExpress.XtraEditors.SimpleButton btnOK;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Label label2;
+        private DevExpress.XtraEditors.SimpleButton btnCancel;
+        private DevExpress.XtraEditors.LabelControl label2;
         public BrowseFileControl browseFileControl1;
 
     }

@@ -11,11 +11,10 @@ using DevExpress.XtraEditors;
 
 namespace ERDesigner
 {
-    public partial class AddCardinality : Form
+    public partial class AddCardinality : DevExpress.XtraEditors.XtraForm
     {
         public EntityShape SelectedEntity1 = null;
         public EntityShape SelectedEntity2 = null;
-        Control.ControlCollection Control;
         RelationshipShape Relationship;
         public CardinalityShape cardi1;
         public CardinalityShape cardi2;
@@ -25,20 +24,11 @@ namespace ERDesigner
             InitializeComponent();
 
             Relationship = new RelationshipShape(relationship.sName, new Point(panelDoubleBuffered1.Width / 2, panelDoubleBuffered1.Height / 2), relationship.type);
-            SelectedEntity1 = new EntityShape(relationship.cardinalities[0].entity.sName, new Point(panelDoubleBuffered1.Width / 2 - ThongSo.ShapeW * 3/2, panelDoubleBuffered1.Height / 2), relationship.cardinalities[0].entity.type);
-            SelectedEntity2 = new EntityShape(relationship.cardinalities[1].entity.sName, new Point(panelDoubleBuffered1.Width / 2 + ThongSo.ShapeW * 3/2, panelDoubleBuffered1.Height / 2), relationship.cardinalities[1].entity.type);
+            SelectedEntity1 = new EntityShape(relationship.cardinalities[0].Entity.sName, new Point(panelDoubleBuffered1.Width / 2 - ThongSo.ShapeW * 3/2, panelDoubleBuffered1.Height / 2), relationship.cardinalities[0].Entity.type);
+            SelectedEntity2 = new EntityShape(relationship.cardinalities[1].Entity.sName, new Point(panelDoubleBuffered1.Width / 2 + ThongSo.ShapeW * 3/2, panelDoubleBuffered1.Height / 2), relationship.cardinalities[1].Entity.type);
 
-            cardi1 = new CardinalityShape(SelectedEntity1);
-            cardi1.setValue(relationship.cardinalities[0].MinCardinality, relationship.cardinalities[0].MaxCardinality);
-
-            cardi2 = new CardinalityShape(SelectedEntity2);
-            cardi2.setValue(relationship.cardinalities[1].MinCardinality, relationship.cardinalities[1].MaxCardinality);
-
-            Relationship.addCardinality(cardi1);
-            Relationship.addCardinality(cardi2);
-
-            //SelectedEntity1.insertCardinality(1, 0, cardi1); //0,1,2,3
-            //SelectedEntity2.insertCardinality(3, 0, cardi2);
+            cardi1 = Relationship.CreateCardinality(SelectedEntity1, relationship.cardinalities[0].MinCardinality, relationship.cardinalities[0].MaxCardinality);
+            cardi2 = Relationship.CreateCardinality(SelectedEntity2, relationship.cardinalities[1].MinCardinality, relationship.cardinalities[1].MaxCardinality);
 
             panelDoubleBuffered1.Controls.Add(Relationship);
             panelDoubleBuffered1.Controls.Add(SelectedEntity1);
@@ -73,29 +63,18 @@ namespace ERDesigner
 
             showText();
         }
-
-        private void btnOK_Click(object sender, EventArgs e)
-        {
-
-        }
-
         void showText()
         {
-            labEntity1.Text = Relationship.cardinalities[0].entity.sName;
-            labEntity11.Text = Relationship.cardinalities[0].entity.sName;
+            labEntity1.Text = Relationship.cardinalities[0].Entity.sName;
+            labEntity11.Text = Relationship.cardinalities[0].Entity.sName;
 
-            labEntity2.Text = Relationship.cardinalities[1].entity.sName;
-            labEntity22.Text = Relationship.cardinalities[1].entity.sName;
+            labEntity2.Text = Relationship.cardinalities[1].Entity.sName;
+            labEntity22.Text = Relationship.cardinalities[1].Entity.sName;
 
             labRel.Text = Relationship.sName;
             labRel2.Text = Relationship.sName;
         }
-
-        private void AddCardinality_Load(object sender, EventArgs e)
-        {
-
-        }
-
+        
         private void imageComboBoxEdit2_SelectedIndexChanged(object sender, EventArgs e)
         {
             RenderPreview(imageComboBoxEdit2, cardi2);
@@ -120,12 +99,5 @@ namespace ERDesigner
 
             panelDoubleBuffered1.Refresh();
         }
-
-        private void labEntity1_Enter(object sender, EventArgs e)
-        {
-
-        }
-
-
     }
 }

@@ -31,6 +31,18 @@ namespace ERDesigner
         {
             //Khởi tạo thêm
             initColor();
+
+            foreach (DevExpress.Skins.SkinContainer skin in DevExpress.Skins.SkinManager.Default.Skins)
+            {
+                BarCheckItem item = ribbon.Items.CreateCheckItem(skin.SkinName, false);
+                item.Tag = skin.SkinName;
+                item.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(OnPaintStyleClick);
+                btnSkin.ItemLinks.Add(item);
+            }
+        }
+        void OnPaintStyleClick(object sender, ItemClickEventArgs e)
+        {
+            defaultLookAndFeel1.LookAndFeel.SetSkinStyle(e.Item.Tag.ToString());
         }
 
         //Khởi tạo gallery màu
@@ -74,7 +86,7 @@ namespace ERDesigner
 
         private void btnClear_Click(object sender, ItemClickEventArgs e)
         {
-            if (MessageBox.Show("Are you sure want to clear ?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+            if (DevExpress.XtraEditors.XtraMessageBox.Show("Are you sure want to clear ?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
             {
                 ((frmDrawBoard)ActiveMdiChild).Clear();
             }
@@ -208,7 +220,7 @@ namespace ERDesigner
         private void drawboard_FormClosing(object sender, FormClosingEventArgs e)
         {
 
-            DialogResult ds = MessageBox.Show("Do you want to save " + ((Form)sender).Text + " ?", "Confirm", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+            DialogResult ds = DevExpress.XtraEditors.XtraMessageBox.Show("Do you want to save " + ((Form)sender).Text + " ?", "Confirm", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
             if (ds == DialogResult.Yes)
             {
                 SaveModel(((Form)sender));
@@ -239,7 +251,7 @@ namespace ERDesigner
                         string s = "Project location was existed in system, do you want to replace it ?";
                         s += "\nWarning: This action can replace your file in that location";
                         s += "\n\nDo you want to contitnue ?";
-                        if (MessageBox.Show(s, "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2) == DialogResult.OK)
+                        if (DevExpress.XtraEditors.XtraMessageBox.Show(s, "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Asterisk, MessageBoxDefaultButton.Button2) == DialogResult.OK)
                         {
                             NewModel();
                             refreshTreeView();
@@ -249,7 +261,7 @@ namespace ERDesigner
             }
             else
             {
-                if (MessageBox.Show("Do you want to close current project ?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                if (DevExpress.XtraEditors.XtraMessageBox.Show("Do you want to close current project ?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                 {
                     btnCloseProject_ItemClick(sender, e);
                 }
@@ -266,7 +278,7 @@ namespace ERDesigner
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("File has invalid format");
+                    DevExpress.XtraEditors.XtraMessageBox.Show("File has invalid format");
                     return;
                 }
                 refreshTreeView();
@@ -294,7 +306,7 @@ namespace ERDesigner
             }
             else
             {
-                MessageBox.Show("You have to create new project first", "Warning");
+                DevExpress.XtraEditors.XtraMessageBox.Show("You have to create new project first", "Warning");
             }
         }
         private void btnOpenModel_ItemClick(object sender, ItemClickEventArgs e)
@@ -308,8 +320,6 @@ namespace ERDesigner
                 SaveModel((Form)ActiveMdiChild);
             }
         }
-
-        
         private void treeView1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (treeView1.Nodes.Count > 0 && treeView1.SelectedNode != null)
@@ -406,7 +416,7 @@ namespace ERDesigner
             }
             else
             {
-                if (MessageBox.Show("This model canot be found, do you want to delete it from this project ?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                if (DevExpress.XtraEditors.XtraMessageBox.Show("This model canot be found, do you want to delete it from this project ?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                 {
                     foreach (Model m in currentProject.Models)
                     {
@@ -469,14 +479,13 @@ namespace ERDesigner
         {
             if (currentProject != null)
             {
-                //if (MessageBox.Show("Do you want to save this project ?", "Question", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                //if (DevExpress.XtraEditors.XtraMessageBox.Show("Do you want to save this project ?", "Question", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                 //{
 
                 //        js.saveProjectToXML(currentProject.ProjectPath + "/project.xml", currentProject);
                 //}
             }
         }
-
         private void treeView1_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             string oldname = treeView1.SelectedNode.Text;
@@ -518,7 +527,6 @@ namespace ERDesigner
                 SaveProject();
             }
         }
-
         private void btnGenerateSQl_ItemClick(object sender, ItemClickEventArgs e)
         {
             if(ActiveMdiChild != null && ActiveMdiChild.GetType().Name == "frmPhysicalDrawBoard")
@@ -549,7 +557,6 @@ namespace ERDesigner
                 }
             }
         }
-
         private void btnCloseProject_ItemClick(object sender, ItemClickEventArgs e)
         {
             foreach (Form f in this.MdiChildren)
@@ -559,7 +566,6 @@ namespace ERDesigner
             treeView1.Nodes.Clear();
             currentProject = null;
         }
-
         private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (treeView1.SelectedNode != null)
@@ -586,7 +592,6 @@ namespace ERDesigner
                 }
             }
         }
-
         private void renameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (treeView1.SelectedNode != null)
@@ -594,7 +599,6 @@ namespace ERDesigner
                 treeView1.SelectedNode.BeginEdit();
             }
         }
-
         private void btnRedo_ItemClick(object sender, ItemClickEventArgs e)
         {
             if (ActiveMdiChild != null)
@@ -603,7 +607,6 @@ namespace ERDesigner
                 
             }
         }
-
         private void DegreeChecked_Change(object sender, EventArgs e)
         {
             if (ActiveMdiChild != null)
@@ -624,6 +627,22 @@ namespace ERDesigner
                     return;
                 }
             }
+        }
+        private void btnAbout_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            AboutBox about = new AboutBox();
+            about.ShowDialog();
+        }
+        private void btnConnect_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            AddConnection connSetting = new AddConnection();
+            AddOwnedForm(connSetting);
+            connSetting.ShowDialog();
+        }
+        private void btnSkin_Popup(object sender, EventArgs e)
+        {
+            foreach (BarItemLink link in btnSkin.ItemLinks)
+                ((BarCheckItem)link.Item).Checked = link.Item.Caption == defaultLookAndFeel1.LookAndFeel.ActiveSkinName;
         }
 
     }

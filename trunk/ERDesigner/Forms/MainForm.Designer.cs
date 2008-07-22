@@ -33,6 +33,8 @@ namespace ERDesigner
             DevExpress.XtraBars.Ribbon.GalleryItemGroup galleryItemGroup1 = new DevExpress.XtraBars.Ribbon.GalleryItemGroup();
             DevExpress.XtraBars.Ribbon.GalleryItemGroup galleryItemGroup2 = new DevExpress.XtraBars.Ribbon.GalleryItemGroup();
             DevExpress.XtraBars.Ribbon.GalleryItemGroup galleryItemGroup3 = new DevExpress.XtraBars.Ribbon.GalleryItemGroup();
+            DevExpress.XtraBars.Ribbon.GalleryItemGroup galleryItemGroup4 = new DevExpress.XtraBars.Ribbon.GalleryItemGroup();
+            DevExpress.XtraBars.Ribbon.GalleryItemGroup galleryItemGroup5 = new DevExpress.XtraBars.Ribbon.GalleryItemGroup();
             this.ribbon = new DevExpress.XtraBars.Ribbon.RibbonControl();
             this.StartMenu = new DevExpress.XtraBars.Ribbon.ApplicationMenu(this.components);
             this.subNew = new DevExpress.XtraBars.BarSubItem();
@@ -70,13 +72,24 @@ namespace ERDesigner
             this.chkSkin = new DevExpress.XtraBars.BarCheckItem();
             this.chkGrid = new DevExpress.XtraBars.BarCheckItem();
             this.btnRedo = new DevExpress.XtraBars.BarButtonItem();
+            this.btnConnect = new DevExpress.XtraBars.BarButtonItem();
+            this.chkDirect = new DevExpress.XtraBars.BarEditItem();
+            this.repositoryItemCheckEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
+            this.chkFile = new DevExpress.XtraBars.BarEditItem();
+            this.repositoryItemCheckEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
+            this.rgbiSkins = new DevExpress.XtraBars.RibbonGalleryBarItem();
+            this.btnSkin = new DevExpress.XtraBars.BarSubItem();
+            this.repositoryItemMRUEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemMRUEdit();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
             this.ribbonHome = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonFile = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonEdit = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonStyle = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonMiniTool = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
+            this.ribbonEERD = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            this.ribbonPageGroup2 = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonTool = new DevExpress.XtraBars.Ribbon.RibbonPage();
+            this.ribbonDataSetting = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.ribbonPhysical = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
             this.repositoryItemCheckEdit1 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.ribbonStatusBar = new DevExpress.XtraBars.Ribbon.RibbonStatusBar();
@@ -127,16 +140,14 @@ namespace ERDesigner
             this.navBarGroup2 = new DevExpress.XtraNavBar.NavBarGroup();
             this.navBarGroup3 = new DevExpress.XtraNavBar.NavBarGroup();
             this.xtraTabPage2 = new DevExpress.XtraTab.XtraTabPage();
-            this.btnConnect = new DevExpress.XtraBars.BarButtonItem();
-            this.ribbonDataSetting = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
-            this.barEditItem1 = new DevExpress.XtraBars.BarEditItem();
-            this.repositoryItemCheckEdit2 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
-            this.barEditItem2 = new DevExpress.XtraBars.BarEditItem();
-            this.repositoryItemCheckEdit3 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
+            this.barButtonItem1 = new DevExpress.XtraBars.BarButtonItem();
             ((System.ComponentModel.ISupportInitialize)(this.StartMenu)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.gddColor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemZoomTrackBar1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemMRUEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).BeginInit();
@@ -153,8 +164,6 @@ namespace ERDesigner
             ((System.ComponentModel.ISupportInitialize)(this.listErrorList)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabbedMdiManager1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).BeginInit();
             this.SuspendLayout();
             // 
             // ribbon
@@ -197,26 +206,32 @@ namespace ERDesigner
             this.btnOpenModel,
             this.btnCloseProject,
             this.btnConnect,
-            this.barEditItem1,
-            this.barEditItem2});
+            this.chkDirect,
+            this.chkFile,
+            this.rgbiSkins,
+            this.btnSkin,
+            this.barButtonItem1});
             this.ribbon.LargeImages = this.imageCollection1;
             this.ribbon.Location = new System.Drawing.Point(0, 0);
-            this.ribbon.MaxItemId = 55;
+            this.ribbon.MaxItemId = 69;
             this.ribbon.Name = "ribbon";
             this.ribbon.PageHeaderItemLinks.Add(this.btnAbout);
             this.ribbon.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
             this.ribbonHome,
+            this.ribbonEERD,
             this.ribbonTool});
             this.ribbon.RepositoryItems.AddRange(new DevExpress.XtraEditors.Repository.RepositoryItem[] {
             this.repositoryItemZoomTrackBar1,
             this.repositoryItemCheckEdit1,
             this.repositoryItemCheckEdit2,
-            this.repositoryItemCheckEdit3});
-            this.ribbon.SelectedPage = this.ribbonHome;
-            this.ribbon.Size = new System.Drawing.Size(792, 149);
+            this.repositoryItemCheckEdit3,
+            this.repositoryItemMRUEdit1});
+            this.ribbon.SelectedPage = this.ribbonEERD;
+            this.ribbon.Size = new System.Drawing.Size(784, 149);
             this.ribbon.Toolbar.ItemLinks.Add(this.btnOpenProject);
             this.ribbon.Toolbar.ItemLinks.Add(this.btnSaveModelAs);
             this.ribbon.Toolbar.ItemLinks.Add(this.btnUndo);
+            this.ribbon.Toolbar.ItemLinks.Add(this.btnSkin);
             // 
             // StartMenu
             // 
@@ -460,6 +475,7 @@ namespace ERDesigner
             this.btnAbout.Id = 16;
             this.btnAbout.ImageIndex = 25;
             this.btnAbout.Name = "btnAbout";
+            this.btnAbout.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnAbout_ItemClick);
             // 
             // btnZoom
             // 
@@ -568,6 +584,74 @@ namespace ERDesigner
             this.btnRedo.Name = "btnRedo";
             this.btnRedo.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnRedo_ItemClick);
             // 
+            // btnConnect
+            // 
+            this.btnConnect.Caption = "Connect to Database...";
+            this.btnConnect.Id = 50;
+            this.btnConnect.ImageIndex = 31;
+            this.btnConnect.LargeImageIndex = 16;
+            this.btnConnect.LargeWidth = 100;
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnConnect_ItemClick);
+            // 
+            // chkDirect
+            // 
+            this.chkDirect.Caption = "Direct";
+            this.chkDirect.Edit = this.repositoryItemCheckEdit2;
+            this.chkDirect.EditValue = true;
+            this.chkDirect.Id = 53;
+            this.chkDirect.Name = "chkDirect";
+            // 
+            // repositoryItemCheckEdit2
+            // 
+            this.repositoryItemCheckEdit2.AutoHeight = false;
+            this.repositoryItemCheckEdit2.Name = "repositoryItemCheckEdit2";
+            // 
+            // chkFile
+            // 
+            this.chkFile.Caption = "SQL File";
+            this.chkFile.Edit = this.repositoryItemCheckEdit3;
+            this.chkFile.EditValue = true;
+            this.chkFile.Id = 54;
+            this.chkFile.Name = "chkFile";
+            this.chkFile.Width = 30;
+            // 
+            // repositoryItemCheckEdit3
+            // 
+            this.repositoryItemCheckEdit3.AutoHeight = false;
+            this.repositoryItemCheckEdit3.Name = "repositoryItemCheckEdit3";
+            // 
+            // rgbiSkins
+            // 
+            this.rgbiSkins.Caption = "Skins";
+            // 
+            // 
+            // 
+            galleryItemGroup4.Caption = "Main Skin";
+            galleryItemGroup5.Caption = "Office Skin";
+            this.rgbiSkins.Gallery.Groups.AddRange(new DevExpress.XtraBars.Ribbon.GalleryItemGroup[] {
+            galleryItemGroup4,
+            galleryItemGroup5});
+            this.rgbiSkins.Id = 55;
+            this.rgbiSkins.Name = "rgbiSkins";
+            // 
+            // btnSkin
+            // 
+            this.btnSkin.Caption = "Paint style";
+            this.btnSkin.Description = "Select a paint scheme";
+            this.btnSkin.Hint = "Select a paint scheme";
+            this.btnSkin.Id = 59;
+            this.btnSkin.ImageIndex = 26;
+            this.btnSkin.Name = "btnSkin";
+            this.btnSkin.Popup += new System.EventHandler(this.btnSkin_Popup);
+            // 
+            // repositoryItemMRUEdit1
+            // 
+            this.repositoryItemMRUEdit1.AutoHeight = false;
+            this.repositoryItemMRUEdit1.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
+            new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
+            this.repositoryItemMRUEdit1.Name = "repositoryItemMRUEdit1";
+            // 
             // imageCollection1
             // 
             this.imageCollection1.ImageSize = new System.Drawing.Size(32, 32);
@@ -627,6 +711,21 @@ namespace ERDesigner
             this.ribbonMiniTool.Name = "ribbonMiniTool";
             this.ribbonMiniTool.Text = "Mini Tool";
             // 
+            // ribbonEERD
+            // 
+            this.ribbonEERD.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
+            this.ribbonPageGroup2});
+            this.ribbonEERD.KeyTip = "";
+            this.ribbonEERD.Name = "ribbonEERD";
+            this.ribbonEERD.Text = "E-ERD";
+            // 
+            // ribbonPageGroup2
+            // 
+            this.ribbonPageGroup2.ItemLinks.Add(this.barButtonItem1);
+            this.ribbonPageGroup2.KeyTip = "";
+            this.ribbonPageGroup2.Name = "ribbonPageGroup2";
+            this.ribbonPageGroup2.Text = "E-ERD Notations";
+            // 
             // ribbonTool
             // 
             this.ribbonTool.Groups.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPageGroup[] {
@@ -635,6 +734,15 @@ namespace ERDesigner
             this.ribbonTool.KeyTip = "";
             this.ribbonTool.Name = "ribbonTool";
             this.ribbonTool.Text = "Tool";
+            // 
+            // ribbonDataSetting
+            // 
+            this.ribbonDataSetting.ItemLinks.Add(this.btnConnect);
+            this.ribbonDataSetting.ItemLinks.Add(this.chkDirect, true);
+            this.ribbonDataSetting.ItemLinks.Add(this.chkFile);
+            this.ribbonDataSetting.KeyTip = "";
+            this.ribbonDataSetting.Name = "ribbonDataSetting";
+            this.ribbonDataSetting.Text = "Database Settings";
             // 
             // ribbonPhysical
             // 
@@ -653,10 +761,10 @@ namespace ERDesigner
             // ribbonStatusBar
             // 
             this.ribbonStatusBar.ItemLinks.Add(this.btnZoom);
-            this.ribbonStatusBar.Location = new System.Drawing.Point(0, 576);
+            this.ribbonStatusBar.Location = new System.Drawing.Point(0, 568);
             this.ribbonStatusBar.Name = "ribbonStatusBar";
             this.ribbonStatusBar.Ribbon = this.ribbon;
-            this.ribbonStatusBar.Size = new System.Drawing.Size(792, 23);
+            this.ribbonStatusBar.Size = new System.Drawing.Size(784, 23);
             // 
             // ribbonPageGroup1
             // 
@@ -674,7 +782,7 @@ namespace ERDesigner
             // 
             // defaultLookAndFeel1
             // 
-            this.defaultLookAndFeel1.LookAndFeel.SkinName = "Black";
+            this.defaultLookAndFeel1.LookAndFeel.SkinName = "Office 2007 Blue";
             // 
             // openFileDialog1
             // 
@@ -705,15 +813,15 @@ namespace ERDesigner
             this.dockToolBox.ID = new System.Guid("bf2c0b03-eaf4-4fac-926e-4bcf3bf10b36");
             this.dockToolBox.Location = new System.Drawing.Point(0, 149);
             this.dockToolBox.Name = "dockToolBox";
-            this.dockToolBox.Size = new System.Drawing.Size(202, 427);
+            this.dockToolBox.Size = new System.Drawing.Size(202, 419);
             this.dockToolBox.Text = "Tool Box";
             // 
             // controlContainer2
             // 
             this.controlContainer2.Controls.Add(this.navBarToolBox);
-            this.controlContainer2.Location = new System.Drawing.Point(3, 29);
+            this.controlContainer2.Location = new System.Drawing.Point(3, 24);
             this.controlContainer2.Name = "controlContainer2";
-            this.controlContainer2.Size = new System.Drawing.Size(196, 395);
+            this.controlContainer2.Size = new System.Drawing.Size(196, 392);
             this.controlContainer2.TabIndex = 0;
             // 
             // navBarToolBox
@@ -747,10 +855,10 @@ namespace ERDesigner
             this.navBarToolBox.Location = new System.Drawing.Point(0, 0);
             this.navBarToolBox.Name = "navBarToolBox";
             this.navBarToolBox.OptionsNavPane.ExpandedWidth = 196;
-            this.navBarToolBox.Size = new System.Drawing.Size(196, 395);
+            this.navBarToolBox.Size = new System.Drawing.Size(196, 392);
             this.navBarToolBox.SmallImages = this.imageCollection3;
+            this.navBarToolBox.StoreDefaultPaintStyleName = true;
             this.navBarToolBox.TabIndex = 0;
-            this.navBarToolBox.View = new DevExpress.XtraNavBar.ViewInfo.StandardSkinExplorerBarViewInfoRegistrator("Black");
             // 
             // navBarRelationship
             // 
@@ -1063,18 +1171,18 @@ namespace ERDesigner
             this.dockExplorer.Controls.Add(this.dockPanel1_Container);
             this.dockExplorer.Dock = DevExpress.XtraBars.Docking.DockingStyle.Right;
             this.dockExplorer.ID = new System.Guid("7a0ffa93-112d-4eeb-a145-57342611d7c9");
-            this.dockExplorer.Location = new System.Drawing.Point(603, 149);
+            this.dockExplorer.Location = new System.Drawing.Point(595, 149);
             this.dockExplorer.Name = "dockExplorer";
-            this.dockExplorer.Size = new System.Drawing.Size(189, 427);
+            this.dockExplorer.Size = new System.Drawing.Size(189, 419);
             this.dockExplorer.TabsScroll = true;
             this.dockExplorer.Text = "Model Explorer";
             // 
             // dockPanel1_Container
             // 
             this.dockPanel1_Container.Controls.Add(this.treeView1);
-            this.dockPanel1_Container.Location = new System.Drawing.Point(3, 29);
+            this.dockPanel1_Container.Location = new System.Drawing.Point(3, 24);
             this.dockPanel1_Container.Name = "dockPanel1_Container";
-            this.dockPanel1_Container.Size = new System.Drawing.Size(183, 395);
+            this.dockPanel1_Container.Size = new System.Drawing.Size(183, 392);
             this.dockPanel1_Container.TabIndex = 0;
             // 
             // treeView1
@@ -1084,7 +1192,7 @@ namespace ERDesigner
             this.treeView1.LabelEdit = true;
             this.treeView1.Location = new System.Drawing.Point(0, 0);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(183, 395);
+            this.treeView1.Size = new System.Drawing.Size(183, 392);
             this.treeView1.TabIndex = 0;
             this.treeView1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeView1_MouseDoubleClick);
             this.treeView1.AfterLabelEdit += new System.Windows.Forms.NodeLabelEditEventHandler(this.treeView1_AfterLabelEdit);
@@ -1095,17 +1203,17 @@ namespace ERDesigner
             this.dockErrorList.Dock = DevExpress.XtraBars.Docking.DockingStyle.Bottom;
             this.dockErrorList.FloatVertical = true;
             this.dockErrorList.ID = new System.Guid("b363091c-9c75-4bb1-9b68-fdd059e504d7");
-            this.dockErrorList.Location = new System.Drawing.Point(202, 451);
+            this.dockErrorList.Location = new System.Drawing.Point(202, 443);
             this.dockErrorList.Name = "dockErrorList";
-            this.dockErrorList.Size = new System.Drawing.Size(401, 125);
+            this.dockErrorList.Size = new System.Drawing.Size(393, 125);
             this.dockErrorList.Text = "Ouput";
             // 
             // dockPanel2_Container
             // 
             this.dockPanel2_Container.Controls.Add(this.listErrorList);
-            this.dockPanel2_Container.Location = new System.Drawing.Point(3, 29);
+            this.dockPanel2_Container.Location = new System.Drawing.Point(3, 24);
             this.dockPanel2_Container.Name = "dockPanel2_Container";
-            this.dockPanel2_Container.Size = new System.Drawing.Size(395, 93);
+            this.dockPanel2_Container.Size = new System.Drawing.Size(387, 98);
             this.dockPanel2_Container.TabIndex = 0;
             // 
             // listErrorList
@@ -1115,7 +1223,7 @@ namespace ERDesigner
             this.listErrorList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listErrorList.Location = new System.Drawing.Point(0, 0);
             this.listErrorList.Name = "listErrorList";
-            this.listErrorList.Size = new System.Drawing.Size(395, 93);
+            this.listErrorList.Size = new System.Drawing.Size(387, 98);
             this.listErrorList.TabIndex = 0;
             // 
             // xtraTabbedMdiManager1
@@ -1179,50 +1287,11 @@ namespace ERDesigner
             this.xtraTabPage2.Name = "xtraTabPage2";
             this.xtraTabPage2.Size = new System.Drawing.Size(195, 77);
             // 
-            // btnConnect
+            // barButtonItem1
             // 
-            this.btnConnect.Caption = "Connect to Database...";
-            this.btnConnect.Id = 50;
-            this.btnConnect.ImageIndex = 31;
-            this.btnConnect.LargeImageIndex = 16;
-            this.btnConnect.LargeWidth = 100;
-            this.btnConnect.Name = "btnConnect";
-            // 
-            // ribbonDataSetting
-            // 
-            this.ribbonDataSetting.ItemLinks.Add(this.btnConnect);
-            this.ribbonDataSetting.ItemLinks.Add(this.barEditItem1, true);
-            this.ribbonDataSetting.ItemLinks.Add(this.barEditItem2);
-            this.ribbonDataSetting.KeyTip = "";
-            this.ribbonDataSetting.Name = "ribbonDataSetting";
-            this.ribbonDataSetting.Text = "Database Settings";
-            // 
-            // barEditItem1
-            // 
-            this.barEditItem1.Caption = "Direct";
-            this.barEditItem1.Edit = this.repositoryItemCheckEdit2;
-            this.barEditItem1.EditValue = true;
-            this.barEditItem1.Id = 53;
-            this.barEditItem1.Name = "barEditItem1";
-            // 
-            // repositoryItemCheckEdit2
-            // 
-            this.repositoryItemCheckEdit2.AutoHeight = false;
-            this.repositoryItemCheckEdit2.Name = "repositoryItemCheckEdit2";
-            // 
-            // barEditItem2
-            // 
-            this.barEditItem2.Caption = "SQL File";
-            this.barEditItem2.Edit = this.repositoryItemCheckEdit3;
-            this.barEditItem2.EditValue = true;
-            this.barEditItem2.Id = 54;
-            this.barEditItem2.Name = "barEditItem2";
-            this.barEditItem2.Width = 30;
-            // 
-            // repositoryItemCheckEdit3
-            // 
-            this.repositoryItemCheckEdit3.AutoHeight = false;
-            this.repositoryItemCheckEdit3.Name = "repositoryItemCheckEdit3";
+            this.barButtonItem1.Caption = "barButtonItem1";
+            this.barButtonItem1.Id = 68;
+            this.barButtonItem1.Name = "barButtonItem1";
             // 
             // MainForm
             // 
@@ -1230,7 +1299,7 @@ namespace ERDesigner
             this.Appearance.Options.UseBackColor = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(792, 599);
+            this.ClientSize = new System.Drawing.Size(784, 591);
             this.Controls.Add(this.dockErrorList);
             this.Controls.Add(this.dockExplorer);
             this.Controls.Add(this.dockToolBox);
@@ -1250,6 +1319,9 @@ namespace ERDesigner
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.gddColor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemZoomTrackBar1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemMRUEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dockManager1)).EndInit();
@@ -1267,8 +1339,6 @@ namespace ERDesigner
             ((System.ComponentModel.ISupportInitialize)(this.listErrorList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.xtraTabbedMdiManager1)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1371,9 +1441,15 @@ namespace ERDesigner
         private System.Windows.Forms.RadioButton radBinary;
         private DevExpress.XtraBars.BarButtonItem btnConnect;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonDataSetting;
-        private DevExpress.XtraBars.BarEditItem barEditItem1;
+        private DevExpress.XtraBars.BarEditItem chkDirect;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit2;
-        private DevExpress.XtraBars.BarEditItem barEditItem2;
+        private DevExpress.XtraBars.BarEditItem chkFile;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit3;
+        private DevExpress.XtraBars.RibbonGalleryBarItem rgbiSkins;
+        private DevExpress.XtraBars.BarSubItem btnSkin;
+        private DevExpress.XtraEditors.Repository.RepositoryItemMRUEdit repositoryItemMRUEdit1;
+        private DevExpress.XtraBars.Ribbon.RibbonPage ribbonEERD;
+        private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup2;
+        private DevExpress.XtraBars.BarButtonItem barButtonItem1;
     }
 }

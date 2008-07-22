@@ -107,7 +107,7 @@ namespace ERDesigner
                                 RelationshipShape relshape = (RelationshipShape)AffectingShape;
                                 if ((relshape.cardinalities[0].MaxCardinality != -1 || relshape.cardinalities[1].MaxCardinality != -1) && ((AttributeShape)currentShape).type == AttributeType.Key)
                                 {
-                                    MessageBox.Show("Relationship couldn't have an Identifier Attribute");
+                                    DevExpress.XtraEditors.XtraMessageBox.Show("Relationship couldn't have an Identifier Attribute");
                                     currentShape = null;
                                 }
                                 else
@@ -492,7 +492,7 @@ namespace ERDesigner
                         relationship.cardinalities[1].setValue(addCardiDialog.cardi2.MinCardinality, addCardiDialog.cardi2.MaxCardinality);
 
                         if ((relationship.cardinalities[0].MaxCardinality != -1 || relationship.cardinalities[1].MaxCardinality != -1) && relationship.type == RelationshipType.AssociativeEntity)
-                            if (relationship.cardinalities[0].entity.type != relationship.cardinalities[1].entity.type)
+                            if (relationship.cardinalities[0].Entity.type != relationship.cardinalities[1].Entity.type)
                                 relationship.type = RelationshipType.Identifier;
                             else
                                 relationship.type = RelationshipType.Normal;
@@ -549,6 +549,40 @@ namespace ERDesigner
             AffectingShape = (ShapeBase)sender;
             isNaming = true;
         }
+        public void CancelDrawing()
+        {
+            isDrawing = false;
+            isDrawEntity = false;
+            isDrawingAtt = false;
+            isDrawRelationship = false;
+            this.Cursor = Cursors.Default;
+            setAllControlToDefaultCursor();
+
+            First_Mouse_Pos.X = -1;
+            First_Mouse_Pos.Y = -1;
+            Last_Mouse_Pos.X = -1;
+            Last_Mouse_Pos.Y = -1;
+
+            First_Mouse_Click = false;
+            Second_Mouse_Click = false;
+            Third_Mouse_Click = false;
+
+            FirstEntity = null;
+            SecondEntity = null;
+            ThirdEntity = null;
+
+            ((MainForm)TopLevelControl).CancelDrawing();
+            this.Refresh();
+        }
+        public void EndEditDataType()
+        {
+            if (AffectingShape != null && AffectingShape.GetType().Name == "AttributeShape" && isNaming)
+            {
+                ((ShapeBase)AffectingShape).endEditName();
+            }
+        }
+        
+        //Draw support
         private void JDrawReversibleRectangle(Point p1, Point p2)
         {
             Rectangle rc = new Rectangle();
@@ -625,6 +659,8 @@ namespace ERDesigner
 
             }
         }
+        
+        //Draw all relation line
         private void DrawConnectiveLines(Graphics g)
         {
             //Tính lại tất cả vị trí
@@ -633,53 +669,37 @@ namespace ERDesigner
             //Băt đầu vẽ
             foreach (Control s in this.Controls)
             {
-                if (s.GetType().Name == "EntityShape" || s.GetType().Name == "RelationshipShape" || s.GetType().Name == "AttributeShape")
+                if (s is INotation)
                 {
-                    if (s.GetType().Name == "EntityShape")
-                    {
-                        foreach (AttributeShape att in ((EntityShape)s).attributes)
-                        {
-                            Point centerEntity = new Point(s.Location.X + s.Width / 2, s.Location.Y + s.Height / 2);
-                            Point centerAtt = new Point(att.Location.X + att.Width / 2, att.Location.Y + att.Height / 2);
-                            g.DrawLine(new Pen(Color.Black, 1), centerEntity.X, centerEntity.Y, centerAtt.X, centerAtt.Y);
-                        }
-                        EntityShape entity = (EntityShape)s;
-                        for (int i = 0; i < 4; i++)
-                        {
-                            for (int j = 0; j < entity.cardinalities[i].Count; j++)
-                            {
-                                DrawCardinalitiesLine(g, entity.cardinalities[i][j], i + 1, j + 1, entity.cardinalities[i].Count);
-                            }
-                        }
-                    }
-                    else if (s.GetType().Name == "RelationshipShape")
-                    {
-                        foreach (AttributeShape att in ((RelationshipShape)s).attributes)
-                        {
-                            Point centerRelationship = new Point(s.Location.X + s.Width / 2, s.Location.Y + s.Height / 2);
-                            Point centerAtt = new Point(att.Location.X + att.Width / 2, att.Location.Y + att.Height / 2);
-                            g.DrawLine(new Pen(Color.Black, 1), centerRelationship.X, centerRelationship.Y, centerAtt.X, centerAtt.Y);
-                        }
-                    }
-                    else if (s.GetType().Name == "AttributeShape" && ((AttributeShape)s).isComposite)
-                    {
-                        foreach (AttributeShape att in ((AttributeShape)s).attributeChilds)
-                        {
-                            Point centerAttComposite = new Point(s.Location.X + s.Width / 2, s.Location.Y + s.Height / 2);
-                            Point centerAttChild = new Point(att.Location.X + att.Width / 2, att.Location.Y + att.Height / 2);
-                            g.DrawLine(new Pen(Color.Black, 1), centerAttComposite.X, centerAttComposite.Y, centerAttChild.X, centerAttChild.Y);
-                        }
-                    }
+                    (s as INotation).DrawConnectiveLines(g);
                 }
             }
         }
+        void UpdateAllPosition()
+        {
+            foreach (Control s in this.Controls)
+            {
+                if (s is EntityShape)
+                {
+                    EntityShape entity = s as EntityShape;
+                    entity.UpdateCardinalityPosition();
+                }
+                else if (s is RelationshipShape && (s as RelationshipShape).type == RelationshipType.AssociativeEntity)
+                {
+                    RelationshipShape rel = s as RelationshipShape;
+                    rel.UpdateCardinalityPosition();
+                }
+            }
+        }
+
+        //Delete and Undo
         public bool deleteAffectingShape()
         {
             if (AffectingShape != null && !isDrawing && !isNaming && !isMoving && !isResizing && !isSelecting)
             {
                 if (AffectingShape.GetType().Name == "EntityShape")
                 {
-                    if (MessageBox.Show("Are you sure want to delete " + AffectingShape.sName + " Entity ?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                    if (DevExpress.XtraEditors.XtraMessageBox.Show("Are you sure want to delete " + AffectingShape.sName + " Entity ?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                     {
                         saveUndoList();
                         AffectingShape.Dispose();
@@ -738,375 +758,8 @@ namespace ERDesigner
             }
             return false;
         }
-        void UpdateAllPosition()
-        {
-            foreach (Control s in this.Controls)
-            {
-                if (s.GetType().Name == "EntityShape")
-                {
-                    EntityShape entity = (EntityShape)s;
-                    for (int i = 0; i < 4; i++)
-                    {
-                        for (int j = 0; j < entity.cardinalities[i].Count; j++)
-                        {
-                            CardinalityShape cardi = entity.cardinalities[i][j];
-
-                            RelationshipShape rel = cardi.relationship;
-
-                            Point centerRelationship = new Point(rel.Location.X + rel.Width / 2, rel.Location.Y + rel.Height / 2);
-                            Point centerEntity = new Point(entity.Location.X + entity.Width / 2, entity.Location.Y + entity.Height / 2);
-
-                            int oldEdgeCardiPlace = i + 1;
-                            int newEdgeCardiPlace = CalculateEdgePlace(entity, centerRelationship, centerEntity);
-
-                            //Chổ này làm kỹ, không thôi nó giựt wài ghét lắm
-
-                            //Nếu vị trí mới tính được khác vị trí cũ
-                            if (oldEdgeCardiPlace != newEdgeCardiPlace)
-                            {
-                                entity.cardinalities[oldEdgeCardiPlace - 1].Remove(cardi);
-
-                                int index = 0;
-
-                                foreach (CardinalityShape cardiInEntity in entity.cardinalities[newEdgeCardiPlace - 1])
-                                {
-                                    if (newEdgeCardiPlace == 1 || newEdgeCardiPlace == 3) //Up hoặc down thì so sánh x
-                                    {
-                                        if (cardi.relationship.Location.X > cardiInEntity.relationship.Location.X)
-                                            index++;
-                                    }
-                                    else //right hoặc left thì so sánh y
-                                    {
-                                        if (cardi.relationship.Location.Y > cardiInEntity.relationship.Location.Y)
-                                            index++;
-                                    }
-                                }
-
-                                entity.insertCardinality(newEdgeCardiPlace - 1, index, cardi);
-                            }
-                            else //Nếu vẫn là vị trí cũ, thì tính lại thứ tự trong vị trí đó
-                            {
-                                for (int k = 0; k < entity.cardinalities[oldEdgeCardiPlace - 1].Count - 1; k++)
-                                {
-                                    if (oldEdgeCardiPlace == 1 || oldEdgeCardiPlace == 3) //Up hoặc down thì so sánh x
-                                    {
-                                        if (entity.cardinalities[oldEdgeCardiPlace - 1][k].relationship.Location.X > entity.cardinalities[oldEdgeCardiPlace - 1][k + 1].relationship.Location.X)
-                                            entity.cardinalities[oldEdgeCardiPlace - 1].Reverse(k, 1);
-                                    }
-                                    else //right hoặc left thì so sánh y
-                                    {
-                                        if (entity.cardinalities[oldEdgeCardiPlace - 1][k].relationship.Location.Y > entity.cardinalities[oldEdgeCardiPlace - 1][k + 1].relationship.Location.Y)
-                                            entity.cardinalities[oldEdgeCardiPlace - 1].Reverse(k, 1);
-                                    }
-                                }
-                            }
-
-                            //Nhắm mắt add cardi vô cạnh mới khỏi tính gì cả - hix
-                            //xóa cardi ở cạnh cũ đi
-                            //for (int k = 0; k < 4; k++)
-                            //    entity.cardinalities[k].Remove(cardi);
-
-                            //add cardi vào cạnh mới
-                            //entity.insertCardinality(newEdgeCardiPlace - 1, index, cardi);
-
-
-                            if (rel.type == RelationshipType.AssociativeEntity)
-                            {
-                                newEdgeCardiPlace = CalculateEdgePlace(rel, centerEntity, centerRelationship);
-
-                                //Tính lại thứ tự của cardi trong Asso En
-                                int index = 0;
-                                foreach (CardinalityShape cardiInEntity in rel.cardiplaces[newEdgeCardiPlace - 1])
-                                {
-                                    if (newEdgeCardiPlace == 1 || newEdgeCardiPlace == 3) //Up hoặc down thì so sánh x
-                                    {
-                                        if (cardi.entity.Location.X > cardiInEntity.entity.Location.X)
-                                            index++;
-                                    }
-                                    else //right hoặc left thì so sánh y
-                                    {
-                                        if (cardi.entity.Location.Y > cardiInEntity.entity.Location.Y)
-                                            index++;
-                                    }
-                                }
-
-                                //Nhắm mắt add cardi vô cạnh mới khỏi tính gì cả - hix
-                                for (int k = 0; k < 4; k++)
-                                    rel.cardiplaces[k].Remove(cardi);
-
-                                rel.insertCardiPlace(newEdgeCardiPlace - 1, index, cardi);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        private void DrawCardinalitiesLine(Graphics g, CardinalityShape cardi, int edgeCardiPlace, int pos, int numCardi)
-        {
-            EntityShape entity = cardi.entity;
-            RelationshipShape rel = cardi.relationship;
-
-            Point centerRelationship = new Point(rel.Location.X + rel.Width / 2, rel.Location.Y + rel.Height / 2);
-            Point centerEntity = new Point(entity.Location.X + entity.Width / 2, entity.Location.Y + entity.Height / 2);
-
-            Point TopLeft = entity.Location;
-            Point BottomRight = new Point(entity.Location.X + entity.Width, entity.Location.Y + entity.Height);
-
-            int stepX = pos * entity.Width / (numCardi + 1);
-            int stepY = pos * entity.Height / (numCardi + 1);
-
-            if (rel.type != RelationshipType.AssociativeEntity)
-            {
-                Bitmap myCardi = GetCardinalitiesShape(cardi, edgeCardiPlace);
-                switch (edgeCardiPlace)
-                {
-                    case 1: g.DrawImage(myCardi, TopLeft.X + stepX - myCardi.Width / 2, TopLeft.Y - myCardi.Height);
-                        g.DrawLine(ThongSo.ConectiveLinePen, centerRelationship.X, centerRelationship.Y, TopLeft.X + stepX, TopLeft.Y - myCardi.Height);
-                        break;
-                    case 2: g.DrawImage(myCardi, BottomRight.X, BottomRight.Y - (entity.Height - stepY) - myCardi.Height / 2);
-                        g.DrawLine(ThongSo.ConectiveLinePen, centerRelationship.X, centerRelationship.Y, BottomRight.X + myCardi.Width, BottomRight.Y - (entity.Height - stepY));
-                        break;
-                    case 3: g.DrawImage(myCardi, BottomRight.X - (entity.Width - stepX) - myCardi.Width / 2 + 1, BottomRight.Y);
-                        g.DrawLine(ThongSo.ConectiveLinePen, centerRelationship.X, centerRelationship.Y, BottomRight.X - (entity.Width - stepX), BottomRight.Y + myCardi.Height);
-                        break;
-                    case 4: g.DrawImage(myCardi, TopLeft.X - myCardi.Width, TopLeft.Y + stepY - myCardi.Height / 2 + 1);
-                        g.DrawLine(ThongSo.ConectiveLinePen, centerRelationship.X, centerRelationship.Y, TopLeft.X - myCardi.Width, TopLeft.Y + stepY);
-                        break;
-                }
-            }
-            else //nếu relationship là Associative Entity
-            {
-                Point TopLeftRel = rel.Location;
-                Point BottomRightRel = new Point(rel.Location.X + rel.Width, rel.Location.Y + rel.Height);
-
-                int newEdgeCardiPlace = CalculateEdgePlace(rel, centerEntity, centerRelationship);
-
-                //Tính lại thứ tự của cardi trong Asso En
-                int index = 0;
-                foreach (CardinalityShape cardiInEntity in rel.cardiplaces[newEdgeCardiPlace - 1])
-                {
-                    if (newEdgeCardiPlace == 1 || newEdgeCardiPlace == 3) //Up hoặc down thì so sánh x
-                    {
-                        if (cardi.entity.Location.X > cardiInEntity.entity.Location.X)
-                            index++;
-                    }
-                    else //right hoặc left thì so sánh y
-                    {
-                        if (cardi.entity.Location.Y > cardiInEntity.entity.Location.Y)
-                            index++;
-                    }
-                }
-
-                //Nhắm mắt add cardi vô cạnh mới khỏi tính gì cả - hix
-                for (int k = 0; k < 4; k++)
-                    rel.cardiplaces[k].Remove(cardi);
-
-                rel.insertCardiPlace(newEdgeCardiPlace - 1, index, cardi);
-
-                int stepXRel = (index + 1) * rel.Width / (rel.cardiplaces[newEdgeCardiPlace - 1].Count + 1);
-                int stepYRel = (index + 1) * rel.Height / (rel.cardiplaces[newEdgeCardiPlace - 1].Count + 1);
-
-                //cardi 1, 1
-                CardinalityShape cardi1 = new CardinalityShape();
-                cardi1.setValue(1, 1);
-
-                //lấy cardi của đầu bên kia Relationship
-                CardinalityShape cardi2 = new CardinalityShape();
-                foreach (CardinalityShape card in cardi.relationship.cardinalities)
-                {
-                    if (card != cardi)
-                        cardi2 = card;
-                }
-
-                Bitmap CardiAtEn = GetCardinalitiesShape(cardi1, edgeCardiPlace);
-                Bitmap CardiAtRel = GetCardinalitiesShape(cardi2, newEdgeCardiPlace);
-
-                //Vẽ cardi cho En
-                switch (edgeCardiPlace)
-                {
-                    case 1: g.DrawImage(CardiAtEn, TopLeft.X + stepX - CardiAtEn.Width / 2, TopLeft.Y - CardiAtEn.Height);
-                        break;
-                    case 2: g.DrawImage(CardiAtEn, BottomRight.X, BottomRight.Y - (entity.Height - stepY) - CardiAtEn.Height / 2);
-                        break;
-                    case 3: g.DrawImage(CardiAtEn, BottomRight.X - (entity.Width - stepX) - CardiAtEn.Width / 2 + 1, BottomRight.Y);
-                        break;
-                    case 4: g.DrawImage(CardiAtEn, TopLeft.X - CardiAtEn.Width, TopLeft.Y + stepY - CardiAtEn.Height / 2 + 1);
-                        break;
-                }
-
-                //Vẽ cardi cho Ass En
-                switch (newEdgeCardiPlace)
-                {
-                    case 1: g.DrawImage(CardiAtRel, TopLeftRel.X + stepXRel - CardiAtRel.Width / 2, TopLeftRel.Y - CardiAtRel.Height);
-                        break;
-                    case 2: g.DrawImage(CardiAtRel, BottomRightRel.X, BottomRightRel.Y - (rel.Height - stepYRel) - CardiAtRel.Height / 2);
-                        break;
-                    case 3: g.DrawImage(CardiAtRel, BottomRightRel.X - (rel.Width - stepXRel) - CardiAtRel.Width / 2 + 1, BottomRightRel.Y);
-                        break;
-                    case 4: g.DrawImage(CardiAtRel, TopLeftRel.X - CardiAtRel.Width, TopLeftRel.Y + stepYRel - CardiAtRel.Height / 2 + 1);
-                        break;
-                }
-
-                //Vẽ Line
-                switch (edgeCardiPlace)
-                {
-                    case 1:
-                        switch (newEdgeCardiPlace)
-                        {
-                            case 2: g.DrawLine(ThongSo.ConectiveLinePen, BottomRightRel.X + CardiAtRel.Width, BottomRightRel.Y - (rel.Height - stepYRel), TopLeft.X + stepX, TopLeft.Y - CardiAtEn.Height);
-                                break;
-                            case 3: g.DrawLine(ThongSo.ConectiveLinePen, BottomRightRel.X - (rel.Width - stepXRel), BottomRightRel.Y + CardiAtRel.Height, TopLeft.X + stepX, TopLeft.Y - CardiAtRel.Height);
-                                break;
-                            case 4: g.DrawLine(ThongSo.ConectiveLinePen, TopLeftRel.X - CardiAtRel.Width, TopLeftRel.Y + stepYRel, TopLeft.X + stepX, TopLeft.Y - CardiAtRel.Height);
-                                break;
-                        }
-                        break;
-                    case 2:
-                        switch (newEdgeCardiPlace)
-                        {
-                            case 1: g.DrawLine(ThongSo.ConectiveLinePen, TopLeftRel.X + stepXRel, TopLeftRel.Y - CardiAtRel.Height, BottomRight.X + CardiAtRel.Width, BottomRight.Y - (entity.Height - stepY));
-                                break;
-                            case 3: g.DrawLine(ThongSo.ConectiveLinePen, BottomRightRel.X - (rel.Width - stepXRel), BottomRightRel.Y + CardiAtRel.Height, BottomRight.X + CardiAtRel.Width, BottomRight.Y - (entity.Height - stepY));
-                                break;
-                            case 4: g.DrawLine(ThongSo.ConectiveLinePen, TopLeftRel.X - CardiAtRel.Width, TopLeftRel.Y + stepYRel, BottomRight.X + CardiAtRel.Width, BottomRight.Y - (entity.Height - stepY));
-                                break;
-                        }
-                        break;
-                    case 3:
-                        switch (newEdgeCardiPlace)
-                        {
-                            case 1: g.DrawLine(ThongSo.ConectiveLinePen, TopLeftRel.X + stepXRel, TopLeftRel.Y - CardiAtRel.Height, BottomRight.X - (entity.Width - stepX), BottomRight.Y + CardiAtRel.Height);
-                                break;
-                            case 2: g.DrawLine(ThongSo.ConectiveLinePen, BottomRightRel.X + CardiAtRel.Width, BottomRightRel.Y - (rel.Height - stepYRel), BottomRight.X - (entity.Width - stepX), BottomRight.Y + CardiAtEn.Height);
-                                break;
-                            case 4: g.DrawLine(ThongSo.ConectiveLinePen, TopLeftRel.X - CardiAtRel.Width, TopLeftRel.Y + stepYRel, BottomRight.X - (entity.Width - stepX), BottomRight.Y + CardiAtEn.Height);
-                                break;
-                        }
-                        break;
-                    case 4:
-                        switch (newEdgeCardiPlace)
-                        {
-                            case 1: g.DrawLine(ThongSo.ConectiveLinePen, TopLeftRel.X + stepXRel, TopLeftRel.Y - CardiAtRel.Height, TopLeft.X - CardiAtEn.Width, TopLeft.Y + stepY);
-                                break;
-                            case 2: g.DrawLine(ThongSo.ConectiveLinePen, BottomRightRel.X + CardiAtRel.Width, BottomRightRel.Y - (rel.Height - stepYRel), TopLeft.X - CardiAtEn.Width, TopLeft.Y + stepY);
-                                break;
-                            case 3: g.DrawLine(ThongSo.ConectiveLinePen, BottomRightRel.X - (rel.Width - stepXRel), BottomRightRel.Y + CardiAtRel.Height, TopLeft.X - CardiAtEn.Width, TopLeft.Y + stepY);
-                                break;
-                        }
-                        break;
-                }
-
-            }
-        }
-        public static int CalculateEdgePlace(ShapeBase entity, Point centerRelationship, Point centerEntity)
-        {
-            //Cạnh đặt Shape - > 1,2,3,4: Up, Right, Down, Left
-            int edgeCardiPlace = -1;
-
-            //Cách khác: phương trình qua 2 điểm centerRelationship và centerEntity (y = mx + b)
-            double m = centerRelationship.Y - centerEntity.Y;
-            if (centerRelationship.X != centerEntity.X)
-                m /= centerRelationship.X - centerEntity.X;
-            else
-                m = 0;
-
-            double b = centerRelationship.Y - m * centerRelationship.X;
-
-
-            if (centerEntity.X < centerRelationship.X) //Relation ship nằm bên phải
-            {
-                //thế x của centerEntity vào phương trình để tính y
-                //Nếu y vượt quá khoảng y của Entity thì đặt cardi ở up hoặc down: else đặt right
-                double ytemp = m * (entity.Location.X + entity.Width) + b;
-
-                if (ytemp < entity.Location.Y) edgeCardiPlace = 1; //Up
-                else if (ytemp > entity.Location.Y + entity.Height) edgeCardiPlace = 3; //Down
-
-                if (ytemp >= entity.Location.Y && ytemp <= entity.Location.Y + entity.Height) edgeCardiPlace = 2; //Right
-            }
-            else
-            {
-                //thế x của centerEntity vào phương trình để tính y
-                //Nếu y vượt quá khoảng y của Entity thì đặt cardi ở up hoặc down: else đặt right
-                double ytemp = m * (entity.Location.X) + b;
-
-                if (ytemp < entity.Location.Y) edgeCardiPlace = 1; //Up
-                else if (ytemp > entity.Location.Y + entity.Height) edgeCardiPlace = 3; //Down
-
-                if (ytemp >= entity.Location.Y && ytemp <= entity.Location.Y + entity.Height) edgeCardiPlace = 4; //Left
-            }
-            return edgeCardiPlace;
-        }
-        private Bitmap GetCardinalitiesShape(CardinalityShape cardi, int edgeCardiPlace)
-        {
-            Bitmap carshape = new Bitmap(20, 20);
-            Graphics gimage = Graphics.FromImage(carshape);
-
-            if (cardi.MaxCardinality == -1)
-            {
-                gimage.DrawLine(ThongSo.ConectiveLinePen, new Point(10, 8), new Point(3, 20));
-                gimage.DrawLine(ThongSo.ConectiveLinePen, new Point(10, 8), new Point(17, 20));
-                gimage.DrawLine(ThongSo.ConectiveLinePen, new Point(10, 0), new Point(10, 20));
-
-                if (cardi.MinCardinality == 0)
-                {
-                    gimage.FillEllipse(new SolidBrush(this.BackColor), 7, 0, 6, 6);
-                    gimage.DrawEllipse(ThongSo.ConectiveLinePen, 7, 0, 6, 6);
-                }
-                else
-                    gimage.DrawLine(ThongSo.ConectiveLinePen, new Point(3, 5), new Point(17, 5));
-            }
-            else
-            {
-                gimage.DrawLine(ThongSo.ConectiveLinePen, new Point(3, 13), new Point(17, 13));
-                gimage.DrawLine(ThongSo.ConectiveLinePen, new Point(10, 0), new Point(10, 20));
-
-                if (cardi.MinCardinality == 0)
-                {
-                    gimage.FillEllipse(new SolidBrush(this.BackColor), 7, 3, 6, 6);
-                    gimage.DrawEllipse(ThongSo.ConectiveLinePen, 7, 3, 6, 6);
-                }
-                else
-                    gimage.DrawLine(ThongSo.ConectiveLinePen, new Point(3, 8), new Point(17, 8));
-            }
-            switch (edgeCardiPlace)
-            {
-                case 1:
-                    break;
-                case 2: carshape.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                    break;
-                case 3: carshape.RotateFlip(RotateFlipType.Rotate180FlipNone);
-                    break;
-                case 4: carshape.RotateFlip(RotateFlipType.Rotate270FlipNone);
-                    break;
-            }
-            return carshape;
-        }
-        public void CancelDrawing()
-        {
-            isDrawing = false;
-            isDrawEntity = false;
-            isDrawingAtt = false;
-            isDrawRelationship = false;
-            this.Cursor = Cursors.Default;
-            setAllControlToDefaultCursor();
-
-            First_Mouse_Pos.X = -1;
-            First_Mouse_Pos.Y = -1;
-            Last_Mouse_Pos.X = -1;
-            Last_Mouse_Pos.Y = -1;
-
-            First_Mouse_Click = false;
-            Second_Mouse_Click = false;
-            Third_Mouse_Click = false;
-
-            FirstEntity = null;
-            SecondEntity = null;
-            ThirdEntity = null;
-
-            ((MainForm)TopLevelControl).CancelDrawing();
-            this.Refresh();
-        }
+        
+        //Auto Layout
         public void AutoLayout()
         {
             //B1: Lấy Entity Bậc cao nhất
@@ -1143,13 +796,13 @@ namespace ERDesigner
                 {
                     CardinalityShape cardi = new CardinalityShape();
 
-                    foreach (CardinalityShape cardi2 in entity.cardinalities[i][j].relationship.cardinalities)
+                    foreach (CardinalityShape cardi2 in entity.cardinalities[i][j].Relationship.cardinalities)
                     {
                         if (cardi2 != entity.cardinalities[i][j])
                             cardi = cardi2;
                     }
 
-                    EntityShape entity2 = cardi.entity;
+                    EntityShape entity2 = cardi.Entity;
                     entity2.Location = new Point(stepX, 150 * (line + 1));
                     stepX += this.Width / (degree + 1);
 
@@ -1158,7 +811,7 @@ namespace ERDesigner
 
                     Point center = new Point(Math.Abs(centerEntity1.X + centerEntity2.X) / 2, Math.Abs(centerEntity1.Y + centerEntity2.Y) / 2);
 
-                    cardi.relationship.Location = new Point(center.X - cardi.relationship.Width / 2, center.Y - cardi.relationship.Height / 2);
+                    cardi.Relationship.Location = new Point(center.X - cardi.Relationship.Width / 2, center.Y - cardi.Relationship.Height / 2);
 
                 }
             }
@@ -1173,6 +826,8 @@ namespace ERDesigner
 
             return bac;
         }
+        
+        //Get, Load Metadata
         public MetaData getMetaData()
         {
             MetaData ERD = new MetaData();
@@ -1224,7 +879,7 @@ namespace ERDesigner
 
                         foreach (CardinalityShape cardi in ((RelationshipShape)s).cardinalities)
                         {
-                            CardinalityData cardinality = new CardinalityData(cardi.entity.sName, cardi.MinCardinality, cardi.MaxCardinality);
+                            CardinalityData cardinality = new CardinalityData(cardi.Entity.sName, cardi.MinCardinality, cardi.MaxCardinality);
 
                             relationship.Cardinalities.Add(cardinality);
                         }
@@ -1357,11 +1012,7 @@ namespace ERDesigner
                     {
                         if (s.GetType().Name == "EntityShape" && s.sName == cardi.Entity)
                         {
-                            CardinalityShape cardinality = new CardinalityShape((EntityShape)s);
-                            //Bắt buộc add vô rel trước
-                            relationship.addCardinality(cardinality);
-
-                            cardinality.setValue(cardi.MinCardinality, cardi.MaxCardinality);
+                            relationship.CreateCardinality((EntityShape)s, cardi.MinCardinality, cardi.MaxCardinality);
                             break;
                         }
                     }
@@ -1369,6 +1020,8 @@ namespace ERDesigner
             }
             this.Refresh();
         }
+        
+        //Verify Model
         public List<string> VerifyModel()
         {
             List<string> errorList = new List<string>();
@@ -1400,9 +1053,9 @@ namespace ERDesigner
                             for (int i = 0; i < 4; i++)
                                 foreach (CardinalityShape cardi in entity.cardinalities[i])
                                 {
-                                    if (cardi.relationship.type != RelationshipType.Identifier)
+                                    if (cardi.Relationship.type != RelationshipType.Identifier)
                                     {
-                                        errorList.Add("Relationship '" + cardi.relationship.sName + "' must be an Identify Relationship");
+                                        errorList.Add("Relationship '" + cardi.Relationship.sName + "' must be an Identify Relationship");
                                     }
                                 }
                         }
@@ -1412,8 +1065,8 @@ namespace ERDesigner
                         //mối kết hợp xác định có hợp lý chưa
                         if (rel.type == RelationshipType.Identifier)
                         {
-                            EntityShape entity1 = rel.cardinalities[0].entity;
-                            EntityShape entity2 = rel.cardinalities[1].entity;
+                            EntityShape entity1 = rel.cardinalities[0].Entity;
+                            EntityShape entity2 = rel.cardinalities[1].Entity;
 
                             if (entity1.type == entity2.type)
                                 errorList.Add("Identify Relationship '" + rel.sName + "' must connect weak entity anh strong entity");
@@ -1458,14 +1111,9 @@ namespace ERDesigner
 
             return errorList;
         }
-        public void EndEditDataType()
-        {
-            if (AffectingShape != null && AffectingShape.GetType().Name == "AttributeShape" && isNaming)
-            {
-                ((ShapeBase)AffectingShape).endEditName();
-            }
-        }
-        private ContextMenu getContexMenuForControl(ShapeBase currentCtrl)
+        
+        //Generate Context Menu
+        private ContextMenu getContexMenuForControl(ShapeBase control)
         {
             ContextMenu ctmn = new ContextMenu();
 
@@ -1477,7 +1125,7 @@ namespace ERDesigner
 
             MenuItem ChangeType = new MenuItem("Change type");
 
-            if (currentCtrl is EntityShape)
+            if (control is EntityShape)
             {
                 ChangeType.MenuItems.Clear();
 
@@ -1491,7 +1139,7 @@ namespace ERDesigner
                 ChangeType.MenuItems.Add(WeakEntity);
             }
 
-            if (currentCtrl is RelationshipShape)
+            if (control is RelationshipShape)
             {
                 ctmn.MenuItems.Add(addCardi);
 
@@ -1513,7 +1161,7 @@ namespace ERDesigner
 
             ctmn.MenuItems.Add(ChangeType);
 
-            if (currentCtrl is AttributeShape && ((AttributeShape)currentCtrl).isComposite)
+            if (control is AttributeShape && ((AttributeShape)control).isComposite)
             {
                 ChangeType.MenuItems.Clear();
 
@@ -1526,7 +1174,7 @@ namespace ERDesigner
                 MenuItem MultiAtt = new MenuItem("Multi-Valued Attribute");
                 MultiAtt.Click += new EventHandler(Change_Type_Click);
 
-                if (((AttributeShape)currentCtrl).attributeChilds.Count == 0)
+                if (((AttributeShape)control).attributeChilds.Count == 0)
                 {
                     MenuItem DerivedAtt = new MenuItem("Derived Attribute");
                     DerivedAtt.Click += new EventHandler(Change_Type_Click);
@@ -1538,7 +1186,7 @@ namespace ERDesigner
                 ChangeType.MenuItems.Add(MultiAtt);
 
             }
-            if (currentCtrl.GetType().Name == "AttributeShape" && !((AttributeShape)currentCtrl).isComposite)
+            if (control.GetType().Name == "AttributeShape" && !((AttributeShape)control).isComposite)
             {
                 ctmn.MenuItems.Remove(ChangeType);
             }
@@ -1546,6 +1194,8 @@ namespace ERDesigner
 
             return ctmn;
         }
+        
+        //Set currsor
         public void setAllControlToDefaultCursor()
         {
             foreach (Control ctr in this.Controls)
@@ -1553,7 +1203,7 @@ namespace ERDesigner
                 if (ctr is ShapeBase)
                     (ctr as ShapeBase).CurrentCursor = Cursors.Default;
             }
-        }
+        } //Default
         public void setAllControlToNoCursor()
         {
             foreach (Control ctr in this.Controls)
@@ -1561,7 +1211,7 @@ namespace ERDesigner
                 if (ctr is ShapeBase)
                     (ctr as ShapeBase).CurrentCursor = Cursors.No;
             }
-        }
+        } //Banned
         public void setCursor(Cursor cursor, string objType)
         {
             this.Cursor = cursor;
@@ -1573,6 +1223,8 @@ namespace ERDesigner
                 }
             }
         }
+        
+        //Create Relationship
         private void CreateUnaryRelationship()
         {
             RelationshipShape rel = new RelationshipShape();
@@ -1580,12 +1232,8 @@ namespace ERDesigner
 
             rel.Location = new Point(FirstEntity.Location.X + FirstEntity.Width + ThongSo.ShapeW, FirstEntity.Location.Y);
 
-            CardinalityShape car1 = new CardinalityShape(FirstEntity);
-            CardinalityShape car2 = new CardinalityShape(FirstEntity);
-
-            //Bắt buộc phải add vô rel trước để tính toán vị trí (nhung rel phải có location rồi)
-            rel.addCardinality(car1);
-            rel.addCardinality(car2);
+            CardinalityShape car1 = rel.CreateCardinality(FirstEntity, 0, 0);
+            CardinalityShape car2 = rel.CreateCardinality(FirstEntity, 0, 0);
 
             if (rel.type != RelationshipType.AssociativeEntity)
             {
@@ -1614,12 +1262,8 @@ namespace ERDesigner
 
             rel.CenterPoint = new Point(Math.Abs(FirstEntity.CenterPoint.X + SecondEntity.CenterPoint.X) / 2, Math.Abs(FirstEntity.CenterPoint.Y + SecondEntity.CenterPoint.Y) / 2);
 
-            CardinalityShape car1 = new CardinalityShape(FirstEntity);
-            CardinalityShape car2 = new CardinalityShape(SecondEntity);
-
-            //Bắt buộc phải add vô rel trước để tính toán vị trí (nhung rel phải có location rồi)
-            rel.addCardinality(car1);
-            rel.addCardinality(car2);
+            CardinalityShape car1 = rel.CreateCardinality(FirstEntity, 0, 0);
+            CardinalityShape car2 = rel.CreateCardinality(SecondEntity, 0, 0);
 
             if (FirstEntity.type != SecondEntity.type)
                 rel.type = RelationshipType.Identifier;
@@ -1672,14 +1316,9 @@ namespace ERDesigner
 
             rel.CenterPoint = new Point(MinX + (MaxX - MinX) / 2, MinY + (MaxY - MinY) / 2);
 
-            CardinalityShape car1 = new CardinalityShape(FirstEntity);
-            CardinalityShape car2 = new CardinalityShape(SecondEntity);
-            CardinalityShape car3 = new CardinalityShape(ThirdEntity);
-
-            //Bắt buộc phải add vô rel trước để tính toán vị trí (nhung rel phải có location rồi)
-            rel.addCardinality(car1);
-            rel.addCardinality(car2);
-            rel.addCardinality(car3);
+            CardinalityShape car1 = rel.CreateCardinality(FirstEntity, 0, 0);
+            CardinalityShape car2 = rel.CreateCardinality(SecondEntity, 0, 0);
+            CardinalityShape car3 = rel.CreateCardinality(ThirdEntity, 0, 0);
 
             if (rel.type != RelationshipType.AssociativeEntity)
             {
@@ -1697,6 +1336,7 @@ namespace ERDesigner
             this.Controls.Add(rel);
         }
 
+        //Other Event
         private void InitializeComponent()
         {
             this.SuspendLayout();

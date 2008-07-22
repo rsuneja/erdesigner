@@ -6,9 +6,9 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("ERDesigner")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("This product is the thesis of me (Lam Quang Cuong - Mr.Jelda) and my partner (Vo Dac Bao - Mr.Bao). We built it when we are studing Information System at HUFLIT University. We want to give a big thanks to our sponsor (Nguyen Trung Truc), our teachers and our colleagues.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("CB Team")]
 [assembly: AssemblyProduct("ERDesigner")]
 [assembly: AssemblyCopyright("Copyright ©  2008")]
 [assembly: AssemblyTrademark("")]
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("4.1.3.36")]
+[assembly: AssemblyFileVersion("4.1.3.36")]

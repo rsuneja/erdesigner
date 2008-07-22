@@ -9,26 +9,40 @@ using System.Text.RegularExpressions;
 
 namespace ERDesigner.Shape
 {
-    public class ShapeBase :UserControl
+    public class ShapeBase : UserControl
     {
         //hình vẽ: là 1 đường khép kín
         protected GraphicsPath path = null;
         public String sName = "";
         public static bool skin = true;
         public Cursor CurrentCursor = Cursors.Default;
-        PanelDoubleBuffered p;
+        PanelDoubleBuffered parentPanel;
         TextBox txtName;
-        
-        //override: lớp con sẽ tự vẽ
-        protected virtual void refreshPath(){}
-        
-        protected override void OnResize(EventArgs e)
-        {
- 	        base.OnResize(e);
-            refreshPath(); //cho class con định nghĩa lại path
-            this.Invalidate();
-        }
 
+        ShapeBase namingShape;
+        DataDescription ucDataDescription;
+
+        private void InitializeComponent()
+        {
+            this.SuspendLayout();
+            // 
+            // ShapeBase
+            // 
+            this.BackColor = System.Drawing.Color.White;
+            this.DoubleBuffered = true;
+            this.MinimumSize = new System.Drawing.Size(100, 50);
+            this.Name = "ShapeBase";
+            this.Size = new System.Drawing.Size(100, 50);
+            this.ResumeLayout(false);
+        }
+        public ShapeBase()
+        {
+            this.BackColor = Color.WhiteSmoke;
+        }
+        public virtual ShapeBase Clone() 
+        { 
+            return this.Clone(); 
+        }
         public Point CenterPoint
         {
             get
@@ -41,20 +55,23 @@ namespace ERDesigner.Shape
             }
         }
 
-        public ShapeBase()
-        {
-            this.BackColor = Color.WhiteSmoke;
-        }
+        //override: lớp con sẽ tự vẽ
+        protected virtual void refreshPath() { }
+        public virtual void DrawSelf(Graphics g) { }
+        public virtual void dinhviTextBox(TextBox txtName) { } //Để cho class con định vị
 
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            refreshPath(); //cho class con định nghĩa lại path
+            this.Invalidate();
+        }
         protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
         {
             base.OnPaint(e);
             if (path != null)
             {
-                //e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-
-                //Giao diện sẽ xử lý sau
-                //
+                e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
 
                 if (this.ClientRectangle.Width != 0 && this.ClientRectangle.Height != 0 && skin)
                 {
@@ -70,15 +87,12 @@ namespace ERDesigner.Shape
                 else
                     e.Graphics.FillPath(new SolidBrush(Color.White), path);
 
-                e.Graphics.DrawPath(new Pen(Color.White,1), path); //vẽ dùm class con
+                e.Graphics.DrawPath(new Pen(Color.White, 1), path); //vẽ dùm class con
 
                 // vẽ tên ở giữa hình
                 StringFormat st = new StringFormat();
                 st.Alignment = StringAlignment.Center;
                 st.LineAlignment = StringAlignment.Center;
-
-                //SizeF nameSize = e.Graphics.MeasureString(sName, ThongSo.JFont);
-                //if (nameSize.Width + 50 > this.Size.Width) this.Size = new Size((int)nameSize.Width + 50, this.Size.Height);
 
                 RectangleF rect = this.ClientRectangle;
 
@@ -88,16 +102,10 @@ namespace ERDesigner.Shape
                 DrawSelf(e.Graphics);
             }
         }
-        public virtual void DrawSelf(Graphics g) { }
 
-        public virtual void dinhviTextBox(TextBox txtName) { } //Để cho class con định vị
-
-        ShapeBase namingShape;
-        DataDescription ucDataDescription;
-
-        public void xulyDoubleClick(PanelDoubleBuffered fmain, ShapeBase ns)
+        public void xulyDoubleClick(PanelDoubleBuffered pn, ShapeBase ns)
         {
-            p = fmain;
+            parentPanel = pn;
             namingShape = ns;
 
             txtName = new TextBox();
@@ -106,15 +114,13 @@ namespace ERDesigner.Shape
             dinhviTextBox(txtName);
 
             txtName.Text = sName; //hiện tên cũ
-            
+
             sName = "";
             this.Invalidate();
 
             this.Controls.Add(txtName);
-
             txtName.SelectAll();
             txtName.Focus();
-
             txtName.KeyPress += new System.Windows.Forms.KeyPressEventHandler(txtName_KeyPress);
 
             //Data type cho attribute
@@ -124,17 +130,17 @@ namespace ERDesigner.Shape
                 {
                     ucDataDescription = new DataDescription();
                     ucDataDescription.Location = new Point(this.Location.X + this.Width + 5, this.Location.Y);
-                    p.Controls.Add(ucDataDescription);
-                    
+                    parentPanel.Controls.Add(ucDataDescription);
+
                     //Cho USC nằm lên trên.
-                    p.Controls.SetChildIndex(ucDataDescription, 0);
+                    parentPanel.Controls.SetChildIndex(ucDataDescription, 0);
 
                     if (((AttributeShape)this).type == AttributeType.Key)
                         ucDataDescription.chkNull.Enabled = false;
 
-                    if(((AttributeShape)this).dataType != null)
+                    if (((AttributeShape)this).dataType != null)
                         ucDataDescription.cboDataType.SelectedItem = ((AttributeShape)this).dataType;
-                    if(((AttributeShape)this).dataLength != 0)
+                    if (((AttributeShape)this).dataLength != 0)
                         ucDataDescription.txtLength.Text = ((AttributeShape)this).dataLength.ToString();
 
                     ucDataDescription.chkNull.Checked = ((AttributeShape)this).allowNull;
@@ -153,7 +159,7 @@ namespace ERDesigner.Shape
         }
         public void endEditName()
         {
-            if(p.isNaming)
+            if (parentPanel.isNaming)
                 checkDuplicateName(txtName);
         }
         void txtName_KeyPress(object sender, KeyPressEventArgs e)
@@ -163,13 +169,14 @@ namespace ERDesigner.Shape
                 checkDuplicateName(txtName);
             }
         }
+
         private void checkDuplicateName(TextBox txtName)
         {
             Regex testName = new Regex("^[A-z][0-9A-z]*$");
 
             if (!testName.Match(txtName.Text).Success)
             {
-                MessageBox.Show("Please enter valid name for this object\nThe name must be alphanumeric", "Warning");
+                DevExpress.XtraEditors.XtraMessageBox.Show("Please enter valid name for this object\nThe name must be alphanumeric", "Warning");
                 txtName.Focus();
                 txtName.SelectAll();
                 return;
@@ -177,10 +184,10 @@ namespace ERDesigner.Shape
 
             bool isDuplicate = false;
 
-            foreach (Control c in p.Controls)
+            foreach (Control c in parentPanel.Controls)
             {
                 //Kiểm tra tên đối với những Notation cùng loại
-                if (c.GetType().Name == namingShape.GetType().Name && c != namingShape) 
+                if (c.GetType().Name == namingShape.GetType().Name && c != namingShape)
                     if (((ShapeBase)c).sName.ToLower() == txtName.Text.ToLower())
                     {
                         isDuplicate = true;
@@ -192,76 +199,63 @@ namespace ERDesigner.Shape
                 //nếu nó là attribute (viết tạm ở đây)
                 if (this is AttributeShape)
                 {
-                    if (((AttributeShape)this).attributeChilds.Count == 0)
+                    AttributeShape att = this as AttributeShape;
+
+                    if (att.attributeChilds.Count == 0)
                     {
-                        ((AttributeShape)this).dataType = ucDataDescription.cboDataType.SelectedItem.ToString();
+                        att.dataType = ucDataDescription.cboDataType.SelectedItem.ToString();
                         if (ucDataDescription.txtLength.Text != "")
                         {
                             try
                             {
-                                int l = int.Parse(ucDataDescription.txtLength.Text);
-                                if ((((AttributeShape)this).dataType == "nvarchar" || ((AttributeShape)this).dataType == "nchar") && (l < 1 || l > 4000))
+                                int length = int.Parse(ucDataDescription.txtLength.Text);
+                                if ((att.dataType == "nvarchar" || att.dataType == "nchar") && (length < 1 || length > 4000))
                                 {
-                                    MessageBox.Show("Please enter Length between 1 and 4000.", "Warning");
+                                    DevExpress.XtraEditors.XtraMessageBox.Show("Please enter Length between 1 and 4000.", "Warning");
                                     return;
                                 }
-                                if (l < 1 || l > 8000)
+                                if (length < 1 || length > 8000)
                                 {
-                                    MessageBox.Show("Please enter Length between 1 and 8000.", "Warning");
+                                    DevExpress.XtraEditors.XtraMessageBox.Show("Please enter Length between 1 and 8000.", "Warning");
                                     return;
                                 }
-                                ((AttributeShape)this).dataLength = l;
+                                att.dataLength = length;
                             }
-                            catch (Exception e)
+                            catch
                             {
-                                MessageBox.Show("Please enter Length as positive number.", "Warning");
+                                DevExpress.XtraEditors.XtraMessageBox.Show("Please enter Length as positive number.", "Warning");
                                 return;
                             }
                         }
                         else
-                            ((AttributeShape)this).dataLength = 0;
+                            att.dataLength = 0;
 
-                        ((AttributeShape)this).allowNull = ucDataDescription.chkNull.Checked;
-                        ((AttributeShape)this).description = ucDataDescription.txtDescription.Text;
+                        att.allowNull = ucDataDescription.chkNull.Checked;
+                        att.description = ucDataDescription.txtDescription.Text;
 
                         ucDataDescription.Dispose();
                     }
                 }
+
                 this.sName = txtName.Text;
 
+                //auto size to bound name
                 Graphics g = CreateGraphics();
                 SizeF nameSize = g.MeasureString(sName, ThongSo.JFont);
-                if(nameSize.Width + 30 > ThongSo.ShapeW)
+                if (nameSize.Width + 30 > ThongSo.ShapeW)
                     this.Width = (int)nameSize.Width + 30;
 
                 txtName.Dispose();
-                p.isNaming = false;
-                p.Refresh();
+                parentPanel.isNaming = false;
+                parentPanel.Refresh();
                 this.Invalidate();
             }
             else
             {
-                MessageBox.Show("Object " + txtName.Text + " already exist", "Warning");
+                DevExpress.XtraEditors.XtraMessageBox.Show("Object " + txtName.Text + " already exist", "Warning");
                 txtName.Focus();
                 txtName.SelectAll();
             }
         }
-        
-        private void InitializeComponent()
-        {
-            this.SuspendLayout();
-            // 
-            // ShapeBase
-            // 
-            this.BackColor = System.Drawing.Color.White;
-            this.DoubleBuffered = true;
-            this.MinimumSize = new System.Drawing.Size(100, 50);
-            this.Name = "ShapeBase";
-            this.Size = new System.Drawing.Size(100, 50);
-            this.ResumeLayout(false);
-
-        }
-
-        public virtual ShapeBase Clone() { return this.Clone(); }
     }
 }

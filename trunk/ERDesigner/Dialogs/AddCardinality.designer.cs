@@ -30,15 +30,15 @@ namespace ERDesigner
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AddCardinality));
-            this.btnOK = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.labEntity2 = new System.Windows.Forms.Label();
-            this.labEntity11 = new System.Windows.Forms.Label();
+            this.btnOK = new DevExpress.XtraEditors.SimpleButton();
+            this.btnCancel = new DevExpress.XtraEditors.SimpleButton();
+            this.labEntity2 = new DevExpress.XtraEditors.LabelControl();
+            this.labEntity11 = new DevExpress.XtraEditors.LabelControl();
             this.imageComboBoxEdit2 = new DevExpress.XtraEditors.ImageComboBoxEdit();
             this.imageCollection2 = new DevExpress.Utils.ImageCollection(this.components);
             this.imageComboBoxEdit1 = new DevExpress.XtraEditors.ImageComboBoxEdit();
-            this.labRel = new System.Windows.Forms.Label();
-            this.labRel2 = new System.Windows.Forms.Label();
+            this.labRel = new DevExpress.XtraEditors.LabelControl();
+            this.labRel2 = new DevExpress.XtraEditors.LabelControl();
             this.panelDoubleBuffered1 = new ERDesigner.PanelDoubleBuffered();
             this.labEntity1 = new System.Windows.Forms.GroupBox();
             this.labEntity22 = new System.Windows.Forms.GroupBox();
@@ -57,8 +57,6 @@ namespace ERDesigner
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 8;
             this.btnOK.Text = "OK";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // btnCancel
             // 
@@ -68,7 +66,6 @@ namespace ERDesigner
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 9;
             this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // labEntity2
             // 
@@ -133,7 +130,6 @@ namespace ERDesigner
             this.labRel.Size = new System.Drawing.Size(65, 13);
             this.labRel.TabIndex = 10;
             this.labRel.Text = "Relationship";
-            this.labRel.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // labRel2
             // 
@@ -143,7 +139,6 @@ namespace ERDesigner
             this.labRel2.Size = new System.Drawing.Size(65, 13);
             this.labRel2.TabIndex = 10;
             this.labRel2.Text = "Relationship";
-            this.labRel2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // panelDoubleBuffered1
             // 
@@ -164,7 +159,6 @@ namespace ERDesigner
             this.labEntity1.TabIndex = 13;
             this.labEntity1.TabStop = false;
             this.labEntity1.Text = "Entity1";
-            this.labEntity1.Enter += new System.EventHandler(this.labEntity1_Enter);
             // 
             // labEntity22
             // 
@@ -188,11 +182,13 @@ namespace ERDesigner
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.labEntity1);
             this.Controls.Add(this.labEntity22);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "AddCardinality";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Cardinalities";
-            this.Load += new System.EventHandler(this.AddCardinality_Load);
             ((System.ComponentModel.ISupportInitialize)(this.imageComboBoxEdit2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageComboBoxEdit1.Properties)).EndInit();
@@ -206,15 +202,15 @@ namespace ERDesigner
 
         #endregion
 
-        private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.Label labEntity2;
-        private System.Windows.Forms.Label labEntity11;
+        private DevExpress.XtraEditors.SimpleButton btnOK;
+        private DevExpress.XtraEditors.SimpleButton btnCancel;
+        private DevExpress.XtraEditors.LabelControl labEntity2;
+        private DevExpress.XtraEditors.LabelControl labEntity11;
         private DevExpress.XtraEditors.ImageComboBoxEdit imageComboBoxEdit2;
         private DevExpress.Utils.ImageCollection imageCollection2;
         private DevExpress.XtraEditors.ImageComboBoxEdit imageComboBoxEdit1;
-        private System.Windows.Forms.Label labRel;
-        private System.Windows.Forms.Label labRel2;
+        private DevExpress.XtraEditors.LabelControl labRel;
+        private DevExpress.XtraEditors.LabelControl labRel2;
         private ERDesigner.PanelDoubleBuffered panelDoubleBuffered1;
         private System.Windows.Forms.GroupBox labEntity1;
         private System.Windows.Forms.GroupBox labEntity22;
