@@ -144,7 +144,13 @@ namespace ERDesigner.Shape
                 g.DrawLine(new Pen(Color.Black, 1), this.CenterPoint, att.CenterPoint);
             }
         }
+        public IMetaData getMetaData()
+        {
+            AttributeData attribute = new AttributeData(this.sName, this.type, this.Location.X, this.Location.Y, this.Width, this.Height, this.dataType, this.dataLength, this.allowNull, this.description);
+            return (IMetaData)attribute;
+        }
 
         #endregion
+
     }
 }

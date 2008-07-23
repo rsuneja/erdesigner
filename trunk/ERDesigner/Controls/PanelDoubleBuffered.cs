@@ -6,11 +6,17 @@ using ERDesigner.Shape;
 using System.Drawing;
 using ERDesigner;
 using System.Drawing.Drawing2D;
+using DevExpress.XtraBars;
 
 namespace ERDesigner
 {
     public class PanelDoubleBuffered : Panel
     {
+        //variable for Subtype
+        public string SubTypeCompleteness = SubTypeConnectorType.TotalSpecialization;
+        public string SubTypeDisjointness = SubTypeConnectorType.DisjointConstraint;
+        //End Declare
+
         //This object variable for tracking Drawing Relationship
         private EntityShape FirstEntity;
         private EntityShape SecondEntity;
@@ -39,6 +45,7 @@ namespace ERDesigner
         public bool isDrawingAtt = false;
         public bool isDrawEntity = false;
         public bool isDrawRelationship = false;
+        public bool isDrawSubType = false;
 
         public bool isDrawing = false;
         public bool isNaming = false;
@@ -117,8 +124,7 @@ namespace ERDesigner
                     }
 
                 }
-
-                if (isDrawEntity || (isDrawingAtt && AffectingShape != null) && currentShape != null)
+                if ((isDrawEntity || isDrawSubType || (isDrawingAtt && AffectingShape != null)) && currentShape != null)
                 {
                     Point mouse = this.PointToClient(Control.MousePosition);
                     currentShape.CenterPoint = mouse;
@@ -127,6 +133,15 @@ namespace ERDesigner
                 }
                 else
                 {
+                    //đang vẽ sub type
+                    if (isDrawSubType && AffectingShape != null)
+                    {
+                        if (AffectingShape is EntityShape)
+                        {
+                            CreateSubTypeConnector((EntityShape)AffectingShape);
+                        }
+
+                    }
                     //đang vẽ relationship (không vẽ shape, vẽ đoạn nối 2 entity)
                     //phải click lên control, click lên panel thì sai, không cho vẽ nữa
                     CancelDrawing();
@@ -323,7 +338,7 @@ namespace ERDesigner
             // click phải: hiện context menu
             else if (e.Button == MouseButtons.Right)
             {
-                ContextMenu ctmn = getContexMenuForControl(currentCtrl);
+                ContextMenuStrip ctmn = getContexMenuForControl(currentCtrl);
                 ctmn.Show(currentCtrl, new Point(e.X, e.Y));
             }
             this.Invalidate();
@@ -450,7 +465,7 @@ namespace ERDesigner
         //Menu Click Event
         void Change_Type_Click(object sender, EventArgs e)
         {
-            String type = ((MenuItem)sender).Text;
+            String type = ((ToolStripMenuItem)sender).Text;
             switch (type)
             {
                 case "Strong Entity Type": ((EntityShape)AffectingShape).Type = EntityType.Strong;
@@ -482,7 +497,7 @@ namespace ERDesigner
             if (AffectingShape != null && AffectingShape is RelationshipShape)
             {
                 relationship = (RelationshipShape)AffectingShape;
-                if(relationship.cardinalities.Count < 3)
+                if (relationship.cardinalities.Count < 3)
                 {
                     AddCardinality addCardiDialog = new AddCardinality(relationship);
 
@@ -521,7 +536,7 @@ namespace ERDesigner
                         this.Invalidate();
                     }
                 }
-                
+
             }
 
         }
@@ -555,6 +570,8 @@ namespace ERDesigner
             isDrawEntity = false;
             isDrawingAtt = false;
             isDrawRelationship = false;
+            isDrawSubType = false;
+
             this.Cursor = Cursors.Default;
             setAllControlToDefaultCursor();
 
@@ -581,7 +598,7 @@ namespace ERDesigner
                 ((ShapeBase)AffectingShape).endEditName();
             }
         }
-        
+
         //Draw support
         private void JDrawReversibleRectangle(Point p1, Point p2)
         {
@@ -659,7 +676,7 @@ namespace ERDesigner
 
             }
         }
-        
+
         //Draw all relation line
         private void DrawConnectiveLines(Graphics g)
         {
@@ -758,7 +775,7 @@ namespace ERDesigner
             }
             return false;
         }
-        
+
         //Auto Layout
         public void AutoLayout()
         {
@@ -826,7 +843,7 @@ namespace ERDesigner
 
             return bac;
         }
-        
+
         //Get, Load Metadata
         public MetaData getMetaData()
         {
@@ -838,17 +855,18 @@ namespace ERDesigner
                     ShapeBase s = (ShapeBase)c;
                     if (s is EntityShape)
                     {
-                        EntityData entity = new EntityData(s.sName, ((EntityShape)s).type, s.Location.X, s.Location.Y, s.Width, s.Height);
+                        EntityShape en = (EntityShape)s;
+                        EntityData entity = (EntityData)en.getMetaData();
 
-                        foreach (AttributeShape att in ((EntityShape)s).attributes)
+                        foreach (AttributeShape att in en.attributes)
                         {
-                            AttributeData attribute = new AttributeData(att.sName, ((AttributeShape)att).type, att.Location.X, att.Location.Y, att.Width, att.Height, att.dataType, att.dataLength, att.allowNull, att.description);
+                            AttributeData attribute = (AttributeData)att.getMetaData();
                             if (att.isComposite)
                             {
                                 attribute.isComposite = true;
-                                foreach (AttributeShape attchild in ((AttributeShape)att).attributeChilds)
+                                foreach (AttributeShape attchild in att.attributeChilds)
                                 {
-                                    AttributeData attributechild = new AttributeData(attchild.sName, ((AttributeShape)attchild).type, attchild.Location.X, attchild.Location.Y, attchild.Width, attchild.Height, attchild.dataType, attchild.dataLength, attchild.allowNull, att.description);
+                                    AttributeData attributechild = (AttributeData)attchild.getMetaData();
 
                                     attribute.AttributeChilds.Add(attributechild);
                                 }
@@ -859,17 +877,18 @@ namespace ERDesigner
                     }
                     if (s is RelationshipShape)
                     {
-                        RelationshipData relationship = new RelationshipData(s.sName, ((RelationshipShape)s).type, s.Location.X, s.Location.Y, s.Width, s.Height);
+                        RelationshipShape rel = (RelationshipShape)s;
+                        RelationshipData relationship = (RelationshipData)rel.getMetaData();
 
-                        foreach (AttributeShape att in ((RelationshipShape)s).attributes)
+                        foreach (AttributeShape att in rel.attributes)
                         {
-                            AttributeData attribute = new AttributeData(att.sName, ((AttributeShape)att).type, att.Location.X, att.Location.Y, att.Width, att.Height, att.dataType, att.dataLength, att.allowNull, att.description);
+                            AttributeData attribute = (AttributeData)att.getMetaData();
                             if (att.isComposite)
                             {
                                 attribute.isComposite = true;
-                                foreach (AttributeShape attchild in ((AttributeShape)att).attributeChilds)
+                                foreach (AttributeShape attchild in att.attributeChilds)
                                 {
-                                    AttributeData attributechild = new AttributeData(attchild.sName, ((AttributeShape)attchild).type, attchild.Location.X, attchild.Location.Y, attchild.Width, attchild.Height, attchild.dataType, attchild.dataLength, attchild.allowNull, att.description);
+                                    AttributeData attributechild = (AttributeData)attchild.getMetaData();
 
                                     attribute.AttributeChilds.Add(attributechild);
                                 }
@@ -877,7 +896,7 @@ namespace ERDesigner
                             relationship.Attributes.Add(attribute);
                         }
 
-                        foreach (CardinalityShape cardi in ((RelationshipShape)s).cardinalities)
+                        foreach (CardinalityShape cardi in rel.cardinalities)
                         {
                             CardinalityData cardinality = new CardinalityData(cardi.Entity.sName, cardi.MinCardinality, cardi.MaxCardinality);
 
@@ -896,115 +915,51 @@ namespace ERDesigner
             // Vẽ entity và Attribute của nó
             foreach (EntityData en in ERD.Entities)
             {
-                EntityShape entity = new EntityShape();
-
-                entity.sName = en.name;
-                entity.type = en.type;
-                entity.Location = new Point(en.x, en.y);
-                entity.Size = new Size(en.w, en.h);
-
+                EntityShape entity = (EntityShape)en.createNotation();
                 this.Controls.Add(entity);
 
                 foreach (AttributeData att in en.Attributes)
                 {
-                    AttributeShape attribute = new AttributeShape();
-
-                    attribute.sName = att.name;
-                    attribute.type = att.type;
-                    attribute.Location = new Point(att.x, att.y);
-                    attribute.Size = new Size(att.w, att.h);
-                    attribute.dataType = att.DataType;
-                    attribute.dataLength = att.Length;
-                    attribute.allowNull = att.AllowNull;
-                    attribute.description = att.Description;
+                    AttributeShape attribute = (AttributeShape)att.createNotation();
 
                     if (att.isComposite)
                     {
                         foreach (AttributeData attChild in att.AttributeChilds)
                         {
-                            AttributeShape attributeChild = new AttributeShape();
-
-                            attributeChild.sName = attChild.name;
-                            attributeChild.type = attChild.type;
-                            attributeChild.Location = new Point(attChild.x, attChild.y);
-                            attributeChild.Size = new Size(attChild.w, attChild.h);
-                            attributeChild.isComposite = false;
-                            attributeChild.dataType = attChild.DataType;
-                            attributeChild.dataLength = attChild.Length;
-                            attributeChild.allowNull = attChild.AllowNull;
-                            attributeChild.description = attChild.Description;
-
+                            AttributeShape attributeChild = (AttributeShape)attChild.createNotation();
                             attribute.addAttribute(attributeChild);
-
                             this.Controls.Add(attributeChild);
                         }
                     }
-
-                    //Không xài hàm này nữa
-                    //entity.attributes.Add(attribute);
-
-                    //Thay bằng
                     entity.addAttribute(attribute);
-
                     this.Controls.Add(attribute);
-
                 }
             }
 
             //Phù, mệt wá, ráng thôi, Vẽ tiếp relationship, attribute và cardinality của nó
+            //Xài interface, hết mệt
             foreach (RelationshipData rel in ERD.Relationships)
             {
-                RelationshipShape relationship = new RelationshipShape();
-
-                relationship.sName = rel.name;
-                relationship.type = rel.type;
-                relationship.Location = new Point(rel.x, rel.y);
-                relationship.Size = new Size(rel.w, rel.h);
-
+                RelationshipShape relationship = (RelationshipShape)rel.createNotation();
                 this.Controls.Add(relationship);
 
                 foreach (AttributeData att in rel.Attributes)
                 {
-                    AttributeShape attribute = new AttributeShape();
-
-                    attribute.sName = att.name;
-                    attribute.type = att.type;
-                    attribute.Location = new Point(att.x, att.y);
-                    attribute.Size = new Size(att.w, att.h);
-                    attribute.dataType = att.DataType;
-                    attribute.dataLength = att.Length;
-                    attribute.allowNull = att.AllowNull;
-                    attribute.description = att.Description;
-                    //relationship.attributes.Add(attribute);
+                    AttributeShape attribute = (AttributeShape)att.createNotation();
 
                     if (att.isComposite)
                     {
                         foreach (AttributeData attChild in att.AttributeChilds)
                         {
-                            AttributeShape attributeChild = new AttributeShape();
-
-                            attributeChild.sName = attChild.name;
-                            attributeChild.type = attChild.type;
-                            attributeChild.Location = new Point(attChild.x, attChild.y);
-                            attributeChild.Size = new Size(attChild.w, attChild.h);
-                            attributeChild.isComposite = false;
-                            attributeChild.dataType = attChild.DataType;
-                            attributeChild.dataLength = attChild.Length;
-                            attributeChild.allowNull = attChild.AllowNull;
-                            attributeChild.description = attChild.Description;
-
+                            AttributeShape attributeChild = (AttributeShape)attChild.createNotation();
                             attribute.addAttribute(attributeChild);
-
                             this.Controls.Add(attributeChild);
                         }
                     }
-
                     relationship.addAttribute(attribute);
-
                     this.Controls.Add(attribute);
 
                 }
-
                 foreach (CardinalityData cardi in rel.Cardinalities)
                 {
                     //Tìm Entity để add vào Cardinality
@@ -1020,7 +975,7 @@ namespace ERDesigner
             }
             this.Refresh();
         }
-        
+
         //Verify Model
         public List<string> VerifyModel()
         {
@@ -1111,90 +1066,80 @@ namespace ERDesigner
 
             return errorList;
         }
-        
-        //Generate Context Menu
-        private ContextMenu getContexMenuForControl(ShapeBase control)
-        {
-            ContextMenu ctmn = new ContextMenu();
 
-            MenuItem del = new MenuItem("Delete");
+        //Generate Context Menu
+        private ContextMenuStrip getContexMenuForControl(ShapeBase control)
+        {
+            ContextMenuStrip ctmn = new ContextMenuStrip();
+
+            ToolStripMenuItem del = new ToolStripMenuItem("Delete");
             del.Click += new EventHandler(del_Click);
 
-            MenuItem addCardi = new MenuItem("Edit Cardinalitiy");
+            ToolStripMenuItem addCardi = new ToolStripMenuItem("Edit Cardinalitiy");
             addCardi.Click += new EventHandler(editCardi_Click);
-
-            MenuItem ChangeType = new MenuItem("Change type");
 
             if (control is EntityShape)
             {
-                ChangeType.MenuItems.Clear();
-
-                MenuItem StrongEntity = new MenuItem("Strong Entity Type");
+                ToolStripMenuItem StrongEntity = new ToolStripMenuItem("Strong Entity Type");
                 StrongEntity.Click += new EventHandler(Change_Type_Click);
 
-                MenuItem WeakEntity = new MenuItem("Weak Entity Type");
+                ToolStripMenuItem WeakEntity = new ToolStripMenuItem("Weak Entity Type");
                 WeakEntity.Click += new EventHandler(Change_Type_Click);
 
-                ChangeType.MenuItems.Add(StrongEntity);
-                ChangeType.MenuItems.Add(WeakEntity);
+                ctmn.Items.Add(StrongEntity);
+                ctmn.Items.Add(WeakEntity);
+                ctmn.Items.Add(new ToolStripSeparator());
             }
 
             if (control is RelationshipShape)
             {
-                ctmn.MenuItems.Add(addCardi);
-
-                ChangeType.MenuItems.Clear();
-
-                MenuItem NormalRelation = new MenuItem("Normal Relationship");
+                ToolStripMenuItem NormalRelation = new ToolStripMenuItem("Normal Relationship");
                 NormalRelation.Click += new EventHandler(Change_Type_Click);
 
-                MenuItem IdRelation = new MenuItem("Identifier Relationship");
+                ToolStripMenuItem IdRelation = new ToolStripMenuItem("Identifier Relationship");
                 IdRelation.Click += new EventHandler(Change_Type_Click);
 
-                MenuItem AssoRelation = new MenuItem("Associative Entity");
+                ToolStripMenuItem AssoRelation = new ToolStripMenuItem("Associative Entity");
                 AssoRelation.Click += new EventHandler(Change_Type_Click);
 
-                ChangeType.MenuItems.Add(NormalRelation);
-                ChangeType.MenuItems.Add(IdRelation);
-                ChangeType.MenuItems.Add(AssoRelation);
-            }
+                ctmn.Items.Add(NormalRelation);
+                ctmn.Items.Add(IdRelation);
+                ctmn.Items.Add(AssoRelation);
 
-            ctmn.MenuItems.Add(ChangeType);
+                ctmn.Items.Add(new ToolStripSeparator());
+
+                ctmn.Items.Add(addCardi);
+            }
 
             if (control is AttributeShape && ((AttributeShape)control).isComposite)
             {
-                ChangeType.MenuItems.Clear();
-
-                MenuItem KeyAtt = new MenuItem("Key Attribute");
+                ToolStripMenuItem KeyAtt = new ToolStripMenuItem("Key Attribute");
                 KeyAtt.Click += new EventHandler(Change_Type_Click);
 
-                MenuItem SimpleAtt = new MenuItem("Simple Attribute");
+                ToolStripMenuItem SimpleAtt = new ToolStripMenuItem("Simple Attribute");
                 SimpleAtt.Click += new EventHandler(Change_Type_Click);
 
-                MenuItem MultiAtt = new MenuItem("Multi-Valued Attribute");
+                ToolStripMenuItem MultiAtt = new ToolStripMenuItem("Multi-Valued Attribute");
                 MultiAtt.Click += new EventHandler(Change_Type_Click);
+
+                ctmn.Items.Add(SimpleAtt);
+                ctmn.Items.Add(KeyAtt);
+                ctmn.Items.Add(MultiAtt);
 
                 if (((AttributeShape)control).attributeChilds.Count == 0)
                 {
-                    MenuItem DerivedAtt = new MenuItem("Derived Attribute");
+                    ToolStripMenuItem DerivedAtt = new ToolStripMenuItem("Derived Attribute");
                     DerivedAtt.Click += new EventHandler(Change_Type_Click);
-                    ChangeType.MenuItems.Add(DerivedAtt);
+                    ctmn.Items.Add(DerivedAtt);
                 }
-
-                ChangeType.MenuItems.Add(KeyAtt);
-                ChangeType.MenuItems.Add(SimpleAtt);
-                ChangeType.MenuItems.Add(MultiAtt);
-
+                ctmn.Items.Add(new ToolStripSeparator());
             }
-            if (control.GetType().Name == "AttributeShape" && !((AttributeShape)control).isComposite)
-            {
-                ctmn.MenuItems.Remove(ChangeType);
-            }
-            ctmn.MenuItems.Add(del);
+
+            ctmn.Items.Add(del);
 
             return ctmn;
         }
-        
+
         //Set currsor
         public void setAllControlToDefaultCursor()
         {
@@ -1223,7 +1168,7 @@ namespace ERDesigner
                 }
             }
         }
-        
+
         //Create Relationship
         private void CreateUnaryRelationship()
         {
@@ -1323,7 +1268,7 @@ namespace ERDesigner
             if (rel.type != RelationshipType.AssociativeEntity)
             {
                 car1.setValue(1, 1);
-                car2.setValue(1, 1); 
+                car2.setValue(1, 1);
                 car3.setValue(1, 1);
             }
             else
@@ -1334,6 +1279,40 @@ namespace ERDesigner
             }
 
             this.Controls.Add(rel);
+        }
+
+        //Create SubTypeConnector
+        private void CreateSubTypeConnector(EntityShape supertype)
+        {
+            if(supertype.SubtypeConnector == null)
+            {
+                EntityShape subtype = new EntityShape();
+                subtype.CenterPoint = this.PointToClient(Control.MousePosition);
+
+                Point CenterTwoEntity = new Point(Math.Abs(supertype.CenterPoint.X + subtype.CenterPoint.X) / 2, Math.Abs(supertype.CenterPoint.Y + subtype.CenterPoint.Y) / 2);
+
+                SubTypeConnector subconnector = new SubTypeConnector(supertype, subtype, CenterTwoEntity, SubTypeCompleteness, SubTypeDisjointness);
+                supertype.SubtypeConnector = subconnector;
+
+                this.Controls.Add(subconnector);
+                this.Controls.Add(subtype);
+            }
+            else
+            {
+                if (supertype.SubtypeConnector.completeness == SubTypeCompleteness && supertype.SubtypeConnector.disjointness == SubTypeDisjointness)
+                {
+                    EntityShape subtype = new EntityShape();
+                    subtype.CenterPoint = this.PointToClient(Control.MousePosition);
+
+                    supertype.SubtypeConnector.addSubType((EntityShape)subtype);
+
+                    this.Controls.Add(subtype);
+                }
+                else
+                {
+                    DevExpress.XtraEditors.XtraMessageBox.Show("The constraint of the Sub Type you want to add must be the same to existed constraint in this Super Type", "Warning");
+                }
+            }
         }
 
         //Other Event

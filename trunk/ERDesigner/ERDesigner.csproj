@@ -9,7 +9,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ERDesigner</RootNamespace>
     <AssemblyName>ERDesigner</AssemblyName>
-    <ApplicationIcon>Icon 3.ico</ApplicationIcon>
+    <ApplicationIcon>
+    </ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,6 +36,22 @@
     <Reference Include="DevExpress.XtraBars.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=63213b87812c7912, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraEditors.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=63213b87812c7912, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraNavBar.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=63213b87812c7912, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.SqlServer.ConnectionInfo, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Microsoft.SqlServer.ConnectionInfo.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Smo, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Microsoft.SqlServer.Smo.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.SmoEnum, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Microsoft.SqlServer.SmoEnum.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.SqlEnum, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Debug\Microsoft.SqlServer.SqlEnum.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -44,27 +61,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
- <Compile Include="Classes\DrawingSupport.cs" />
- <Compile Include="Classes\GenerateDDL.cs" />
+    <Compile Include="Classes\DrawingSupport.cs" />
+    <Compile Include="Classes\GenerateDDL.cs" />
+    <Compile Include="Classes\GeneratePhysicalModel.cs" />
+    <Compile Include="Classes\JSerializer.cs" />
     <Compile Include="Classes\ScriptAccess.cs" />
     <Compile Include="Classes\ScriptMySql.cs" />
     <Compile Include="Classes\ScriptOracle.cs" />
- <Compile Include="Classes\ScriptMySql.cs" />
-    <Compile Include="Classes\ScriptOracle.cs" />
- <Compile Include="Classes\ScriptMySql.cs" />
-
-    <Compile Include="Classes\ScriptOracle.cs" />
+    <Compile Include="Classes\ScriptSQL.cs" />
+    <Compile Include="Controls\BrowseFileControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\BrowseFileControl.Designer.cs">
+      <DependentUpon>BrowseFileControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Controls\DataDescription.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\DataDescription.Designer.cs">
       <DependentUpon>DataDescription.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\BrowseFileControl.cs">
-      <SubType>UserControl</SubType>
+    <Compile Include="Controls\PanelDoubleBuffered.cs">
+      <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\BrowseFileControl.Designer.cs">
-      <DependentUpon>BrowseFileControl.cs</DependentUpon>
+    <Compile Include="Controls\PanelPhysical.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\ScrollablePanel.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Dialogs\AboutBox.cs">
       <SubType>Form</SubType>
@@ -90,6 +114,18 @@
     <Compile Include="Dialogs\EditTernaryRelationship.designer.cs">
       <DependentUpon>EditTernaryRelationship.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\New Project.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\New Project.Designer.cs">
+      <DependentUpon>New Project.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\SplashScreen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\SplashScreen.Designer.cs">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frmDrawBoard.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -108,88 +144,80 @@
     <Compile Include="Forms\frmPhysicalDrawBoard.Designer.cs">
       <DependentUpon>frmPhysicalDrawBoard.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\GeneratePhysicalModel.cs" />
     <Compile Include="Forms\GenerateScriptSQL.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\GenerateScriptSQL.designer.cs">
+    <Compile Include="Forms\GenerateScriptSQL.Designer.cs">
       <DependentUpon>GenerateScriptSQL.cs</DependentUpon>
     </Compile>
-    <Compile Include="Classes\JSerializer.cs" />
     <Compile Include="Forms\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\IMetaData.cs" />
+    <Compile Include="Interfaces\INotation.cs" />
     <Compile Include="MetaData.cs" />
     <Compile Include="MetaDataPhysical.cs" />
-    <Compile Include="Dialogs\New Project.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\New Project.Designer.cs">
-      <DependentUpon>New Project.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\PanelDoubleBuffered.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Controls\PanelPhysical.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="ProjectData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Controls\BrowseFileControl.resx">
+      <DependentUpon>BrowseFileControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\DataDescription.resx">
       <DependentUpon>DataDescription.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\BrowseFileControl.resx">
+    <EmbeddedResource Include="Controls\PanelDoubleBuffered.resx">
+      <DependentUpon>PanelDoubleBuffered.cs</DependentUpon>
       <SubType>Designer</SubType>
-      <DependentUpon>BrowseFileControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AboutBox.resx">
-      <SubType>Designer</SubType>
       <DependentUpon>AboutBox.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AddCardinality.resx">
       <DependentUpon>AddCardinality.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\AddConnection.resx">
-      <SubType>Designer</SubType>
       <DependentUpon>AddConnection.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\EditTernaryRelationship.resx">
       <DependentUpon>EditTernaryRelationship.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmDrawBoard.resx">
+    <EmbeddedResource Include="Dialogs\New Project.resx">
+      <DependentUpon>New Project.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\SplashScreen.resx">
+      <DependentUpon>SplashScreen.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmDrawBoard.resx">
       <DependentUpon>frmDrawBoard.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmEditDDLScript.resx">
       <DependentUpon>frmEditDDLScript.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmPhysicalDrawBoard.resx">
-      <SubType>Designer</SubType>
       <DependentUpon>frmPhysicalDrawBoard.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GenerateScriptSQL.resx">
       <DependentUpon>GenerateScriptSQL.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\MainForm.resx">
-      <SubType>Designer</SubType>
       <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\New Project.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>New Project.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\PanelDoubleBuffered.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>PanelDoubleBuffered.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -220,16 +248,15 @@
       <DependentUpon>ShapeBase.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\SplashScreen.resx">
+    <EmbeddedResource Include="Shape\SubTypeConnector.resx">
+      <DependentUpon>SubTypeConnector.cs</DependentUpon>
       <SubType>Designer</SubType>
-      <DependentUpon>SplashScreen.cs</DependentUpon>
     </EmbeddedResource>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="app.config" />
     <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -239,10 +266,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="Classes\ScriptSQL.cs" />
-    <Compile Include="Forms\ScrollablePanel.cs">
-      <SubType>Component</SubType>
     </Compile>
     <Compile Include="ShapePhysical\FKShape.cs" />
     <Compile Include="ShapePhysical\ShapBase.cs">
@@ -261,18 +284,14 @@
     <Compile Include="Shape\EntityShape.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Shape\INotation.cs" />
     <Compile Include="Shape\RelationshipShape.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Shape\ShapeBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Dialogs\SplashScreen.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\SplashScreen.Designer.cs">
-      <DependentUpon>SplashScreen.cs</DependentUpon>
+    <Compile Include="Shape\SubTypeConnector.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="ThongSo.cs" />
   </ItemGroup>

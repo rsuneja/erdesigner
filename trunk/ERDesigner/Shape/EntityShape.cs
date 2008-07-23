@@ -13,6 +13,7 @@ namespace ERDesigner.Shape
         static int number = 0;
         public List<AttributeShape> attributes;
         public List<CardinalityShape>[] cardinalities;
+        SubTypeConnector subtypeconnector;
 
         private void InitializeComponent()
         {
@@ -31,6 +32,7 @@ namespace ERDesigner.Shape
         {
             type = EntityType.Strong;
             attributes = new List<AttributeShape>();
+            
             cardinalities = new List<CardinalityShape>[4];
             cardinalities[0] = new List<CardinalityShape>();
             cardinalities[1] = new List<CardinalityShape>();
@@ -47,6 +49,7 @@ namespace ERDesigner.Shape
         {
             type = t;
             attributes = new List<AttributeShape>();
+            
             cardinalities = new List<CardinalityShape>[4];
             cardinalities[0] = new List<CardinalityShape>();
             cardinalities[1] = new List<CardinalityShape>();
@@ -85,6 +88,22 @@ namespace ERDesigner.Shape
                         att.Invalidate();
                 }
             }
+        }
+        public SubTypeConnector SubtypeConnector
+        {
+            get
+            {
+                return subtypeconnector;
+            }
+            set
+            {
+                subtypeconnector = value;
+                subtypeconnector.Disposed += new EventHandler(subtypeconnector_Disposed);
+            }
+        }
+        void subtypeconnector_Disposed(object sender, EventArgs e)
+        {
+            subtypeconnector = null;
         }
         public override ShapeBase Clone()
         {
@@ -147,7 +166,7 @@ namespace ERDesigner.Shape
         {
             attributes.Remove((AttributeShape)sender);
         }
-
+        
         protected override void refreshPath()
         {
             path = new GraphicsPath();
@@ -255,11 +274,15 @@ namespace ERDesigner.Shape
             {
                 for (int j = 0; j < this.cardinalities[i].Count; j++)
                 {
-                    DrawingSupport.DrawCardinalitiesLine(g, this.cardinalities[i][j], i + 1, j + 1, this.cardinalities[i].Count);
+                    DrawingSupport.DrawCardinalitiesLine(g, this.cardinalities[i][j], i + 1, j + 1, this.cardinalities[i].Count, this.BackColor);
                 }
             }
         }
-
+        public IMetaData getMetaData()
+        {
+            EntityData entity = new EntityData(this.sName, this.type, this.Location.X, this.Location.Y, this.Width, this.Height);
+            return (IMetaData)entity;
+        }
         #endregion
     }
 }

@@ -54,7 +54,7 @@ namespace ERDesigner
             }
             return edgeCardiPlace;
         }
-        public static void DrawCardinalitiesLine(Graphics g, CardinalityShape cardi, int edgeCardiPlace, int pos, int numCardi)
+        public static void DrawCardinalitiesLine(Graphics g, CardinalityShape cardi, int EntityEdgeCardiPlace, int pos, int numCardi, Color backgroundColor)
         {
             EntityShape entity = cardi.Entity;
             RelationshipShape rel = cardi.Relationship;
@@ -71,126 +71,103 @@ namespace ERDesigner
             int stepX = pos * entity.Width / (numCardi + 1);
             int stepY = pos * entity.Height / (numCardi + 1);
 
+            Bitmap myCardi = GetCardinalitiesShape(cardi, EntityEdgeCardiPlace, backgroundColor);
+
+            Point EntityStartPos = getStartPos(EntityEdgeCardiPlace, (ShapeBase)entity, TopLeft, BottomRight, stepX, stepY, myCardi);
+            Point EntityCardiPos = getCardiPos(EntityEdgeCardiPlace, (ShapeBase)entity, TopLeft, BottomRight, stepX, stepY, myCardi);
+
             if (rel.type != RelationshipType.AssociativeEntity)
             {
-                Bitmap myCardi = GetCardinalitiesShape(cardi, edgeCardiPlace);
-                switch (edgeCardiPlace)
-                {
-                    case 1: g.DrawImage(myCardi, TopLeft.X + stepX - myCardi.Width / 2, TopLeft.Y - myCardi.Height);
-                        g.DrawLine(ThongSo.ConectiveLinePen, centerRelationship.X, centerRelationship.Y, TopLeft.X + stepX, TopLeft.Y - myCardi.Height);
-                        break;
-                    case 2: g.DrawImage(myCardi, BottomRight.X, BottomRight.Y - (entity.Height - stepY) - myCardi.Height / 2);
-                        g.DrawLine(ThongSo.ConectiveLinePen, centerRelationship.X, centerRelationship.Y, BottomRight.X + myCardi.Width, BottomRight.Y - (entity.Height - stepY));
-                        break;
-                    case 3: g.DrawImage(myCardi, BottomRight.X - (entity.Width - stepX) - myCardi.Width / 2 + 1, BottomRight.Y);
-                        g.DrawLine(ThongSo.ConectiveLinePen, centerRelationship.X, centerRelationship.Y, BottomRight.X - (entity.Width - stepX), BottomRight.Y + myCardi.Height);
-                        break;
-                    case 4: g.DrawImage(myCardi, TopLeft.X - myCardi.Width, TopLeft.Y + stepY - myCardi.Height / 2 + 1);
-                        g.DrawLine(ThongSo.ConectiveLinePen, centerRelationship.X, centerRelationship.Y, TopLeft.X - myCardi.Width, TopLeft.Y + stepY);
-                        break;
-                }
+                g.DrawImage(myCardi, EntityCardiPos);
+                g.DrawLine(ThongSo.ConectiveLinePen, EntityStartPos, centerRelationship);
             }
             else //nếu relationship là Associative Entity
             {
-                //Point TopLeftRel = rel.Location;
-                //Point BottomRightRel = new Point(rel.Location.X + rel.Width, rel.Location.Y + rel.Height);
+                Point TopLeftRel = rel.Location;
+                Point BottomRightRel = new Point(rel.Location.X + rel.Width, rel.Location.Y + rel.Height);
 
-                //int stepXRel = (index + 1) * rel.Width / (rel.cardiplaces[newEdgeCardiPlace - 1].Count + 1);
-                //int stepYRel = (index + 1) * rel.Height / (rel.cardiplaces[newEdgeCardiPlace - 1].Count + 1);
+                int AssEdgeCardiPlace = 0, index = 0;
+                rel.getCardiPosition(cardi, ref AssEdgeCardiPlace, ref index);
+                
+                int stepXRel = (index + 1) * rel.Width / (rel.cardiplaces[AssEdgeCardiPlace - 1].Count + 1);
+                int stepYRel = (index + 1) * rel.Height / (rel.cardiplaces[AssEdgeCardiPlace - 1].Count + 1);
 
-                ////cardi 1, 1
-                //CardinalityShape cardi1 = new CardinalityShape();
-                //cardi1.setValue(1, 1);
+                //cardi 1, 1
+                CardinalityShape cardi1 = new CardinalityShape();
+                cardi1.setValue(1, 1);
 
-                ////lấy cardi của đầu bên kia Relationship
-                //CardinalityShape cardi2 = new CardinalityShape();
-                //foreach (CardinalityShape card in cardi.relationship.cardinalities)
-                //{
-                //    if (card != cardi)
-                //        cardi2 = card;
-                //}
+                //lấy cardi của đầu bên kia Relationship
+                CardinalityShape cardi2 = new CardinalityShape();
+                foreach (CardinalityShape card in cardi.Relationship.cardinalities)
+                {
+                    if (card != cardi)
+                        cardi2 = card;
+                }
 
-                //Bitmap CardiAtEn = GetCardinalitiesShape(cardi1, edgeCardiPlace);
-                //Bitmap CardiAtRel = GetCardinalitiesShape(cardi2, newEdgeCardiPlace);
+                Bitmap CardiAtEn = GetCardinalitiesShape(cardi1, EntityEdgeCardiPlace, backgroundColor);
+                Bitmap CardiAtRel = GetCardinalitiesShape(cardi2, AssEdgeCardiPlace, backgroundColor);
 
-                ////Vẽ cardi cho En
-                //switch (edgeCardiPlace)
-                //{
-                //    case 1: g.DrawImage(CardiAtEn, TopLeft.X + stepX - CardiAtEn.Width / 2, TopLeft.Y - CardiAtEn.Height);
-                //        break;
-                //    case 2: g.DrawImage(CardiAtEn, BottomRight.X, BottomRight.Y - (entity.Height - stepY) - CardiAtEn.Height / 2);
-                //        break;
-                //    case 3: g.DrawImage(CardiAtEn, BottomRight.X - (entity.Width - stepX) - CardiAtEn.Width / 2 + 1, BottomRight.Y);
-                //        break;
-                //    case 4: g.DrawImage(CardiAtEn, TopLeft.X - CardiAtEn.Width, TopLeft.Y + stepY - CardiAtEn.Height / 2 + 1);
-                //        break;
-                //}
+                Point AssStartPos = getStartPos(AssEdgeCardiPlace, (ShapeBase)rel, TopLeftRel, BottomRightRel, stepXRel, stepYRel, CardiAtRel);
+                Point AssCardiPos = getCardiPos(AssEdgeCardiPlace, (ShapeBase)rel, TopLeftRel, BottomRightRel, stepXRel, stepYRel, CardiAtRel);
 
-                ////Vẽ cardi cho Ass En
-                //switch (newEdgeCardiPlace)
-                //{
-                //    case 1: g.DrawImage(CardiAtRel, TopLeftRel.X + stepXRel - CardiAtRel.Width / 2, TopLeftRel.Y - CardiAtRel.Height);
-                //        break;
-                //    case 2: g.DrawImage(CardiAtRel, BottomRightRel.X, BottomRightRel.Y - (rel.Height - stepYRel) - CardiAtRel.Height / 2);
-                //        break;
-                //    case 3: g.DrawImage(CardiAtRel, BottomRightRel.X - (rel.Width - stepXRel) - CardiAtRel.Width / 2 + 1, BottomRightRel.Y);
-                //        break;
-                //    case 4: g.DrawImage(CardiAtRel, TopLeftRel.X - CardiAtRel.Width, TopLeftRel.Y + stepYRel - CardiAtRel.Height / 2 + 1);
-                //        break;
-                //}
-
-                ////Vẽ Line
-                //switch (edgeCardiPlace)
-                //{
-                //    case 1:
-                //        switch (newEdgeCardiPlace)
-                //        {
-                //            case 2: g.DrawLine(ThongSo.ConectiveLinePen, BottomRightRel.X + CardiAtRel.Width, BottomRightRel.Y - (rel.Height - stepYRel), TopLeft.X + stepX, TopLeft.Y - CardiAtEn.Height);
-                //                break;
-                //            case 3: g.DrawLine(ThongSo.ConectiveLinePen, BottomRightRel.X - (rel.Width - stepXRel), BottomRightRel.Y + CardiAtRel.Height, TopLeft.X + stepX, TopLeft.Y - CardiAtRel.Height);
-                //                break;
-                //            case 4: g.DrawLine(ThongSo.ConectiveLinePen, TopLeftRel.X - CardiAtRel.Width, TopLeftRel.Y + stepYRel, TopLeft.X + stepX, TopLeft.Y - CardiAtRel.Height);
-                //                break;
-                //        }
-                //        break;
-                //    case 2:
-                //        switch (newEdgeCardiPlace)
-                //        {
-                //            case 1: g.DrawLine(ThongSo.ConectiveLinePen, TopLeftRel.X + stepXRel, TopLeftRel.Y - CardiAtRel.Height, BottomRight.X + CardiAtRel.Width, BottomRight.Y - (entity.Height - stepY));
-                //                break;
-                //            case 3: g.DrawLine(ThongSo.ConectiveLinePen, BottomRightRel.X - (rel.Width - stepXRel), BottomRightRel.Y + CardiAtRel.Height, BottomRight.X + CardiAtRel.Width, BottomRight.Y - (entity.Height - stepY));
-                //                break;
-                //            case 4: g.DrawLine(ThongSo.ConectiveLinePen, TopLeftRel.X - CardiAtRel.Width, TopLeftRel.Y + stepYRel, BottomRight.X + CardiAtRel.Width, BottomRight.Y - (entity.Height - stepY));
-                //                break;
-                //        }
-                //        break;
-                //    case 3:
-                //        switch (newEdgeCardiPlace)
-                //        {
-                //            case 1: g.DrawLine(ThongSo.ConectiveLinePen, TopLeftRel.X + stepXRel, TopLeftRel.Y - CardiAtRel.Height, BottomRight.X - (entity.Width - stepX), BottomRight.Y + CardiAtRel.Height);
-                //                break;
-                //            case 2: g.DrawLine(ThongSo.ConectiveLinePen, BottomRightRel.X + CardiAtRel.Width, BottomRightRel.Y - (rel.Height - stepYRel), BottomRight.X - (entity.Width - stepX), BottomRight.Y + CardiAtEn.Height);
-                //                break;
-                //            case 4: g.DrawLine(ThongSo.ConectiveLinePen, TopLeftRel.X - CardiAtRel.Width, TopLeftRel.Y + stepYRel, BottomRight.X - (entity.Width - stepX), BottomRight.Y + CardiAtEn.Height);
-                //                break;
-                //        }
-                //        break;
-                //    case 4:
-                //        switch (newEdgeCardiPlace)
-                //        {
-                //            case 1: g.DrawLine(ThongSo.ConectiveLinePen, TopLeftRel.X + stepXRel, TopLeftRel.Y - CardiAtRel.Height, TopLeft.X - CardiAtEn.Width, TopLeft.Y + stepY);
-                //                break;
-                //            case 2: g.DrawLine(ThongSo.ConectiveLinePen, BottomRightRel.X + CardiAtRel.Width, BottomRightRel.Y - (rel.Height - stepYRel), TopLeft.X - CardiAtEn.Width, TopLeft.Y + stepY);
-                //                break;
-                //            case 3: g.DrawLine(ThongSo.ConectiveLinePen, BottomRightRel.X - (rel.Width - stepXRel), BottomRightRel.Y + CardiAtRel.Height, TopLeft.X - CardiAtEn.Width, TopLeft.Y + stepY);
-                //                break;
-                //        }
-                //        break;
-                //}
-
+                g.DrawImage(CardiAtEn, EntityCardiPos);
+                g.DrawImage(CardiAtRel, AssCardiPos);
+                g.DrawLine(ThongSo.ConectiveLinePen, EntityStartPos, AssStartPos);
             }
         }
-        private static Bitmap GetCardinalitiesShape(CardinalityShape cardi, int edgeCardiPlace)
+        private static Point getCardiPos(int EdgeCardiPlace, ShapeBase shape, Point TopLeft, Point BottomRight, int stepX, int stepY, Bitmap myCardi)
+        {
+            Point CardiPos = new Point();
+
+            switch (EdgeCardiPlace)
+            {
+                case 1:
+                    CardiPos.X = TopLeft.X + stepX - myCardi.Width / 2;
+                    CardiPos.Y = TopLeft.Y - myCardi.Height;
+                    break;
+                case 2:
+                    CardiPos.X = BottomRight.X;
+                    CardiPos.Y = BottomRight.Y - (shape.Height - stepY) - myCardi.Height / 2;
+                    break;
+                case 3:
+                    CardiPos.X = BottomRight.X - (shape.Width - stepX) - myCardi.Width / 2 + 1;
+                    CardiPos.Y = BottomRight.Y;
+                    break;
+                case 4:
+                    CardiPos.X = TopLeft.X - myCardi.Width;
+                    CardiPos.Y = TopLeft.Y + stepY - myCardi.Height / 2 + 1;
+                    break;
+            }
+
+            return CardiPos;
+        }
+        private static Point getStartPos(int EdgeCardiPlace, ShapeBase shape, Point TopLeft, Point BottomRight, int stepX, int stepY, Bitmap myCardi)
+        {
+            Point StartPos = new Point();
+
+            switch (EdgeCardiPlace)
+            {
+                case 1:
+                    StartPos.X = TopLeft.X + stepX;
+                    StartPos.Y = TopLeft.Y - myCardi.Height;
+                    break;
+                case 2:
+                    StartPos.X = BottomRight.X + myCardi.Width;
+                    StartPos.Y = BottomRight.Y - (shape.Height - stepY);
+                    break;
+                case 3:
+                    StartPos.X = BottomRight.X - (shape.Width - stepX);
+                    StartPos.Y = BottomRight.Y + myCardi.Height;
+                    break;
+                case 4:
+                    StartPos.X = TopLeft.X - myCardi.Width;
+                    StartPos.Y = TopLeft.Y + stepY;
+                    break;
+            }
+
+            return StartPos;
+        }
+        private static Bitmap GetCardinalitiesShape(CardinalityShape cardi, int edgeCardiPlace, Color backgroundColor)
         {
             Bitmap carshape = new Bitmap(20, 20);
             Graphics gimage = Graphics.FromImage(carshape);
@@ -203,7 +180,7 @@ namespace ERDesigner
 
                 if (cardi.MinCardinality == 0)
                 {
-                    //gimage.FillEllipse(new SolidBrush(this.BackColor), 7, 0, 6, 6);
+                    gimage.FillEllipse(new SolidBrush(backgroundColor), 7, 0, 6, 6);
                     gimage.DrawEllipse(ThongSo.ConectiveLinePen, 7, 0, 6, 6);
                 }
                 else
@@ -216,7 +193,7 @@ namespace ERDesigner
 
                 if (cardi.MinCardinality == 0)
                 {
-                    //gimage.FillEllipse(new SolidBrush(this.BackColor), 7, 3, 6, 6);
+                    gimage.FillEllipse(new SolidBrush(backgroundColor), 7, 3, 6, 6);
                     gimage.DrawEllipse(ThongSo.ConectiveLinePen, 7, 3, 6, 6);
                 }
                 else
