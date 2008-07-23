@@ -1,19 +1,20 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-
+using ERDesigner.Shape;
+using System.Drawing;
 
 namespace ERDesigner
 {
-    public class EntityData
+    public class EntityData : IMetaData
     {
         public String name;
         public String type;
-        public int x,y;
+        public int x, y;
         public int w, h;
         public List<AttributeData> Attributes;
 
-        public EntityData() 
+        public EntityData()
         {
             Attributes = new List<AttributeData>();
         }
@@ -27,8 +28,23 @@ namespace ERDesigner
             w = ww;
             h = hh;
         }
+
+        #region IMetaData Members
+
+        public INotation createNotation()
+        {
+            EntityShape entity = new EntityShape();
+            entity.sName = this.name;
+            entity.type = this.type;
+            entity.Location = new Point(this.x, this.y);
+            entity.Size = new Size(this.w, this.h);
+            
+            return (INotation)entity;
+        }
+
+        #endregion
     }
-    public class AttributeData
+    public class AttributeData : IMetaData
     {
         public String name;
         public bool isComposite;
@@ -60,6 +76,25 @@ namespace ERDesigner
             isComposite = false;
             Description = des;
         }
+
+        #region IMetaData Members
+
+        public INotation createNotation()
+        {
+            AttributeShape attribute = new AttributeShape();
+            attribute.sName = this.name;
+            attribute.type = this.type;
+            attribute.Location = new Point(this.x, this.y);
+            attribute.Size = new Size(this.w, this.h);
+            attribute.dataType = this.DataType;
+            attribute.dataLength = this.Length;
+            attribute.allowNull = this.AllowNull;
+            attribute.description = this.Description;
+
+            return (INotation)attribute;
+        }
+
+        #endregion
     }
     public class CardinalityData
     {
@@ -74,7 +109,7 @@ namespace ERDesigner
             MaxCardinality = max;
         }
     }
-    public class RelationshipData
+    public class RelationshipData : IMetaData
     {
         public String name;
         public String type;
@@ -98,13 +133,28 @@ namespace ERDesigner
             w = ww;
             h = hh;
         }
+
+        #region IMetaData Members
+
+        public INotation createNotation()
+        {
+            RelationshipShape relationship = new RelationshipShape();
+            relationship.sName = this.name;
+            relationship.type = this.type;
+            relationship.Location = new Point(this.x, this.y);
+            relationship.Size = new Size(this.w, this.h);
+                
+            return (INotation)relationship;
+        }
+
+        #endregion
     }
     public class MetaData
     {
         public string Name;
         public List<EntityData> Entities;
         public List<RelationshipData> Relationships;
-        public MetaData() 
+        public MetaData()
         {
             Entities = new List<EntityData>();
             Relationships = new List<RelationshipData>();

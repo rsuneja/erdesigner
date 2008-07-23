@@ -37,7 +37,7 @@ namespace ERDesigner.Shape
         public EntityShape Entity
         {
             get { return _entity; }
-            set 
+            set
             {
                 _entity = value;
                 _entity.Disposed += new EventHandler(This_Dispose);
@@ -249,7 +249,7 @@ namespace ERDesigner.Shape
                 this.Dispose();
             }
         }
-        
+
         protected override void refreshPath()
         {
             path = new GraphicsPath();
@@ -315,16 +315,16 @@ namespace ERDesigner.Shape
         {
             if (this.type == RelationshipType.AssociativeEntity)
             {
-	            for (int i = 0; i < 4; i++)
-	            {
-	                //update all cardinality of this relationship
+                for (int i = 0; i < 4; i++)
+                {
+                    //update all cardinality of this relationship
                     for (int j = 0; j < this.cardiplaces[i].Count; j++)
-	                {
+                    {
                         CardinalityShape cardi = this.cardiplaces[i][j];
-	
-	                    EntityShape entity = cardi.Entity;
-	
-	                    int oldEdgeCardiPlace = i + 1;
+
+                        EntityShape entity = cardi.Entity;
+
+                        int oldEdgeCardiPlace = i + 1;
                         int newEdgeCardiPlace = DrawingSupport.CalculateCardiDirection(this, entity);
 
                         //Chổ này làm kỹ, không thôi nó giựt wài ghét lắm
@@ -355,8 +355,8 @@ namespace ERDesigner.Shape
                                 }
                             }
                         }
-	                }
-	            }
+                    }
+                }
             }
         }
         private int CalculateCardiPosition(CardinalityShape cardi, int newEdgeCardiPlace)
@@ -377,7 +377,18 @@ namespace ERDesigner.Shape
             }
             return index;
         }
-
+        public void getCardiPosition(CardinalityShape cardi, ref int direction, ref int index)
+        {
+            for (int i = 0; i < 4; i++)
+                for (int j = 0; j < cardiplaces[i].Count; j++)
+                {
+                    if (cardi == cardiplaces[i][j])
+                    {
+                        direction = i + 1;
+                        index = j;
+                    }
+                }
+        }
         #region INotation Members
 
         public void DrawConnectiveLines(Graphics g)
@@ -387,7 +398,11 @@ namespace ERDesigner.Shape
                 g.DrawLine(new Pen(Color.Black, 1), this.CenterPoint, att.CenterPoint);
             }
         }
-
+        public IMetaData getMetaData()
+        {
+            RelationshipData relationship = new RelationshipData(this.sName, this.type, this.Location.X, this.Location.Y, this.Width, this.Height);
+            return (IMetaData)relationship;
+        }
         #endregion
     }
 }

@@ -5,8 +5,9 @@ using System.Drawing;
 
 namespace ERDesigner
 {
-    interface INotation
+    public interface INotation
     {
+        IMetaData getMetaData();
         void DrawConnectiveLines(Graphics g);
     }
 }

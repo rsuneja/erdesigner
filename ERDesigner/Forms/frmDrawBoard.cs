@@ -99,6 +99,10 @@ namespace ERDesigner
                     break;
                 case "Pointer": pnlDrawBoard.CancelDrawing();
                     break;
+                case "Sub Type":
+                    pnlDrawBoard.setCursor(System.Windows.Forms.Cursors.Hand, "EntityShape");
+                    pnlDrawBoard.isDrawSubType = true;
+                    break;
             }
             
         }

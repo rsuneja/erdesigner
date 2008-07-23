@@ -50,5 +50,11 @@ namespace ERDesigner
         public const string ConceptualExtention = ".cxl";
         public const string PhysicalExtention = ".pxl";
     }
-
+    public class SubTypeConnectorType
+    {
+        public const string TotalSpecialization = "Total Specialization";
+        public const string PartialSpecialization = "Partial Specialization";
+        public const string DisjointConstraint = "Disjoint Constraint";
+        public const string OverlapConstraint = "Overlap Constraint";
+    }
 }

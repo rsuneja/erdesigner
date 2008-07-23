@@ -645,5 +645,57 @@ namespace ERDesigner
                 ((BarCheckItem)link.Item).Checked = link.Item.Caption == defaultLookAndFeel1.LookAndFeel.ActiveSkinName;
         }
 
+        private void chkTotal_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (chkTotal.Down)
+            {
+                chkPartial.Down = false;
+                if (ActiveMdiChild != null && ActiveMdiChild is frmDrawBoard)
+                {
+                    ((frmDrawBoard)ActiveMdiChild).pnlDrawBoard.SubTypeCompleteness = SubTypeConnectorType.TotalSpecialization;
+                }
+            }
+        }
+        private void chkPartial_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (chkPartial.Down)
+            {
+                chkTotal.Down = false;
+                if (ActiveMdiChild != null && ActiveMdiChild is frmDrawBoard)
+                {
+                    ((frmDrawBoard)ActiveMdiChild).pnlDrawBoard.SubTypeCompleteness = SubTypeConnectorType.PartialSpecialization;
+                }
+            }
+        }
+        private void chkDisjoint_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (chkDisjoint.Down)
+            {
+                chkOverlap.Down = false;
+                if (ActiveMdiChild != null && ActiveMdiChild is frmDrawBoard)
+                {
+                    ((frmDrawBoard)ActiveMdiChild).pnlDrawBoard.SubTypeDisjointness = SubTypeConnectorType.DisjointConstraint;
+                }
+            }
+        }
+        private void chkOverlap_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (chkOverlap.Down)
+            {
+                chkDisjoint.Down = false;
+                if (ActiveMdiChild != null && ActiveMdiChild is frmDrawBoard)
+                {
+                    ((frmDrawBoard)ActiveMdiChild).pnlDrawBoard.SubTypeDisjointness = SubTypeConnectorType.OverlapConstraint;
+                }
+            }
+        }
+
+        private void btnAddSubType_ItemClick(object sender, ItemClickEventArgs e)
+        {
+            if (ActiveMdiChild != null && ActiveMdiChild is frmDrawBoard)
+            {
+                ((frmDrawBoard)ActiveMdiChild).prepairDrawing("Sub Type");
+            }
+        }
     }
 }
