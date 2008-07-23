@@ -103,10 +103,19 @@ namespace ERDesigner.Shape
             }
         }
 
-        public void xulyDoubleClick(PanelDoubleBuffered pn, ShapeBase ns)
+        public virtual void DoubleClick(PanelDoubleBuffered pn, ShapeBase ns)
         {
             parentPanel = pn;
             namingShape = ns;
+
+            if (parentPanel.isNaming)
+            {
+                parentPanel.AffectingShape.endEditName();
+                return;
+            }
+
+            parentPanel.AffectingShape = ns;
+            parentPanel.isNaming = true;
 
             txtName = new TextBox();
 

@@ -32,7 +32,7 @@ namespace ERDesigner
 
         public bool allowDrawing;
         ShapeBase currentShape = null;
-        ShapeBase AffectingShape = null;
+        public ShapeBase AffectingShape = null;
 
         Point First_Mouse_Pos = new Point(-1, -1);
         Point Last_Mouse_Pos = new Point(-1, -1);
@@ -129,7 +129,7 @@ namespace ERDesigner
                     Point mouse = this.PointToClient(Control.MousePosition);
                     currentShape.CenterPoint = mouse;
                     this.Controls.Add(currentShape);
-                    beginRename(currentShape);
+                    shapeDoubleClick(currentShape, e);
                 }
                 else
                 {
@@ -452,7 +452,7 @@ namespace ERDesigner
         }
         void shapeDoubleClick(object sender, MouseEventArgs e)
         {
-            beginRename(sender);
+            ((ShapeBase)sender).DoubleClick(this, (ShapeBase)sender);
         }
         void shape_KeyDown(object sender, KeyEventArgs e)
         {
@@ -553,17 +553,6 @@ namespace ERDesigner
         }
 
         //My function
-        private void beginRename(object sender)
-        {
-            if (isNaming)
-            {
-                AffectingShape.endEditName();
-                return;
-            }
-            ((ShapeBase)sender).xulyDoubleClick(this, (ShapeBase)sender);
-            AffectingShape = (ShapeBase)sender;
-            isNaming = true;
-        }
         public void CancelDrawing()
         {
             isDrawing = false;

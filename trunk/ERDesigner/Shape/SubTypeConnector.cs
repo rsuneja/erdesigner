@@ -12,7 +12,7 @@ namespace ERDesigner.Shape
     {
         public string completeness;
         public string disjointness;
-        public EntityShape subpertype;
+        public EntityShape supertype;
         public List<EntityShape> subtypes;
         public List<string> discriminators;
 
@@ -21,7 +21,7 @@ namespace ERDesigner.Shape
             subtypes = new List<EntityShape>();
             discriminators = new List<string>();
 
-            subpertype = super;
+            supertype = super;
             addSubType(sub);
 
             completeness = comp;
@@ -31,7 +31,7 @@ namespace ERDesigner.Shape
             this.CenterPoint = loc;
 
             this.Disposed += new EventHandler(SubTypeConnector_Disposed);
-            subpertype.Disposed += new EventHandler(subpertype_Disposed);
+            supertype.Disposed += new EventHandler(subpertype_Disposed);
             refreshPath();
         }
         void subpertype_Disposed(object sender, EventArgs e)
@@ -72,7 +72,10 @@ namespace ERDesigner.Shape
             if (subtypes.Count == 0)
                 this.Dispose();
         }
-
+        public override void DoubleClick(PanelDoubleBuffered pn, ShapeBase ns)
+        {
+            
+        }
         protected override void refreshPath()
         {
             path = new GraphicsPath();
@@ -107,18 +110,54 @@ namespace ERDesigner.Shape
 
         public void DrawConnectiveLines(Graphics g)
         {
-            if(completeness == SubTypeConnectorType.TotalSpecialization)
+            if (completeness == SubTypeConnectorType.TotalSpecialization)
             {
+                double Dx = supertype.CenterPoint.X - this.CenterPoint.X;
+                double Dy = supertype.CenterPoint.Y - this.CenterPoint.Y;
+                double distance = Math.Sqrt(Dx * Dx + Dy * Dy);
+
+                Matrix X = new Matrix();
+                X.Translate(this.CenterPoint.X, this.CenterPoint.Y);
+                float angle = (float)(Math.Acos((float)Dx / distance) * 180 / Math.PI);
+                if(Dy > 0)
+                    angle = - angle;
+                X.Rotate(-angle);
+                g.Transform = X;
+
+                g.DrawLine(ThongSo.JPen, new Point(0, -this.Width / 3), new Point((int)distance, -this.Width / 3));
+                g.DrawLine(ThongSo.JPen, new Point(0, this.Width / 3), new Point((int)distance, this.Width / 3));
                 
+                X.Reset();
+                g.Transform = X;
             }
             else
             {
-                g.DrawLine(ThongSo.JPen, subpertype.CenterPoint, this.CenterPoint);
+                g.DrawLine(ThongSo.JPen, supertype.CenterPoint, this.CenterPoint);
             }
 
             foreach (EntityShape sub in subtypes)
             {
                 g.DrawLine(ThongSo.JPen, this.CenterPoint, sub.CenterPoint);
+                Point midline = new Point((this.CenterPoint.X + sub.CenterPoint.X) / 2, (this.CenterPoint.Y + sub.CenterPoint.Y) / 2);
+                
+                double Dx = sub.CenterPoint.X - this.CenterPoint.X;
+                double Dy = sub.CenterPoint.Y - this.CenterPoint.Y;
+                double distance = Math.Sqrt(Dx * Dx + Dy * Dy);
+
+                Matrix X = new Matrix();
+                X.Translate(midline.X, midline.Y);
+                float angle = (float)(Math.Acos((float)Dx / distance) * 180 / Math.PI);
+                if (Dy > 0)
+                    angle = -angle;
+                X.Rotate(-angle);
+                X.Rotate(-90);
+                g.Transform = X;
+
+                Rectangle rect = new Rectangle(-this.Width / 2, -this.Height * 3/2, this.Width, this.Height);
+                g.DrawArc(ThongSo.JPen, rect, 0, 180);
+
+                X.Reset();
+                g.Transform = X; 
             }
         }
         public IMetaData getMetaData()
