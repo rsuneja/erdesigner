@@ -7,15 +7,23 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
+using ERDesigner.Classes;
 
 namespace ERDesigner
 {
+    public enum DBMS
+    {
+        MS_Server2000 = 1,
+        Oracle,
+        Access,
+        MySql
+    }
     public partial class GenerateScriptSQL : Form
     {
         private MetaDataPhysical mdp;
         private MainForm frmMain;
         private string urlFile;
-        private List<string> listProcess = new List<string>();
+       
         //Constructor
         public GenerateScriptSQL(MainForm f,MetaDataPhysical mdPhysical)
         {                
@@ -25,76 +33,24 @@ namespace ERDesigner
         }
                        
         //My Method
-        public List<string> generateScript(string urlFileScript, string dbName)
+
+        public void GenerateScript(string urlFileScript, string dbName)
         {
-            //Local Constant             
-            //Local Variable 
-            List<string> listProcess = new List<string>();
-            List<string> listCreateTable = new List<string>();
-            List<string> listPK = new List<string>();
-            List<string> listFK = new List<string>();
-            //List<string> listDropTable = new List<string>();
-            //List<string> listDropFK = new List<string>();
-
-            //Local Process
-
-            foreach (Table table in mdp.Tables)
-            {
-                //string strDropTable = ScriptSQL.dropTable(table.name);
-                string strCreateTable = ScriptSQL.createTable(table.name, table.columns);
-
-                listProcess.Add("Create Tables");
-                //listDropTable.Add(strDropTable);
-                listCreateTable.Add(strCreateTable);
-                listProcess.Add("\t " + table.name);
-
-                listProcess.Add("Create Primary Keys");
-                List<string> listPKName = new List<string>();
-                foreach (Column col in table.columns)
-                    if (col.PrimaryKey)
-                    {
-                        listPKName.Add(col.Name);
-                        listProcess.Add("\t PK_" + col.Name);
-                    }
-
-                string strPK = ScriptSQL.createPrimaryKey(table.name, listPKName);
-                listPK.Add(strPK);
-
-            }
-
-            listProcess.Add("Create Foreign Keys");
-            foreach (ForeignKey fk in mdp.ForeignKeys)
-            {
-                //string strDropFK = ScriptSQL.dropForeignKey(fk.Name, fk.ChildTable);
-                string strFK = ScriptSQL.createForeignKey(fk.Name, fk.ParentTable, fk.ParentColumn, fk.ChildTable, fk.ChildColumn);
-                //listDropFK.Add(strDropFK);
-                listFK.Add(strFK);
-                listProcess.Add("\t " + fk.Name);
-            }
-
-            string strDropDB = ScriptSQL.dropDatabase(dbName);
-            string strDB = ScriptSQL.createDataBase(dbName);
-            string strTables = ScriptSQL.generateTables(listCreateTable, listPK);
-            string strFKs = ScriptSQL.generateForeignKeys(listFK);
-            //string strDropFKs = ScriptSQL.generateDropForeignKeys(listDropFK);
-
-
+            GenerateDDL generate = new GenerateDDL(mdp, DBMS.MS_Server2000, txtDBName.Text);
+            List<string> listScript = generate.Process(); 
             if (urlFileScript != "")
             {
                 FileStream fs = new FileStream(urlFileScript, FileMode.Create, FileAccess.Write);
                 StreamWriter sw = new StreamWriter(fs);
-                sw.Write(strDB);
-                //sw.Write(strDropFKs);
-                sw.Write(strTables);
-                sw.Write(strFKs);
+                sw.Write(listScript[0]);  //Create DB             
+                sw.Write(listScript[1]);  //Create Table
+                sw.Write(listScript[2]);  //Create Foreign Key
                 sw.Close();
                 fs.Close();
-            }
-
-            return listProcess;
+            }          
         }
 
-        private void disabledTextField()
+        private void DisabledTextField()
         {
             txtDBName.Enabled = false;
             txtDirectory.Enabled = false;
@@ -102,7 +58,7 @@ namespace ERDesigner
             btnBrowser.Enabled = false;
         }
 
-        private void enabledTextField()
+        private void EnabledTextField()
         {
             txtDBName.Enabled = true;
             txtDirectory.Enabled = true;
@@ -112,6 +68,7 @@ namespace ERDesigner
         }
 
         //GenerateScriptSQL Form Events
+
         private void GenerateScriptSQL_Load(object sender, EventArgs e)
         {
             txtDBName.Text = frmMain.currentProject.ProjectName;
@@ -126,9 +83,9 @@ namespace ERDesigner
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            enabledTextField();
+            EnabledTextField();
             GenerateScriptSQL_Load(sender, e);
-            listProcess = new List<string>();
+         
         }
 
         private void btnBrowser_Click(object sender, EventArgs e)
@@ -144,21 +101,12 @@ namespace ERDesigner
             if (txtDirectory.Text != "" && txtDBName.Text != "" && txtFileName.Text != "")
             {
                 string urlFileScript = txtDirectory.Text + "\\" + txtFileName.Text + ".sql";
-                listProcess = generateScript(urlFileScript, txtDBName.Text);
-                
-                frmMain.listErrorList.Items.Clear();
-                frmMain.listErrorList.Items.AddRange(listProcess.ToArray());
-
+                GenerateScript(urlFileScript, txtDBName.Text);
+                                
                 btnPreview.Enabled = true;
                 btnGenerate.Enabled = false;
                 urlFile = urlFileScript;
-
-                //this.Close();
-
-                //frmEditDDLScript frmEdit = new frmEditDDLScript(urlFileScript);
-                //frmEdit.Text = "Edit";
-                //frmEdit.Show();
-                //frmEdit.Focus();
+               
             }
         }
 
