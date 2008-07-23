@@ -23,17 +23,17 @@ namespace ERDesigner
 
         //Methods
         
-        public void addColumn(Column col)
+        public void AddColumn(Column col)
         {
-            col.isSimpleKey();
+            col.IsSimpleKey();
             this.columns.Add(col);
         }
-        public void addColumn(string name, string dataType, int lenght, bool allowNull, string description)
+        public void AddColumn(string name, string dataType, int lenght, bool allowNull, string description)
         {
             Column col = new Column(name, dataType, lenght, allowNull, description);
             this.columns.Add(col);
         }
-        public void addColumn(List<Column> listColumn)
+        public void AddColumn(List<Column> listColumn)
         {
             foreach (Column col in listColumn)
             {
@@ -43,63 +43,63 @@ namespace ERDesigner
                 }
             }
         }
-        public void addColumnFK(Column col)
+        public void AddColumnFK(Column col)
         {
-            col.isForeignKey();
+            col.IsForeignKey();
             this.columns.Add(col);
         }
-        public void addColumnFK(string name, string dataType, int lenght, bool allowNull, string description)
+        public void AddColumnFK(string name, string dataType, int lenght, bool allowNull, string description)
         {
             this.columns.Add(new Column(name, dataType, lenght, allowNull, false, true, description));
         }
-        public void addColumnFK(List<Column> listCol)
+        public void AddColumnFK(List<Column> listCol)
         {
             foreach (Column col in listCol)
             {
-                col.isForeignKey();
-                addColumnFK(col);
+                col.IsForeignKey();
+                AddColumnFK(col);
             }
         }
 
-        public void addPrimaryKey(Column col)
+        public void AddPrimaryKey(Column col)
         {
-            col.isPrimaryKey();
+            col.IsPrimaryKey();
             this.columns.Add(col);
         }
-        public void addPrimaryKey(string name, string dataType, int lenght, string description)
+        public void AddPrimaryKey(string name, string dataType, int lenght, string description)
         {
             this.columns.Add(new Column(name, dataType, lenght, false, true, false, description));
         }
-        public void addPrimaryKey(List<Column> listCol)
+        public void AddPrimaryKey(List<Column> listCol)
         {
             foreach (Column col in listCol)
             {
                 if (!col.PrimaryKey)
-                    col.isPrimaryKey();
+                    col.IsPrimaryKey();
                 this.columns.Add(col);
             }
         }
 
-        public void addPrimaryKeyForeignKey(Column col)
+        public void AddPrimaryKeyForeignKey(Column col)
         {
-            col.isForeignKey();
-            col.isPrimaryKey();
+            col.IsForeignKey();
+            col.IsPrimaryKey();
             this.columns.Add(col);            
         }
-        public void addPrimaryKeyForeignKey(string name, string dataType, int lenght, string description)
+        public void AddPrimaryKeyForeignKey(string name, string dataType, int lenght, string description)
         {
             this.columns.Add(new Column(name, dataType, lenght, false, true, true, description));
         }
-        public void addPrimaryKeyForeignKey(List<Column> listCol)
+        public void AddPrimaryKeyForeignKey(List<Column> listCol)
         {
             foreach (Column col in listCol)
             {
-                col.isPrimaryKeyForeignKey();
+                col.IsPrimaryKeyForeignKey();
                 this.columns.Add(col);
             }
         }
 
-        public int countNumberPrimaryKey()
+        public int CountNumberPrimaryKey()
         {
             int temp = 0;
             foreach (Column c in columns)
@@ -110,7 +110,7 @@ namespace ERDesigner
             return temp;
         }
 
-        public List<Column> getPrimaryKey()
+        public List<Column> GetPrimaryKey()
         {
             List<Column> temp = new List<Column>();
             foreach (Column c in columns)            
@@ -118,7 +118,7 @@ namespace ERDesigner
                     temp.Add(new Column(c.Name,c.DataType,c.Length,c.AlowNull,c.PrimaryKey,false,c.Description));                       
             return temp;
         }
-        public List<Column> getPrimaryKey(EntityData ed)
+        public List<Column> GetPrimaryKey(EntityData ed)
         {
             List<Column> listPK = new List<Column>();
             foreach (AttributeData ad in ed.Attributes)
@@ -175,30 +175,30 @@ namespace ERDesigner
         }
 
         //Methods               
-        public void isSimpleKey()
+        public void IsSimpleKey()
         {
             ForeignKey = false;
             PrimaryKey = false;
         }
-        public void isForeignKey()
+        public void IsForeignKey()
         {
             ForeignKey = true;
             PrimaryKey = false;
         }
-        public void isPrimaryKey()
+        public void IsPrimaryKey()
         {
             ForeignKey = false;
             PrimaryKey = true;
             AlowNull = false;
         }
-        public void isPrimaryKeyForeignKey()
+        public void IsPrimaryKeyForeignKey()
         {
             ForeignKey = true;
             PrimaryKey = true; 
             AlowNull = false;
         }
 
-        public static List<Column> copyColumn(List<Column> listCol)
+        public static List<Column> CopyColumn(List<Column> listCol)
         {
             List<Column> listTemp = new List<Column>();
             foreach (Column c in listCol)
@@ -225,7 +225,7 @@ namespace ERDesigner
         public List<ForeignKey> ForeignKeys = new List<ForeignKey>();     
 
         //Methods
-        public Table searchTable(string nameTable)
+        public Table SearchTable(string nameTable)
         {
             Table temp = new Table();
             foreach (Table t in Tables)
@@ -238,7 +238,7 @@ namespace ERDesigner
             }
             return temp;
         }
-        public bool hasTable(string tableName)
+        public bool HasTable(string tableName)
         {
             bool flag = false;
             foreach (Table t in Tables)
@@ -251,11 +251,11 @@ namespace ERDesigner
             }
             return flag;
         }
-        public void addTable(Table t)
+        public void AddTable(Table t)
         {           
             this.Tables.Add(t);
         }       
-        public void addForeignKey(string relationshipName,Table parentTable, List<Column> listColumnPK,Table childTable,List<Column> listColumnFK)
+        public void AddForeignKey(string relationshipName,Table parentTable, List<Column> listColumnPK,Table childTable,List<Column> listColumnFK)
         {
             string nameFK = "";
             if (relationshipName != "")
@@ -282,7 +282,7 @@ namespace ERDesigner
             this.ForeignKeys.Add(fk);
         }
 
-        public void convertEntityStrongToTable(EntityData ed)
+        public void ConvertEntityStrongToTable(EntityData ed)
         {           
             Table t = new Table(ed.name, ed.x, ed.y, ed.w, ed.h);
             Table t2 = new Table();
@@ -303,9 +303,9 @@ namespace ERDesigner
                     foreach (AttributeData ac in ad.AttributeChilds)
                     {
                         if (!isTypeColumn)//Simple      
-                            t.addColumn(ac.name, ac.DataType, ac.Length, ac.AllowNull, ac.Description);                          
+                            t.AddColumn(ac.name, ac.DataType, ac.Length, ac.AllowNull, ac.Description);                          
                         if (isTypeColumn)//PK
-                            t.addPrimaryKey(ac.name, ac.DataType, ac.Length, ac.Description);                        
+                            t.AddPrimaryKey(ac.name, ac.DataType, ac.Length, ac.Description);                        
                     }
                 }
                 //Key, Simple, Multi Attribute
@@ -314,10 +314,10 @@ namespace ERDesigner
                     switch (ad.type)
                     {
                         case AttributeType.Key:
-                            t.addPrimaryKey(ad.name, ad.DataType, ad.Length, ad.Description);
+                            t.AddPrimaryKey(ad.name, ad.DataType, ad.Length, ad.Description);
                             break;
                         case AttributeType.Simple:
-                            t.addColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);                            
+                            t.AddColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);                            
                             break;
                         case AttributeType.MultiValued:
                             //Xử lý cái Table thứ hai
@@ -330,14 +330,14 @@ namespace ERDesigner
                             t2.h = t.h;
                             t2.w = t.w;
                             //Tim column Key.
-                            List<Column> listPK2 = t2.getPrimaryKey(ed);
+                            List<Column> listPK2 = t2.GetPrimaryKey(ed);
                             
                             //Column Multi Value là khóa chính
                             Column c3 = new Column(ad.name, ad.DataType, ad.Length,false,true,false, ad.Description);
                            
                             //Thêm 2 column trên vào Table t2
-                            t2.addPrimaryKeyForeignKey(listPK2);
-                            t2.addPrimaryKey(c3);
+                            t2.AddPrimaryKeyForeignKey(listPK2);
+                            t2.AddPrimaryKey(c3);
 
                             //Bật cờ báo hiệu Entity này có Attribute MultiValue
                             flagAttMuliValue = true;
@@ -347,13 +347,13 @@ namespace ERDesigner
             }
             if (flagAttMuliValue)
             {                
-                this.addTable(t);
-                this.addTable(t2);
-                this.addForeignKey("", t, t.getPrimaryKey(), t2, t.getPrimaryKey());
+                this.AddTable(t);
+                this.AddTable(t2);
+                this.AddForeignKey("", t, t.GetPrimaryKey(), t2, t.GetPrimaryKey());
             }
             else
             {
-                this.addTable(t);
+                this.AddTable(t);
             }            
         }
     }
