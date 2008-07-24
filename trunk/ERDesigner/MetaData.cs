@@ -13,7 +13,7 @@ namespace ERDesigner
         public int x, y;
         public int w, h;
         public List<AttributeData> Attributes;
-        public SubTypeConnectorData SubTypeConnector;
+        
         public EntityData()
         {
             Attributes = new List<AttributeData>();
@@ -38,12 +38,6 @@ namespace ERDesigner
             entity.Location = new Point(this.x, this.y);
             entity.Size = new Size(this.w, this.h);
 
-            if (this.SubTypeConnector != null)
-            {
-                entity.SubtypeConnector = (SubTypeConnector)this.SubTypeConnector.createNotation();
-                entity.SubtypeConnector.supertype = entity;
-            }
-
             return (INotation)entity;
         }
 
@@ -55,6 +49,7 @@ namespace ERDesigner
         public int w, h;
         public string Completeness;
         public string Disjointness;
+        public string SuperType;
         public List<string> SubTypes;
         public List<string> Discriminators;
 
@@ -82,6 +77,7 @@ namespace ERDesigner
         public INotation createNotation()
         {
             SubTypeConnector subtypeconnector = new SubTypeConnector(new Point(this.x, this.y), Completeness, Disjointness);
+            
             foreach (string des in this.Discriminators)
             {
                 subtypeconnector.discriminators.Add(des);
@@ -201,10 +197,12 @@ namespace ERDesigner
         public string Name;
         public List<EntityData> Entities;
         public List<RelationshipData> Relationships;
+        public List<SubTypeConnectorData> SubTypeConnectors;
         public MetaData()
         {
             Entities = new List<EntityData>();
             Relationships = new List<RelationshipData>();
+            SubTypeConnectors = new List<SubTypeConnectorData>();
         }
     }
 }

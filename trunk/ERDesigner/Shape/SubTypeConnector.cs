@@ -180,10 +180,13 @@ namespace ERDesigner.Shape
         public IMetaData getMetaData()
         {
             SubTypeConnectorData subtypeconnector = new SubTypeConnectorData(this.completeness, this.disjointness, this.Location.X, this.Location.Y, this.Width, this.Height);
-            foreach (string des in this.discriminators)
-                subtypeconnector.Discriminators.Add(des);
+            subtypeconnector.SuperType = this.supertype.sName;
+
             foreach (EntityShape subtype in this.subtypes)
                 subtypeconnector.SubTypes.Add(subtype.sName);
+
+            foreach (string des in this.discriminators)
+                subtypeconnector.Discriminators.Add(des);
 
             return (IMetaData)subtypeconnector;
         }
