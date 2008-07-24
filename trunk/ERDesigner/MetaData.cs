@@ -13,7 +13,7 @@ namespace ERDesigner
         public int x, y;
         public int w, h;
         public List<AttributeData> Attributes;
-
+        public SubTypeConnectorData SubTypeConnector;
         public EntityData()
         {
             Attributes = new List<AttributeData>();
@@ -28,7 +28,6 @@ namespace ERDesigner
             w = ww;
             h = hh;
         }
-
         #region IMetaData Members
 
         public INotation createNotation()
@@ -38,8 +37,56 @@ namespace ERDesigner
             entity.type = this.type;
             entity.Location = new Point(this.x, this.y);
             entity.Size = new Size(this.w, this.h);
-            
+
+            if (this.SubTypeConnector != null)
+            {
+                entity.SubtypeConnector = (SubTypeConnector)this.SubTypeConnector.createNotation();
+                entity.SubtypeConnector.supertype = entity;
+            }
+
             return (INotation)entity;
+        }
+
+        #endregion
+    }
+    public class SubTypeConnectorData : IMetaData
+    {
+        public int x, y;
+        public int w, h;
+        public string Completeness;
+        public string Disjointness;
+        public List<string> SubTypes;
+        public List<string> Discriminators;
+
+        public SubTypeConnectorData()
+        {
+            SubTypes = new List<string>();
+            Discriminators = new List<string>();
+        }
+        public SubTypeConnectorData(string completeness, string disjointness, int xx, int yy, int ww, int hh)
+        {
+            SubTypes = new List<string>();
+            Discriminators = new List<string>();
+            
+            x = xx;
+            y = yy;
+            w = ww;
+            h = hh;
+
+            Completeness = completeness;
+            Disjointness = disjointness;
+        }
+
+        #region IMetaData Members
+
+        public INotation createNotation()
+        {
+            SubTypeConnector subtypeconnector = new SubTypeConnector(new Point(this.x, this.y), Completeness, Disjointness);
+            foreach (string des in this.Discriminators)
+            {
+                subtypeconnector.discriminators.Add(des);
+            }
+            return (INotation)subtypeconnector;
         }
 
         #endregion
