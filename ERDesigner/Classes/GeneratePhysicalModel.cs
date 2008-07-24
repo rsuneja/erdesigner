@@ -869,7 +869,6 @@ namespace ERDesigner
             //nameEntity danh sách tên Entity trong quan hệ Indentifer
             //indexNameEntityParent là vị trí của Parent
             List<string> nameEntity = new List<string>();
-            int indexNameEntityParent = -1;
             string temp = "";
             int index = -1;
             for (int i = 0; i < erd.Relationships.Count; i++)

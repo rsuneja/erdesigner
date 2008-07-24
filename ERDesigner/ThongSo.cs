@@ -14,6 +14,14 @@ namespace ERDesigner
         public static Brush JBrush = Brushes.Black;
         public static Font JFont = new Font("Arial", 8);
         public static Pen ConectiveLinePen = new Pen(Color.Black, 1);
+
+        public static DBMS DB_Mode;
+        public static string DB_Server;
+        public static string DB_UserName;
+        public static string DB_Password;
+        public static bool DB_GenerateScriptFile;
+        public static string DB_GenerateDirect;
+
         public static Pen getDashPen()
         {
             Pen daspen = (Pen)JPen.Clone();

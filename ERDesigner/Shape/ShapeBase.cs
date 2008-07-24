@@ -103,7 +103,7 @@ namespace ERDesigner.Shape
             }
         }
 
-        public virtual void DoubleClick(PanelDoubleBuffered pn, ShapeBase ns)
+        public virtual void doDoubleClick(PanelDoubleBuffered pn, ShapeBase ns)
         {
             parentPanel = pn;
             namingShape = ns;

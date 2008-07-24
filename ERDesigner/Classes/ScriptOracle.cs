@@ -14,7 +14,7 @@ namespace ERDesigner.Classes
             this.dbName = dbName;
         }
         private string CreateDataBase()
-        {
+        {            
             return "";
         }
         private string CreateTable()

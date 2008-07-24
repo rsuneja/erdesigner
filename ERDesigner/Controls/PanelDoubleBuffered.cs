@@ -452,7 +452,7 @@ namespace ERDesigner
         }
         void shapeDoubleClick(object sender, MouseEventArgs e)
         {
-            ((ShapeBase)sender).DoubleClick(this, (ShapeBase)sender);
+            ((ShapeBase)sender).doDoubleClick(this, (ShapeBase)sender);
         }
         void shape_KeyDown(object sender, KeyEventArgs e)
         {

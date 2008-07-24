@@ -1,4 +1,4 @@
-namespace ERDesigner
+﻿namespace ERDesigner
 {
     partial class AddConnection
     {
@@ -30,13 +30,13 @@ namespace ERDesigner
         {
             this.label1 = new DevExpress.XtraEditors.LabelControl();
             this.label2 = new DevExpress.XtraEditors.LabelControl();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtServer = new System.Windows.Forms.TextBox();
             this.label3 = new DevExpress.XtraEditors.LabelControl();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label5 = new DevExpress.XtraEditors.LabelControl();
             this.label4 = new DevExpress.XtraEditors.LabelControl();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.txtPassword = new System.Windows.Forms.TextBox();
+            this.txtUserName = new System.Windows.Forms.TextBox();
             this.btnCancel = new DevExpress.XtraEditors.SimpleButton();
             this.btnOK = new DevExpress.XtraEditors.SimpleButton();
             this.btnTest = new DevExpress.XtraEditors.SimpleButton();
@@ -59,34 +59,34 @@ namespace ERDesigner
             this.label2.Location = new System.Drawing.Point(12, 42);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(62, 13);
-            this.label2.TabIndex = 0;
+            this.label2.TabIndex = 1;
             this.label2.Text = "Data source:";
             // 
-            // textBox1
+            // txtServer
             // 
-            this.textBox1.Location = new System.Drawing.Point(15, 105);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(289, 20);
-            this.textBox1.TabIndex = 1;
+            this.txtServer.Location = new System.Drawing.Point(15, 105);
+            this.txtServer.Name = "txtServer";
+            this.txtServer.Size = new System.Drawing.Size(289, 20);
+            this.txtServer.TabIndex = 4;
             // 
             // label3
             // 
             this.label3.Location = new System.Drawing.Point(12, 89);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(65, 13);
-            this.label3.TabIndex = 0;
+            this.label3.TabIndex = 3;
             this.label3.Text = "Server name:";
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.label5);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.textBox3);
-            this.groupBox1.Controls.Add(this.textBox2);
+            this.groupBox1.Controls.Add(this.txtPassword);
+            this.groupBox1.Controls.Add(this.txtUserName);
             this.groupBox1.Location = new System.Drawing.Point(15, 141);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(289, 90);
-            this.groupBox1.TabIndex = 3;
+            this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Log on to the database";
             // 
@@ -95,7 +95,7 @@ namespace ERDesigner
             this.label5.Location = new System.Drawing.Point(6, 54);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(50, 13);
-            this.label5.TabIndex = 0;
+            this.label5.TabIndex = 2;
             this.label5.Text = "Password:";
             // 
             // label4
@@ -106,19 +106,21 @@ namespace ERDesigner
             this.label4.TabIndex = 0;
             this.label4.Text = "User name:";
             // 
-            // textBox3
+            // txtPassword
             // 
-            this.textBox3.Location = new System.Drawing.Point(73, 51);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(210, 20);
-            this.textBox3.TabIndex = 1;
+            this.txtPassword.Location = new System.Drawing.Point(73, 51);
+            this.txtPassword.Name = "txtPassword";
+            this.txtPassword.PasswordChar = '●';
+            this.txtPassword.Size = new System.Drawing.Size(210, 20);
+            this.txtPassword.TabIndex = 3;
             // 
-            // textBox2
+            // txtUserName
             // 
-            this.textBox2.Location = new System.Drawing.Point(73, 25);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(210, 20);
-            this.textBox2.TabIndex = 1;
+            this.txtUserName.Location = new System.Drawing.Point(73, 25);
+            this.txtUserName.Name = "txtUserName";
+            this.txtUserName.Size = new System.Drawing.Size(210, 20);
+            this.txtUserName.TabIndex = 1;
+            this.txtUserName.TextChanged += new System.EventHandler(this.txtUserName_TextChanged);
             // 
             // btnCancel
             // 
@@ -126,7 +128,7 @@ namespace ERDesigner
             this.btnCancel.Location = new System.Drawing.Point(229, 246);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
-            this.btnCancel.TabIndex = 2;
+            this.btnCancel.TabIndex = 8;
             this.btnCancel.Text = "Cancel";
             // 
             // btnOK
@@ -135,16 +137,18 @@ namespace ERDesigner
             this.btnOK.Location = new System.Drawing.Point(148, 246);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
-            this.btnOK.TabIndex = 2;
+            this.btnOK.TabIndex = 7;
             this.btnOK.Text = "OK";
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // btnTest
             // 
             this.btnTest.Location = new System.Drawing.Point(15, 246);
             this.btnTest.Name = "btnTest";
             this.btnTest.Size = new System.Drawing.Size(102, 23);
-            this.btnTest.TabIndex = 2;
+            this.btnTest.TabIndex = 6;
             this.btnTest.Text = "Test connection";
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
             // 
             // cboDatasource
             // 
@@ -159,19 +163,21 @@ namespace ERDesigner
             "Microsoft Access Database File (OLE DB)"});
             this.cboDatasource.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cboDatasource.Size = new System.Drawing.Size(289, 20);
-            this.cboDatasource.TabIndex = 4;
+            this.cboDatasource.TabIndex = 2;
             // 
             // AddConnection
             // 
+            this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(316, 288);
             this.Controls.Add(this.cboDatasource);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnTest);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtServer);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -195,7 +201,7 @@ namespace ERDesigner
 
         private DevExpress.XtraEditors.LabelControl label1;
         private DevExpress.XtraEditors.LabelControl label2;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtServer;
         private DevExpress.XtraEditors.LabelControl label3;
         private System.Windows.Forms.GroupBox groupBox1;
         private DevExpress.XtraEditors.SimpleButton btnCancel;
@@ -203,8 +209,8 @@ namespace ERDesigner
         private DevExpress.XtraEditors.SimpleButton btnTest;
         private DevExpress.XtraEditors.LabelControl label5;
         private DevExpress.XtraEditors.LabelControl label4;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox txtPassword;
+        private System.Windows.Forms.TextBox txtUserName;
         private DevExpress.XtraEditors.ComboBoxEdit cboDatasource;
     }
 }

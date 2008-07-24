@@ -276,7 +276,7 @@ namespace ERDesigner
                     currentProject = (ProjectData)js.loadProjectFromXML(openFileDialog1.FileName); //Load xml lên
                     currentProject.ProjectPath = openFileDialog1.FileName.Substring(0,openFileDialog1.FileName.LastIndexOf('\\'));
                 }
-                catch (Exception ex)
+                catch
                 {
                     DevExpress.XtraEditors.XtraMessageBox.Show("File has invalid format");
                     return;
