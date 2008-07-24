@@ -862,6 +862,10 @@ namespace ERDesigner
                             }
                             entity.Attributes.Add(attribute);
                         }
+
+                        if (en.SubtypeConnector != null)
+                            entity.SubTypeConnector = (SubTypeConnectorData)en.SubtypeConnector.getMetaData();
+
                         ERD.Entities.Add(entity);
                     }
                     if (s is RelationshipShape)
@@ -922,6 +926,21 @@ namespace ERDesigner
                     }
                     entity.addAttribute(attribute);
                     this.Controls.Add(attribute);
+                }
+
+                if (en.SubTypeConnector != null)
+                {
+                    foreach (string subtypename in en.SubTypeConnector.SubTypes)
+                    {
+                        foreach (ShapeBase s in this.Controls)
+                        {
+                            if (s is EntityShape && s.sName == subtypename)
+                            {
+                                entity.SubtypeConnector.addSubType((EntityShape)s);
+                            }
+                        }   
+                    }
+                    this.Controls.Add(entity.SubtypeConnector);
                 }
             }
 

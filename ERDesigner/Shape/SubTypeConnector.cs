@@ -34,6 +34,20 @@ namespace ERDesigner.Shape
             supertype.Disposed += new EventHandler(subpertype_Disposed);
             refreshPath();
         }
+        public SubTypeConnector(Point loc, string comp, string disj)
+        {
+            subtypes = new List<EntityShape>();
+            discriminators = new List<string>();
+
+            completeness = comp;
+            disjointness = disj;
+
+            this.Size = new Size(ThongSo.ShapeH / 2, ThongSo.ShapeH / 2);
+            this.CenterPoint = loc;
+
+            this.Disposed += new EventHandler(SubTypeConnector_Disposed);
+            refreshPath();
+        }
         void subpertype_Disposed(object sender, EventArgs e)
         {
             this.Dispose();
@@ -63,8 +77,11 @@ namespace ERDesigner.Shape
         //Key: Can I dispose of instances without explicitly removing all references to them?
         public void addSubType(EntityShape entity)
         {
-            subtypes.Add(entity);
-            entity.Disposed += new EventHandler(subtype_Disposed);
+            if (entity != null)
+            {
+                subtypes.Add(entity);
+                entity.Disposed += new EventHandler(subtype_Disposed);
+            }
         }
         void subtype_Disposed(object sender, EventArgs e)
         {
@@ -162,7 +179,13 @@ namespace ERDesigner.Shape
         }
         public IMetaData getMetaData()
         {
-            return null;
+            SubTypeConnectorData subtypeconnector = new SubTypeConnectorData(this.completeness, this.disjointness, this.Location.X, this.Location.Y, this.Width, this.Height);
+            foreach (string des in this.discriminators)
+                subtypeconnector.Discriminators.Add(des);
+            foreach (EntityShape subtype in this.subtypes)
+                subtypeconnector.SubTypes.Add(subtype.sName);
+
+            return (IMetaData)subtypeconnector;
         }
         #endregion
     }
