@@ -21,7 +21,7 @@ namespace ERDesigner
                     database = new MySQLProvider();
                     break;
                 case DBMS.Access:
-                    database = new MSAccessProvider();
+                    //database = new MSAccessProvider();
                     break;
                 default:
                     database = new MSSQLServer2000Provider();
@@ -32,6 +32,11 @@ namespace ERDesigner
         public bool TestConnection()
         {
             return database.TestConnection();
+        }
+
+        public string getDataType(string datatype)
+        {
+            return database.getDataType(datatype);
         }
 
         public bool Connect(string DatabaseName)

@@ -7,7 +7,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
-using ERDesigner.Classes;
 
 namespace ERDesigner
 {
@@ -36,7 +35,7 @@ namespace ERDesigner
 
         public void GenerateScript(string FilePath, string dbName)
         {
-            GenerateDDL generate = new GenerateDDL(mdp, DBMS.MSSQLServer2000, txtDBName.Text);
+            GenerateDDL generate = new GenerateDDL(mdp, ThongSo.DB_Mode, txtDBName.Text);
             List<string> listScript = generate.Process(); 
             if (FilePath != "")
             {
@@ -47,9 +46,13 @@ namespace ERDesigner
                 sw.Write(listScript[2]);  //Create Foreign Key
                 sw.Close();
                 fs.Close();
-
-                GenerateDirect(FilePath.Substring(0, FilePath.LastIndexOf('\\')), dbName, listScript[1] + listScript[2]);
             }          
+            if(ThongSo.DB_Mode == DBMS.MSSQLServer2000 && FilePath == "")
+            {
+                return;
+            }
+            
+            GenerateDirect(FilePath.Substring(0, FilePath.LastIndexOf('\\')), dbName, listScript[1] + listScript[2]);
         }
         public void GenerateDirect(string FolderPath, string dbName, string script)
         {
