@@ -89,7 +89,7 @@ namespace ERDesigner.Shape
             if (subtypes.Count == 0)
                 this.Dispose();
         }
-        public override void DoubleClick(PanelDoubleBuffered pn, ShapeBase ns)
+        public override void doDoubleClick(PanelDoubleBuffered pn, ShapeBase ns)
         {
             
         }

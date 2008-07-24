@@ -77,7 +77,6 @@ namespace ERDesigner
         }
         private string CreateTable(string tableName, List<Column> listColumn)
         {
-
             string temp1 = "";
             temp1 = "/*" + temp1.PadRight(50, '=') + "*/ \r\n";
             string temp2 = "Table: " + tableName + "";

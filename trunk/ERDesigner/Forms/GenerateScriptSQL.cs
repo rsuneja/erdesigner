@@ -13,10 +13,10 @@ namespace ERDesigner
 {
     public enum DBMS
     {
-        MS_Server2000 = 1,
+        MSSQLServer2000 = 0,
         Oracle,
-        Access,
-        MySql
+        MySql,
+        Access        
     }
     public partial class GenerateScriptSQL : Form
     {
@@ -34,22 +34,46 @@ namespace ERDesigner
                        
         //My Method
 
-        public void GenerateScript(string urlFileScript, string dbName)
+        public void GenerateScript(string FilePath, string dbName)
         {
-            GenerateDDL generate = new GenerateDDL(mdp, DBMS.MS_Server2000, txtDBName.Text);
+            GenerateDDL generate = new GenerateDDL(mdp, DBMS.MSSQLServer2000, txtDBName.Text);
             List<string> listScript = generate.Process(); 
-            if (urlFileScript != "")
+            if (FilePath != "")
             {
-                FileStream fs = new FileStream(urlFileScript, FileMode.Create, FileAccess.Write);
+                FileStream fs = new FileStream(FilePath, FileMode.Create, FileAccess.Write);
                 StreamWriter sw = new StreamWriter(fs);
                 sw.Write(listScript[0]);  //Create DB             
                 sw.Write(listScript[1]);  //Create Table
                 sw.Write(listScript[2]);  //Create Foreign Key
                 sw.Close();
                 fs.Close();
+
+                GenerateDirect(FilePath.Substring(0, FilePath.LastIndexOf('\\')), dbName, listScript[1] + listScript[2]);
             }          
         }
+        public void GenerateDirect(string FolderPath, string dbName, string script)
+        {
+            DBProviderBase database = new DBProviderBase();
 
+            if (database.TestConnection())
+            {
+                if (!database.CreateDatabase(dbName, FolderPath))
+                {
+                    if (DevExpress.XtraEditors.XtraMessageBox.Show("This database already existed\nDo you want to overwrite it ?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                    {
+                        return;
+                    }
+                }
+                if (database.Connect(dbName))
+                {
+                    database.Execute(script);
+                }
+            }
+            else
+            {
+                DevExpress.XtraEditors.XtraMessageBox.Show("Cannot connect to database\nYou must start the database first", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
         private void DisabledTextField()
         {
             txtDBName.Enabled = false;

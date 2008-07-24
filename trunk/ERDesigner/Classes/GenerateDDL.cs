@@ -6,7 +6,7 @@ namespace ERDesigner
 {
     public class GenerateDDL
     {
-        private DBMS nameDBMS = DBMS.MS_Server2000;
+        private DBMS nameDBMS = DBMS.MSSQLServer2000;
         private string dbName;
         private MetaDataPhysical mdp;
         /// <summary>
@@ -25,7 +25,7 @@ namespace ERDesigner
         public List<string> Process()
         {
             List<string> listScript = new List<string>();
-            if (nameDBMS == DBMS.MS_Server2000)
+            if (nameDBMS == DBMS.MSSQLServer2000)
             {
                 ScriptSQL sql = new ScriptSQL(mdp, dbName);
                 listScript = sql.Process();
