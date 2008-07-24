@@ -839,7 +839,7 @@ namespace ERDesigner
             MetaData ERD = new MetaData();
             foreach (Control c in this.Controls)
             {
-                if (c is EntityShape || c is RelationshipShape)
+                if (c is EntityShape || c is RelationshipShape || c is SubTypeConnector)
                 {
                     ShapeBase s = (ShapeBase)c;
                     if (s is EntityShape)
@@ -862,9 +862,6 @@ namespace ERDesigner
                             }
                             entity.Attributes.Add(attribute);
                         }
-
-                        if (en.SubtypeConnector != null)
-                            entity.SubTypeConnector = (SubTypeConnectorData)en.SubtypeConnector.getMetaData();
 
                         ERD.Entities.Add(entity);
                     }
@@ -897,6 +894,11 @@ namespace ERDesigner
                         }
                         ERD.Relationships.Add(relationship);
                     }
+                    if (s is SubTypeConnector)
+                    {
+                        SubTypeConnectorData subtypeconnectordata = (SubTypeConnectorData)((SubTypeConnector)s).getMetaData();
+                        ERD.SubTypeConnectors.Add(subtypeconnectordata);
+                    }
                 }
             }
             return ERD;
@@ -926,21 +928,6 @@ namespace ERDesigner
                     }
                     entity.addAttribute(attribute);
                     this.Controls.Add(attribute);
-                }
-
-                if (en.SubTypeConnector != null)
-                {
-                    foreach (string subtypename in en.SubTypeConnector.SubTypes)
-                    {
-                        foreach (ShapeBase s in this.Controls)
-                        {
-                            if (s is EntityShape && s.sName == subtypename)
-                            {
-                                entity.SubtypeConnector.addSubType((EntityShape)s);
-                            }
-                        }   
-                    }
-                    this.Controls.Add(entity.SubtypeConnector);
                 }
             }
 
@@ -980,6 +967,29 @@ namespace ERDesigner
                         }
                     }
                 }
+            }
+            foreach (SubTypeConnectorData subtypeconnectordata in ERD.SubTypeConnectors)
+            {
+                SubTypeConnector subtypeconnector = (SubTypeConnector)subtypeconnectordata.createNotation();
+                foreach (ShapeBase s in this.Controls)
+                {
+                    if (s is EntityShape && s.sName == subtypeconnectordata.SuperType)
+                    {
+                        subtypeconnector.supertype = (EntityShape)s;
+                    }
+                }
+                foreach (string subtypename in subtypeconnectordata.SubTypes)
+                {
+                    foreach (ShapeBase s in this.Controls)
+                    {
+                        if (s is EntityShape && s.sName == subtypename)
+                        {
+                            subtypeconnector.addSubType((EntityShape)s);
+                        }
+                    }
+                }
+                this.Controls.Add(subtypeconnector);
+
             }
             this.Refresh();
         }
@@ -1292,7 +1302,7 @@ namespace ERDesigner
         //Create SubTypeConnector
         private void CreateSubTypeConnector(EntityShape supertype)
         {
-            if(supertype.SubtypeConnector == null)
+            if (supertype.SubtypeConnector == null)
             {
                 EntityShape subtype = new EntityShape();
                 subtype.CenterPoint = this.PointToClient(Control.MousePosition);
