@@ -40,6 +40,8 @@ namespace ERDesigner
             }
             if (nameDBMS == DBMS.MySql)
             {
+                ScriptMySql sql = new ScriptMySql(mdp, dbName);
+                listScript = sql.Process();
             }
             return listScript;
         }

@@ -69,17 +69,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\DatabaseProvider\DataTypeMap.cs" />
     <Compile Include="Classes\DatabaseProvider\DBProviderBase.cs" />
     <Compile Include="Classes\DatabaseProvider\OracleProvider.cs" />
     <Compile Include="Classes\DatabaseProvider\MySQLProvider.cs" />
-    <Compile Include="Classes\DatabaseProvider\MSAccessProvider.cs" />
     <Compile Include="Classes\DatabaseProvider\MSSQLServer2000Provider.cs" />
     <Compile Include="Classes\DrawingSupport.cs" />
     <Compile Include="Classes\GenerateDDL.cs" />
     <Compile Include="Classes\GeneratePhysicalModel.cs" />
     <Compile Include="Classes\JSerializer.cs" />
-    <Compile Include="Classes\ScriptAccess.cs" />
     <Compile Include="Classes\ScriptMySql.cs" />
     <Compile Include="Classes\ScriptOracle.cs" />
     <Compile Include="Classes\ScriptSQL.cs" />

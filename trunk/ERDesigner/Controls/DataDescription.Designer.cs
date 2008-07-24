@@ -44,36 +44,18 @@ namespace ERDesigner
             // 
             // cboDataType
             // 
-            this.cboDataType.EditValue = "varchar";
+            this.cboDataType.EditValue = "Number";
             this.cboDataType.Location = new System.Drawing.Point(3, 22);
             this.cboDataType.Name = "cboDataType";
             this.cboDataType.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
             new DevExpress.XtraEditors.Controls.EditorButton(DevExpress.XtraEditors.Controls.ButtonPredefines.Combo)});
             this.cboDataType.Properties.Items.AddRange(new object[] {
-            "bigint",
-            "binary",
-            "bit",
-            "char",
-            "datetime",
-            "decimal",
-            "float",
-            "image",
-            "int",
-            "money",
-            "nchar",
-            "ntext",
-            "numeric",
-            "nvarchar",
-            "real",
-            "smalldatetime",
-            "smallint",
-            "sqlvariant",
-            "text",
-            "timestamp",
-            "tinyint",
-            "uniqueidentifier",
-            "varbinary",
-            "varchar"});
+            "Number",
+            "Text",
+            "LongText",
+            "Decimal",
+            "DateTime",
+            "Binary"});
             this.cboDataType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cboDataType.Size = new System.Drawing.Size(128, 20);
             this.cboDataType.TabIndex = 0;
@@ -88,6 +70,7 @@ namespace ERDesigner
             this.txtLength.Name = "txtLength";
             this.txtLength.Properties.AllowNullInput = DevExpress.Utils.DefaultBoolean.False;
             this.txtLength.Properties.DisplayFormat.FormatType = DevExpress.Utils.FormatType.Numeric;
+            this.txtLength.Properties.MaxLength = 5;
             this.txtLength.Size = new System.Drawing.Size(85, 20);
             this.txtLength.TabIndex = 3;
             // 
@@ -115,6 +98,7 @@ namespace ERDesigner
             this.btnOK.Size = new System.Drawing.Size(49, 19);
             this.btnOK.TabIndex = 5;
             this.btnOK.Text = "OK";
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
             // label1
             // 

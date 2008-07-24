@@ -34,6 +34,28 @@ namespace ERDesigner
             }
         }
 
+        public string getDataType(string datatype)
+        {
+            string newdatatype = "";
+            switch (datatype)
+            {
+                case StandardDataType.Number:
+                    break;
+                case StandardDataType.Text:
+                    break;
+                case StandardDataType.LongText:
+                    newdatatype = "ntext";
+                    break;
+                case StandardDataType.Decimal:
+                    break;
+                case StandardDataType.DateTime:
+                    break;
+                case StandardDataType.Binary:
+                    break;
+            }
+            return newdatatype;
+        }
+
         public bool Connect(string DatabaseName)
         {
             try

@@ -218,14 +218,19 @@ namespace ERDesigner.Shape
                             try
                             {
                                 int length = int.Parse(ucDataDescription.txtLength.Text);
-                                if ((att.dataType == "nvarchar" || att.dataType == "nchar") && (length < 1 || length > 4000))
+                                //if ((att.dataType == "nvarchar" || att.dataType == "nchar") && (length < 1 || length > 4000))
+                                //{
+                                //    DevExpress.XtraEditors.XtraMessageBox.Show("Please enter Length between 1 and 4000.", "Warning");
+                                //    return;
+                                //}
+                                //if (length < 1 || length > 8000)
+                                //{
+                                //    DevExpress.XtraEditors.XtraMessageBox.Show("Please enter Length between 1 and 8000.", "Warning");
+                                //    return;
+                                //}
+                                if (length < 1)
                                 {
-                                    DevExpress.XtraEditors.XtraMessageBox.Show("Please enter Length between 1 and 4000.", "Warning");
-                                    return;
-                                }
-                                if (length < 1 || length > 8000)
-                                {
-                                    DevExpress.XtraEditors.XtraMessageBox.Show("Please enter Length between 1 and 8000.", "Warning");
+                                    DevExpress.XtraEditors.XtraMessageBox.Show("Please enter Length greater than 0", "Warning");
                                     return;
                                 }
                                 att.dataLength = length;

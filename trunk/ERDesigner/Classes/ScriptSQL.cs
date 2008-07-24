@@ -19,8 +19,14 @@ namespace ERDesigner
             List<string> listPK = new List<string>();
             List<string> listFK = new List<string>();
 
+            DBProviderBase database = new DBProviderBase();
+
             foreach (Table table in mdp.Tables)
             {
+                foreach (Column col in table.columns)
+                {
+                    col.DataType = database.getDataType(col.DataType);
+                }
                 string strCreateTable = CreateTable(table.name, table.columns);
 
                 listCreateTable.Add(strCreateTable);               

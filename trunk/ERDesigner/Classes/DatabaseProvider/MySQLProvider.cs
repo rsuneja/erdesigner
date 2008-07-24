@@ -34,6 +34,33 @@ namespace ERDesigner
             }
         }
 
+        public string getDataType(string datatype)
+        {
+            string newdatatype = "";
+            switch (datatype)
+            {
+                case StandardDataType.Number:
+                    newdatatype = "integer";
+                    break;
+                case StandardDataType.Text:
+                    newdatatype = "varchar";
+                    break;
+                case StandardDataType.LongText:
+                    newdatatype = "longtext";
+                    break;
+                case StandardDataType.Decimal:
+                    newdatatype = "decimal";
+                    break;
+                case StandardDataType.DateTime:
+                    newdatatype = "datetime";
+                    break;
+                case StandardDataType.Binary:
+                    newdatatype = "blob";
+                    break;
+            }
+            return newdatatype;
+        }
+
         public bool Connect(string DatabaseName)
         {
             try

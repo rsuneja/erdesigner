@@ -65,4 +65,13 @@ namespace ERDesigner
         public const string DisjointConstraint = "Disjoint Constraint";
         public const string OverlapConstraint = "Overlap Constraint";
     }
+    class StandardDataType
+    {
+        public const string Number = "Number";
+        public const string Text = "Text";
+        public const string LongText = "LongText";
+        public const string Decimal = "Decimal";
+        public const string DateTime = "DateTime";
+        public const string Binary = "Binary";
+    }
 }
