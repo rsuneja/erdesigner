@@ -28,11 +28,15 @@ namespace ERDesigner
             col.IsSimpleKey();
             this.columns.Add(col);
         }
-        public void AddColumn(string name, string dataType, int lenght, bool allowNull, string description)
+        public void AddColumn(AttributeData ad)
         {
-            Column col = new Column(name, dataType, lenght, allowNull, description);
+            Column col = new Column(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
             this.columns.Add(col);
         }
+        //public void AddColumn(AttributeData ad)
+        //{
+        //    AddColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
+        //}
         public void AddColumn(List<Column> listColumn)
         {
             foreach (Column col in listColumn)
@@ -303,7 +307,7 @@ namespace ERDesigner
                     foreach (AttributeData ac in ad.AttributeChilds)
                     {
                         if (!isTypeColumn)//Simple      
-                            t.AddColumn(ac.name, ac.DataType, ac.Length, ac.AllowNull, ac.Description);                          
+                            t.AddColumn(ac);                          
                         if (isTypeColumn)//PK
                             t.AddPrimaryKey(ac.name, ac.DataType, ac.Length, ac.Description);                        
                     }
@@ -317,7 +321,7 @@ namespace ERDesigner
                             t.AddPrimaryKey(ad.name, ad.DataType, ad.Length, ad.Description);
                             break;
                         case AttributeType.Simple:
-                            t.AddColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);                            
+                            t.AddColumn(ad);                            
                             break;
                         case AttributeType.MultiValued:
                             //Xử lý cái Table thứ hai
