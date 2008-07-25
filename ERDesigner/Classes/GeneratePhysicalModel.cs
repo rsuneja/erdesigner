@@ -181,7 +181,7 @@ namespace ERDesigner
                 {
                     Table subTable = mdp.SearchTable(subTypeName);
                     subTable.AddPrimaryKeyForeignKey(listPK);
-                    mdp.AddForeignKey("fk_" + supperTypeName + "_" + subTypeName, supperTable, listPK, subTable, listPK);
+                    mdp.AddForeignKey("fk_" + supperTypeName , supperTable, listPK, subTable, listPK);
                 }
             }
             #endregion
@@ -271,7 +271,7 @@ namespace ERDesigner
                     //Add bảng Weak vào MetaDataPhysical
                     mdp.AddTable(weakTable);
                     //Tạo quan hệ khóa ngoại cho bảng Parent và Weak
-                    mdp.AddForeignKey("fk_" + parentTable.name + "_" + weakTable.name, parentTable, pkParent, weakTable, pkParent);
+                    mdp.AddForeignKey("fk_" + parentTable.name , parentTable, pkParent, weakTable, pkParent);
 
                     //Xử lý Weak có thuộc tính đa trị
                     if (multiAttribute.name != String.Empty)
@@ -769,7 +769,7 @@ namespace ERDesigner
             multivalueTable.AddPrimaryKeyForeignKey(table.GetPrimaryKey());
             multivalueTable.AddPrimaryKey(multiAttribute.name, multiAttribute.DataType, multiAttribute.Length, multiAttribute.Description);
             mdp.AddTable(multivalueTable);
-            mdp.AddForeignKey("fk_" + table.name + "_" + multivalueTable.name, table, table.GetPrimaryKey(), multivalueTable, table.GetPrimaryKey());
+            mdp.AddForeignKey("fk_" + table.name , table, table.GetPrimaryKey(), multivalueTable, table.GetPrimaryKey());
         }
 
         /// <summary>

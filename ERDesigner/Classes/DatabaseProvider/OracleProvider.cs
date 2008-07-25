@@ -49,6 +49,7 @@ namespace ERDesigner
                     newdatatype = "clob";
                     break;
                 case StandardDataType.Decimal:
+                    newdatatype = "decimal";
                     break;
                 case StandardDataType.DateTime:
                     newdatatype = "date";
@@ -84,25 +85,26 @@ namespace ERDesigner
 
         public bool Execute(string sqlQuery)
         {
-            try
-            {
-                string[] listQuery = sqlQuery.Replace("\r\n", "").Split(';');
+            string[] listQuery = sqlQuery.Replace("\r\n", "").Split(';');
+            bool success = true;
 
-                foreach (string query in listQuery)
+            foreach (string query in listQuery)
+            {
+                
+                if (query.Length > 10)
                 {
-                    if(query.Length > 10)
+                    try
                     {
                         OracleCommand Command = new OracleCommand(query, conn);
                         Command.ExecuteNonQuery();
                     }
+                    catch
+                    {
+                        success = false;
+                    }
                 }
-                
-                return true;
             }
-            catch
-            {
-                return false;
-            }
+            return success;
         }
 
         public void Close()

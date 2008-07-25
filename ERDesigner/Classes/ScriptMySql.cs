@@ -23,10 +23,6 @@ namespace ERDesigner
 
             foreach (Table table in mdp.Tables)
             {
-                foreach (Column col in table.columns)
-                {
-                    col.DataType = database.getDataType(col.DataType);
-                }
                 string strCreateTable = CreateTable(table.name, table.columns);
 
                 listCreateTable.Add(strCreateTable);               
@@ -101,10 +97,10 @@ namespace ERDesigner
             {
                 Column col = listColumn[i];
                 string strAlowNull = getAlowNull(col.AlowNull);
-                dataType = DataTypeLenght(col.DataType, col.Length.ToString());
+                dataType = DataTypeLenght(col.DBMSDataType, col.Length.ToString());
                 script += "\t" + col.Name + " " + dataType + " " + strAlowNull + " ," + "\r\n";
             }
-            dataType = DataTypeLenght(listColumn[i].DataType, listColumn[i].Length.ToString());
+            dataType = DataTypeLenght(listColumn[i].DBMSDataType, listColumn[i].Length.ToString());
             script += "\t" + listColumn[i].Name + " " + dataType + " " + getAlowNull(listColumn[i].AlowNull) + "\r\n";
             script += ")" + "\r\n";
             script += ";" + "\r\n\r\n";

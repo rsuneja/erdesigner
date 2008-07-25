@@ -10,6 +10,7 @@ namespace ERDesigner
         string getDataType(string datatype);
         bool Connect(string DatabaseName);
         bool CreateDatabase(string DatabaseName, string FilePath);
+        //bool DropDatabase(string DatabaseName);
         bool Execute(string sqlQuery);
         void Close();
     }

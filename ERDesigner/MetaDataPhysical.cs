@@ -201,7 +201,13 @@ namespace ERDesigner
             PrimaryKey = true; 
             AlowNull = false;
         }
-
+        public string DBMSDataType
+        {
+            get
+            {
+                return new DBProviderBase().getDataType(DataType);
+            }
+        }
         public static List<Column> CopyColumn(List<Column> listCol)
         {
             List<Column> listTemp = new List<Column>();
@@ -262,11 +268,25 @@ namespace ERDesigner
         public void AddForeignKey(string relationshipName,Table parentTable, List<Column> listColumnPK,Table childTable,List<Column> listColumnFK)
         {
             string nameFK = "";
-            if (relationshipName != "")
-                nameFK = "fk" + "_" + parentTable.name + "_" + relationshipName + "_" + childTable.name;
-            else
-                nameFK = "fk" + "_" + parentTable.name + "_" + childTable.name;
+            //Tên dài quá Oracle không chạy được
+            //if (relationshipName != "")
+            //{
+            //    if (listColumnFK.Count == 1)
+            //        nameFK = "fk" + "_" + listColumnFK[0].Name + "_" + parentTable.name.Substring(0, 5) + "_" + listColumnPK[0].Name;
+            //    else
+            //        nameFK = "fk" + "_" + childTable.name.Substring(0, 5) + "_" + relationshipName.Substring(0,5) + "_" + parentTable.name.Substring(0, 5) + "_" + listColumnPK.Count;
+            //}
+            //else
+            //{
+            //    if (listColumnFK.Count == 1)
+            //        nameFK = "fk" + "_" + listColumnFK[0].Name + "_" + parentTable.name.Substring(0, 5) + "_" + listColumnPK[0].Name;
+            //    else
+            //        nameFK = "fk" + "_" + childTable.name.Substring(0, 5) + "_" + parentTable.name.Substring(0, 5) + "_" + listColumnPK.Count;
+            //}
 
+            nameFK = "fk" + "_" + parentTable.name.Substring(0, 5) + System.Guid.NewGuid().ToString().Replace("-","").Substring(10);
+            
+            
             ForeignKey fk = new ForeignKey();
 
             List<string> listColumnPKName = new List<string>();

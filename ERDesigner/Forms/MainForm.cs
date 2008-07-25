@@ -697,5 +697,25 @@ namespace ERDesigner
                 ((frmDrawBoard)ActiveMdiChild).prepairDrawing("Sub Type");
             }
         }
+
+        private void chkDirect_EditValueChanged(object sender, EventArgs e)
+        {
+            if ((bool)chkDirect.EditValue)
+            {
+                ThongSo.DB_GenerateDirect = true;
+            }
+            else
+                ThongSo.DB_GenerateDirect = false;
+        }
+
+        private void chkFile_EditValueChanged(object sender, EventArgs e)
+        {
+            if ((bool)chkFile.EditValue)
+            {
+                ThongSo.DB_GenerateScriptFile = true;
+            }
+            else
+                ThongSo.DB_GenerateScriptFile = false;
+        }
     }
 }

@@ -19,8 +19,8 @@ namespace ERDesigner
         public static string DB_Server;
         public static string DB_UserName;
         public static string DB_Password;
-        public static bool DB_GenerateScriptFile;
-        public static string DB_GenerateDirect;
+        public static bool DB_GenerateScriptFile = true;
+        public static bool DB_GenerateDirect = true;
 
         public static Pen getDashPen()
         {
