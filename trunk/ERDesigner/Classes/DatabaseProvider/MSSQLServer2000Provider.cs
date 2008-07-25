@@ -57,6 +57,9 @@ namespace ERDesigner
                 case StandardDataType.Binary:
                     newdatatype = "image";
                     break;
+                default:
+                    newdatatype = datatype;
+                    break;
             }
             return newdatatype;
         }
@@ -107,6 +110,7 @@ namespace ERDesigner
         {
             try
             {
+                sqlQuery = sqlQuery.Replace(";", "");
                 SqlCommand Command = new SqlCommand(sqlQuery, conn);
                 Command.ExecuteNonQuery();
                 return true;

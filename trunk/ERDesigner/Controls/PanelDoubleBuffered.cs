@@ -1042,7 +1042,7 @@ namespace ERDesigner
                             EntityShape entity2 = rel.cardinalities[1].Entity;
 
                             if (entity1.type == entity2.type)
-                                errorList.Add("Identify Relationship '" + rel.sName + "' must connect weak entity anh strong entity");
+                                errorList.Add("Identify Relationship '" + rel.sName + "' must connect weak entity and strong entity");
                             else
                             {
                                 if (entity1.type == EntityType.Strong && rel.cardinalities[0].MaxCardinality != 1)
@@ -1050,10 +1050,10 @@ namespace ERDesigner
                                 if (entity2.type == EntityType.Strong && rel.cardinalities[1].MaxCardinality != 1)
                                     errorList.Add("Max Cardinality of '" + rel.sName + "' with Strong Entity " + entity2.sName + " must be one");
 
-                                if (entity1.type == EntityType.Weak && rel.cardinalities[0].MaxCardinality != -1)
-                                    errorList.Add("Max Cardinality of '" + rel.sName + "' with Weak Entity " + entity1.sName + " must be many");
-                                if (entity2.type == EntityType.Weak && rel.cardinalities[1].MaxCardinality != -1)
-                                    errorList.Add("Max Cardinality of '" + rel.sName + "' with Weak Entity " + entity2.sName + " must be many");
+                                //if (entity1.type == EntityType.Weak && rel.cardinalities[0].MaxCardinality != -1)
+                                //    errorList.Add("Max Cardinality of '" + rel.sName + "' with Weak Entity " + entity1.sName + " must be many");
+                                //if (entity2.type == EntityType.Weak && rel.cardinalities[1].MaxCardinality != -1)
+                                //    errorList.Add("Max Cardinality of '" + rel.sName + "' with Weak Entity " + entity2.sName + " must be many");
                             }
                         }
 
@@ -1067,9 +1067,21 @@ namespace ERDesigner
                                 errorList.Add("The Cardinalities of Associative Entity '" + rel.sName + "' must be many to many");
                         }
 
-                        //Nếu cardinality là n:n thì relationship phải là Associative Entity
-                        //if (rel.cardinalities[0].MaxCardinality == -1 && rel.cardinalities[1].MaxCardinality == -1 && rel.type != RelationshipType.AssociativeEntity)
-                        //    errorList.Add("Relationship '" + rel.sName + "' should be changed to Associative Entity");
+                        //mối kết hợp thường không được có key attribute
+                        if (rel.type == RelationshipType.Normal)
+                        {
+                            bool haveKey = false;
+                            foreach (AttributeShape att in rel.attributes)
+                            {
+                                if (att.type == AttributeType.Key)
+                                {
+                                    haveKey = true;
+                                    break;
+                                }
+                            }
+                            if(haveKey)
+                                errorList.Add("Relationship '" + rel.sName + "' must not have any key attributes");
+                        }
 
                         break;
                     case "AttributeShape": AttributeShape attribute = (AttributeShape)c;

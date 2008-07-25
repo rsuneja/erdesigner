@@ -32,8 +32,8 @@ namespace ERDesigner
             }
             if (nameDBMS == DBMS.Oracle)
             {
-                //ScriptOracle oracle = new ScriptOracle(mdp,dbName);
-                //script = oracle.Process();
+                ScriptOracle oracle = new ScriptOracle(mdp, dbName);
+                listScript = oracle.Process();
             }
             if (nameDBMS == DBMS.Access)
             {

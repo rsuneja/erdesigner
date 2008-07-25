@@ -57,6 +57,9 @@ namespace ERDesigner
                 case StandardDataType.Binary:
                     newdatatype = "blob";
                     break;
+                default:
+                    newdatatype = datatype;
+                    break;
             }
             return newdatatype;
         }
