@@ -139,13 +139,53 @@ namespace ERDesigner
         public void process()
         {
             preProcess();
+
             #region Variables
             List<string> entityHadCreated = new List<string>();
             #endregion
 
-            //Process
+            #region EERD
+            foreach (SubTypeConnectorData st in erd.SubTypeConnectors)
+            {
+                string supperType = st.SuperType;
+                List<string> subType = new List<string>();
+                foreach (string sub in st.SubTypes)
+                {
+                    subType.Add(sub);
+                }
 
-            //Entities
+                //Tạo Table Supper Type
+
+                if (!SearchInList(entityHadCreated, supperType))
+                {
+                    EntityData entityData = SearchEntityData(supperType);
+                    mdp.ConvertEntityStrongToTable(entityData);
+                    entityHadCreated.Add(supperType);
+                }
+                //Tạo Table Sub Type
+                foreach (string typeName in subType)
+                {
+
+                    if (!SearchInList(entityHadCreated, typeName))
+                    {
+                        EntityData subEntity = SearchEntityData(typeName);
+                        mdp.ConvertEntityStrongToTable(subEntity);
+                        entityHadCreated.Add(typeName);
+                    }
+                }
+                //Add thuộc tính SupperType và SubType
+                Table supperTable = mdp.SearchTable(supperType);
+                List<Column> listPK = supperTable.GetPrimaryKey();
+
+                foreach (string typeName in subType)
+                {
+                    Table subTable = mdp.SearchTable(typeName);
+                    subTable.AddPrimaryKeyForeignKey(listPK);
+                    mdp.AddForeignKey("fk_" + supperType + "_" + typeName, supperTable, listPK, subTable, listPK);
+                }
+            }
+            #endregion
+
             #region Entities
             foreach (EntityData ed in erd.Entities)
             {
@@ -602,73 +642,23 @@ namespace ERDesigner
                                 edTemp.Attributes.Add(new AttributeData(col2.Name, AttributeType.Key, 0, 0, 0, 0, col2.DataType, col2.Length, col2.AlowNull, col2.Description));
 
                         }
-                        int numPK = 0;
-                        int numSimple = 0;
-                        int numMulitiValue = 0;
-                        //Đếm loại Attribute
-                        foreach (AttributeData var in rd.Attributes)
+
+                        foreach (AttributeData ad in rd.Attributes)
                         {
-                            if (var.AttributeChilds.Count > 0)//Composite Attribute
+                            AttributeData adTemp = new AttributeData();
+                            //Xét Associative Enity có Composite Attribute
+                            if (ad.AttributeChilds.Count > 0)
                             {
-                                if (var.type == AttributeType.Key)
-                                    numPK += var.AttributeChilds.Count;
-                                if (var.type == AttributeType.Simple)
-                                    numSimple += var.AttributeChilds.Count;
+                                adTemp = new AttributeData(ad.name, ad.type, ad.x, ad.y, ad.w, ad.h, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
+                                adTemp.isComposite = true;
+                                foreach (AttributeData adChild in ad.AttributeChilds)
+                                    adTemp.AttributeChilds.Add(adChild);
                             }
                             else
-                                if (var.type == AttributeType.Key)
-                                    numPK++;
-                                else
-                                    if (var.type == AttributeType.Simple)
-                                        numSimple++;
-                                    else
-                                        if (var.type == AttributeType.MultiValued)
-                                            numMulitiValue++;
+                                adTemp = new AttributeData(ad.name, ad.type, ad.x, ad.y, ad.w, ad.h, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
+                            edTemp.Attributes.Add(adTemp);
+                        }
 
-                        }
-                        //TH Associative Entity có MultiValued và có số lượng Attribute nhỏ hơn 3
-                        if (numSimple >= 0 && numSimple <= 1 && numMulitiValue >= 1)
-                        {
-                            foreach (AttributeData ad in rd.Attributes)
-                            {
-                                AttributeData adTemp = new AttributeData();
-                                if (ad.type == AttributeType.MultiValued)
-                                    adTemp = new AttributeData(ad.name, AttributeType.Simple, ad.x, ad.y, ad.w, ad.h, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
-                                else
-                                {
-                                    //Xét Associative Enity có Composite Attribute
-                                    if (ad.AttributeChilds.Count > 0)
-                                    {
-                                        adTemp = new AttributeData(ad.name, ad.type, ad.x, ad.y, ad.w, ad.h, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
-                                        adTemp.isComposite = true;
-                                        foreach (AttributeData adChild in ad.AttributeChilds)
-                                            adTemp.AttributeChilds.Add(adChild);
-                                    }
-                                    else
-                                        adTemp = new AttributeData(ad.name, ad.type, ad.x, ad.y, ad.w, ad.h, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
-                                }
-                                edTemp.Attributes.Add(adTemp);
-                            }
-
-                        }
-                        else//TH Associative Entity có MultiValued và có số lượng Attribute lớn hơn 3    
-                        {
-                            foreach (AttributeData ad in rd.Attributes)
-                            {
-                                AttributeData adTemp = new AttributeData();
-                                //Xét Associative Enity có Composite Attribute
-                                if (ad.AttributeChilds.Count > 0)
-                                {
-                                    adTemp = new AttributeData(ad.name, ad.type, ad.x, ad.y, ad.w, ad.h, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
-                                    adTemp.isComposite = true;
-                                    foreach (AttributeData adChild in ad.AttributeChilds)
-                                        adTemp.AttributeChilds.Add(adChild);
-                                }
-                                else
-                                    adTemp = new AttributeData(ad.name, ad.type, ad.x, ad.y, ad.w, ad.h, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
-                                edTemp.Attributes.Add(adTemp);
-                            }
-                        }
                         mdp.ConvertEntityStrongToTable(edTemp);
 
                         //Lấy Table Associative vừa tạo
@@ -686,7 +676,6 @@ namespace ERDesigner
                             temp.AddColumnFK(pk1);
                             temp.AddColumnFK(pk2);
                         }
-
 
                         mdp.AddForeignKey("", t1, pk1, temp, pk1);
                         mdp.AddForeignKey("", t2, pk2, temp, pk2);
@@ -835,6 +824,14 @@ namespace ERDesigner
             ProcessTernary(rd, nameRalationship, t1, t2, t3, false);
         }
 
+        #region EERD
+        //Kiểm tra Entity này có SupTypeConnector hay ko
+        //Nếu có thì nó chính là supper, còn những thằng ở trong là sub
+        //Gọi làm chuyển đổi EERD
+        //Nếu không ta vẫn làm công việc bình thường: kiểm tra nó là Strong hay Weak (keke) thế là OK
+
+
+        #endregion
         private EntityData SearchEntityData(string nameWeakTable)
         {
             EntityData temp = new EntityData();
@@ -863,6 +860,7 @@ namespace ERDesigner
             }
 
         }
+
         private string SearchEntityParent(string nameEntityWeak)
         {
             //Tìm tên Parent dựa vào RelationShip Indentifier
