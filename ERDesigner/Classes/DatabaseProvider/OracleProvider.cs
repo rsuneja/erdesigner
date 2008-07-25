@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Data.SqlClient;
+using Oracle.DataAccess.Client;
 
 namespace ERDesigner
 {
     class OracleProvider : IDatabase
     {
-        SqlConnection conn;
+        OracleConnection conn;
 
         public OracleProvider()
         {
@@ -15,16 +15,16 @@ namespace ERDesigner
         }
         private string getConnectionString(string DatabaseName)
         {
-            return "Server=" + ThongSo.DB_Server + "; Database = " + DatabaseName + "; User ID = " + ThongSo.DB_UserName + "; Password = " + ThongSo.DB_Password;
+            return "Data Source =" + ThongSo.DB_Server + "; User ID = " + ThongSo.DB_UserName + "; Password = " + ThongSo.DB_Password;
         }
 
         #region IDatabase Members
-        
+         
         public bool TestConnection()
         {
             try
             {
-                SqlConnection tmpConn = new SqlConnection(getConnectionString("master"));
+                OracleConnection tmpConn = new OracleConnection(getConnectionString("oracle"));
                 tmpConn.Open();
                 return true;
             }
@@ -40,17 +40,24 @@ namespace ERDesigner
             switch (datatype)
             {
                 case StandardDataType.Number:
+                    newdatatype = "number";
                     break;
                 case StandardDataType.Text:
+                    newdatatype = "varchar2";
                     break;
                 case StandardDataType.LongText:
-                    newdatatype = "ntext";
+                    newdatatype = "clob";
                     break;
                 case StandardDataType.Decimal:
                     break;
                 case StandardDataType.DateTime:
+                    newdatatype = "date";
                     break;
                 case StandardDataType.Binary:
+                    newdatatype = "blob";
+                    break;
+                default:
+                    newdatatype = datatype;
                     break;
             }
             return newdatatype;
@@ -60,7 +67,7 @@ namespace ERDesigner
         {
             try
             {
-                conn = new SqlConnection(getConnectionString(DatabaseName));
+                conn = new OracleConnection(getConnectionString(DatabaseName));
                 conn.Open();
                 return true;
             }
@@ -72,38 +79,24 @@ namespace ERDesigner
 
         public bool CreateDatabase(string DatabaseName, string FolderPath)
         {
-            SqlConnection tmpConn = new SqlConnection(getConnectionString("master"));
-            string sqlCreateDBQuery = " CREATE DATABASE "
-                               + DatabaseName
-                               + " ON PRIMARY "
-                               + " (NAME = " + DatabaseName + ", "
-                               + " FILENAME = '" + FolderPath + "\\" + DatabaseName + "_DATA.MDF', "
-                               + " SIZE = 1MB) "
-                               + " LOG ON (NAME =" + DatabaseName + "LOG, "
-                               + " FILENAME = '" + FolderPath + "\\" + DatabaseName + "_LOG.LDF', "
-                               + " SIZE = 1MB) ";
-            
-            try
-            {
-                tmpConn.Open();
-                SqlCommand Command = new SqlCommand(sqlCreateDBQuery, tmpConn);
-                Command.ExecuteNonQuery();
-            }
-            catch
-            {
-                return false;
-            }
-            tmpConn.Close();
-            
-            return true;
+            return TestConnection();
         }
 
         public bool Execute(string sqlQuery)
         {
             try
             {
-                SqlCommand Command = new SqlCommand(sqlQuery, conn);
-                Command.ExecuteNonQuery();
+                string[] listQuery = sqlQuery.Replace("\r\n", "").Split(';');
+
+                foreach (string query in listQuery)
+                {
+                    if(query.Length > 10)
+                    {
+                        OracleCommand Command = new OracleCommand(query, conn);
+                        Command.ExecuteNonQuery();
+                    }
+                }
+                
                 return true;
             }
             catch

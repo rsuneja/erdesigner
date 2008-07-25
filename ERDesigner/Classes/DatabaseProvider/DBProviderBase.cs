@@ -51,7 +51,6 @@ namespace ERDesigner
 
         public bool Execute(string sqlQuery)
         {
-            sqlQuery = sqlQuery.Replace("GO", ";");
             return database.Execute(sqlQuery);
         }
 

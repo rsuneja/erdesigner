@@ -47,9 +47,10 @@
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(12, 9);
+            this.label1.AutoSizeMode = DevExpress.XtraEditors.LabelAutoSizeMode.Vertical;
+            this.label1.Location = new System.Drawing.Point(12, 10);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(436, 13);
+            this.label1.Size = new System.Drawing.Size(292, 26);
             this.label1.TabIndex = 0;
             this.label1.Text = "Enter information to connect to the selected data source or choose a different da" +
                 "ta source";
