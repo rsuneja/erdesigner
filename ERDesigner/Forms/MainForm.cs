@@ -707,7 +707,6 @@ namespace ERDesigner
             else
                 ThongSo.DB_GenerateDirect = false;
         }
-
         private void chkFile_EditValueChanged(object sender, EventArgs e)
         {
             if ((bool)chkFile.EditValue)
@@ -716,6 +715,15 @@ namespace ERDesigner
             }
             else
                 ThongSo.DB_GenerateScriptFile = false;
+        }
+        private void chkIsolate_EditValueChanged(object sender, EventArgs e)
+        {
+            if ((bool)chkIsolate.EditValue)
+            {
+                ThongSo.checkIsolation = true;
+            }
+            else
+                ThongSo.checkIsolation = false;
         }
     }
 }

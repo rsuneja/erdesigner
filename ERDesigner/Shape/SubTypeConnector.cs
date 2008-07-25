@@ -80,6 +80,7 @@ namespace ERDesigner.Shape
             if (entity != null)
             {
                 subtypes.Add(entity);
+                entity.isSubType = true;
                 entity.Disposed += new EventHandler(subtype_Disposed);
             }
         }

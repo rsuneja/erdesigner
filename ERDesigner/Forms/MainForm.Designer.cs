@@ -85,6 +85,8 @@ namespace ERDesigner
             this.chkDisjoint = new DevExpress.XtraBars.BarButtonItem();
             this.chkOverlap = new DevExpress.XtraBars.BarButtonItem();
             this.btnAddSubType = new DevExpress.XtraBars.BarButtonItem();
+            this.chkIsolate = new DevExpress.XtraBars.BarEditItem();
+            this.repositoryItemCheckEdit4 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
             this.ribbonHome = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonFile = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -155,6 +157,7 @@ namespace ERDesigner
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemZoomTrackBar1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit4)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemMRUEdit1)).BeginInit();
@@ -223,10 +226,11 @@ namespace ERDesigner
             this.chkPartial,
             this.chkDisjoint,
             this.chkOverlap,
-            this.btnAddSubType});
+            this.btnAddSubType,
+            this.chkIsolate});
             this.ribbon.LargeImages = this.imageCollection1;
             this.ribbon.Location = new System.Drawing.Point(0, 0);
-            this.ribbon.MaxItemId = 74;
+            this.ribbon.MaxItemId = 76;
             this.ribbon.Name = "ribbon";
             this.ribbon.PageHeaderItemLinks.Add(this.btnAbout);
             this.ribbon.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
@@ -238,8 +242,9 @@ namespace ERDesigner
             this.repositoryItemCheckEdit1,
             this.repositoryItemCheckEdit2,
             this.repositoryItemCheckEdit3,
-            this.repositoryItemMRUEdit1});
-            this.ribbon.SelectedPage = this.ribbonTool;
+            this.repositoryItemMRUEdit1,
+            this.repositoryItemCheckEdit4});
+            this.ribbon.SelectedPage = this.ribbonHome;
             this.ribbon.Size = new System.Drawing.Size(784, 149);
             this.ribbon.Toolbar.ItemLinks.Add(this.btnOpenProject);
             this.ribbon.Toolbar.ItemLinks.Add(this.btnSaveModelAs);
@@ -718,6 +723,21 @@ namespace ERDesigner
             this.btnAddSubType.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
             this.btnAddSubType.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnAddSubType_ItemClick);
             // 
+            // chkIsolate
+            // 
+            this.chkIsolate.Caption = "Check Isolation";
+            this.chkIsolate.Edit = this.repositoryItemCheckEdit4;
+            this.chkIsolate.EditValue = true;
+            this.chkIsolate.Id = 75;
+            this.chkIsolate.Name = "chkIsolate";
+            this.chkIsolate.Width = 25;
+            this.chkIsolate.EditValueChanged += new System.EventHandler(this.chkIsolate_EditValueChanged);
+            // 
+            // repositoryItemCheckEdit4
+            // 
+            this.repositoryItemCheckEdit4.AutoHeight = false;
+            this.repositoryItemCheckEdit4.Name = "repositoryItemCheckEdit4";
+            // 
             // imageCollection1
             // 
             this.imageCollection1.ImageSize = new System.Drawing.Size(32, 32);
@@ -770,6 +790,7 @@ namespace ERDesigner
             // ribbonMiniTool
             // 
             this.ribbonMiniTool.ItemLinks.Add(this.btnVerifyModel, true);
+            this.ribbonMiniTool.ItemLinks.Add(this.chkIsolate, true);
             this.ribbonMiniTool.ItemLinks.Add(this.btnAutoLayout);
             this.ribbonMiniTool.ItemLinks.Add(this.chkGrid);
             this.ribbonMiniTool.ItemLinks.Add(this.btnOverView, true);
@@ -1412,6 +1433,7 @@ namespace ERDesigner
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemZoomTrackBar1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit4)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemMRUEdit1)).EndInit();
@@ -1550,5 +1572,7 @@ namespace ERDesigner
         private DevExpress.XtraBars.BarButtonItem chkOverlap;
         private DevExpress.XtraBars.BarButtonItem btnAddSubType;
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup2;
+        private DevExpress.XtraBars.BarEditItem chkIsolate;
+        private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit4;
     }
 }

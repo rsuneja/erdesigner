@@ -1009,7 +1009,7 @@ namespace ERDesigner
                             errorList.Add("Entity '" + entity.sName + "' doesn't have attribute yet");
 
                         //thực thể mạnh phải có thuộc tính khóa
-                        if (entity.type == EntityType.Strong)
+                        if (entity.type == EntityType.Strong && !entity.isSubType)
                         {
                             bool isError = true;
                             foreach (AttributeShape att in entity.attributes)
@@ -1079,7 +1079,7 @@ namespace ERDesigner
                                     break;
                                 }
                             }
-                            if(haveKey)
+                            if (haveKey)
                                 errorList.Add("Relationship '" + rel.sName + "' must not have any key attributes");
                         }
 
@@ -1093,6 +1093,121 @@ namespace ERDesigner
             }
 
             //Kiểm tra đồ thị liên thông
+            if(ThongSo.checkIsolation)
+                errorList.AddRange(CheckConnectivity());
+            
+            return errorList;
+        }
+        public List<string> CheckConnectivity()
+        {
+            List<ShapeBase> listShape = new List<ShapeBase>();
+            Queue<ShapeBase> listChecking = new Queue<ShapeBase>();
+            List<string> errorList = new List<string>();
+
+            foreach (ShapeBase shape in this.Controls)
+            {
+                listShape.Add(shape);
+            }
+
+            if (listShape.Count > 0)
+            {
+                foreach (ShapeBase shape in listShape)
+                {
+                    if (shape is EntityShape)
+                    {
+                        listChecking.Enqueue(shape);
+                        break;
+                    }
+                }
+                
+                while (listChecking.Count > 0)
+                {
+                    ShapeBase shape = listChecking.Dequeue();
+
+                    switch (shape.GetType().Name)
+                    {
+                        case "EntityShape":
+                            EntityShape entity = (EntityShape)shape;
+                            foreach (AttributeShape att in entity.attributes)
+                            {
+                                if(att.isComposite)
+                                {
+                                    foreach (AttributeShape attChild in att.attributeChilds)
+                                    {
+                                        listShape.Remove((ShapeBase)attChild);
+                                    }
+                                }
+                                listShape.Remove((ShapeBase)att);
+                            }
+                            for (int i = 0; i < 4; i++)
+                                foreach (CardinalityShape cardi in entity.cardinalities[i])
+                                {
+                                    if (!listChecking.Contains((ShapeBase)cardi.Relationship) && listShape.Contains((ShapeBase)cardi.Relationship))
+                                        listChecking.Enqueue((ShapeBase)cardi.Relationship);
+                                }
+
+                            if (entity.SubtypeConnector != null)
+                            {
+                                foreach (EntityShape subtype in entity.SubtypeConnector.subtypes)
+                                {
+                                    if (!listChecking.Contains((ShapeBase)subtype) && listShape.Contains((ShapeBase)subtype))
+                                        listChecking.Enqueue((ShapeBase)subtype);
+                                }
+                            }
+                            
+                            listShape.Remove((ShapeBase)entity);
+                            break;
+                        case "RelationshipShape":
+                            RelationshipShape rel = (RelationshipShape)shape;
+                            foreach (AttributeShape att in rel.attributes)
+                            {
+                                if (att.isComposite)
+                                {
+                                    foreach (AttributeShape attChild in att.attributeChilds)
+                                    {
+                                        listShape.Remove((ShapeBase)attChild);
+                                    }
+                                }
+                                listShape.Remove((ShapeBase)att);
+                            }
+                            foreach (CardinalityShape cardi in rel.cardinalities)
+                            {
+                                if (!listChecking.Contains((ShapeBase)cardi.Entity) && listShape.Contains((ShapeBase)cardi.Entity))
+                                    listChecking.Enqueue((ShapeBase)cardi.Entity);
+                            }
+                            listShape.Remove((ShapeBase)rel);
+                            break;
+                        case "AttributeShape":
+                            break;
+                        case "SubTypeConnector":
+                            break;
+                    }
+                }
+
+                List<ShapeBase> tempList = new List<ShapeBase>();
+
+                //Nếu isolate nhiều hơn không isolate -> ngược lại
+                if (listShape.Count > this.Controls.Count - listShape.Count)
+                {
+                    foreach (ShapeBase shape in this.Controls)
+                    {
+                        if (!listShape.Contains(shape))
+                            tempList.Add(shape);
+                    }
+
+                    foreach (ShapeBase shape in tempList)
+                    {
+                        errorList.Add("'" + shape.sName + "' is isolated");
+                    }
+                }
+                else
+                {
+                    foreach (ShapeBase shape in listShape)
+                    {
+                        errorList.Add("'" + shape.sName + "' is isolated");
+                    }
+                }
+            }
 
             return errorList;
         }
