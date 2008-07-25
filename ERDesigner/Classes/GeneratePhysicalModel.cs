@@ -147,41 +147,41 @@ namespace ERDesigner
             #region EERD
             foreach (SubTypeConnectorData st in erd.SubTypeConnectors)
             {
-                string supperType = st.SuperType;
-                List<string> subType = new List<string>();
+                string supperTypeName = st.SuperType;
+                List<string> listSubTypeName = new List<string>();
                 foreach (string sub in st.SubTypes)
                 {
-                    subType.Add(sub);
+                    listSubTypeName.Add(sub);
                 }
 
-                //Tạo Table Supper Type
-
-                if (!SearchInList(entityHadCreated, supperType))
+                //Tạo Table SupperType
+                if (!SearchInList(entityHadCreated, supperTypeName))
                 {
-                    EntityData entityData = SearchEntityData(supperType);
+                    EntityData entityData = SearchEntityData(supperTypeName);
                     mdp.ConvertEntityStrongToTable(entityData);
-                    entityHadCreated.Add(supperType);
+                    entityHadCreated.Add(supperTypeName);
                 }
-                //Tạo Table Sub Type
-                foreach (string typeName in subType)
-                {
 
-                    if (!SearchInList(entityHadCreated, typeName))
+                //Tạo Table SubType
+                foreach (string subTypeName in listSubTypeName)
+                {
+                    if (!SearchInList(entityHadCreated, subTypeName))
                     {
-                        EntityData subEntity = SearchEntityData(typeName);
+                        EntityData subEntity = SearchEntityData(subTypeName);
                         mdp.ConvertEntityStrongToTable(subEntity);
-                        entityHadCreated.Add(typeName);
+                        entityHadCreated.Add(subTypeName);
                     }
                 }
-                //Add thuộc tính SupperType và SubType
-                Table supperTable = mdp.SearchTable(supperType);
+
+                //Add thuộc tính SupperType vào SubType
+                Table supperTable = mdp.SearchTable(supperTypeName);
                 List<Column> listPK = supperTable.GetPrimaryKey();
 
-                foreach (string typeName in subType)
+                foreach (string subTypeName in listSubTypeName)
                 {
-                    Table subTable = mdp.SearchTable(typeName);
+                    Table subTable = mdp.SearchTable(subTypeName);
                     subTable.AddPrimaryKeyForeignKey(listPK);
-                    mdp.AddForeignKey("fk_" + supperType + "_" + typeName, supperTable, listPK, subTable, listPK);
+                    mdp.AddForeignKey("fk_" + supperTypeName + "_" + subTypeName, supperTable, listPK, subTable, listPK);
                 }
             }
             #endregion
@@ -223,14 +223,14 @@ namespace ERDesigner
                         entityHadCreated.Add(nEntityParent);
                     }
 
-                    Table weak = new Table(ed.name, ed.x, ed.y, ed.w, ed.h);
-                    Table parent = mdp.SearchTable(nEntityParent);
+                    Table weakTable = new Table(ed.name, ed.x, ed.y, ed.w, ed.h);
+                    Table parentTable = mdp.SearchTable(nEntityParent);
 
+                    AttributeData multiAttribute = new AttributeData();
                     //Process Column
                     foreach (AttributeData ad in ed.Attributes)
                     {
-                        //Composite Attribute
-                        //Jelda: Chổ này cần kiểm tra đa trị phức hợp chứ không phải chỉ có key với simple
+                        //Composite Attribute                      
                         if (ad.AttributeChilds.Count > 0)
                         {
                             bool isTypeColumn = false;//False->Simple, True->Key
@@ -241,9 +241,9 @@ namespace ERDesigner
                             foreach (AttributeData ac in ad.AttributeChilds)
                             {
                                 if (!isTypeColumn)//Simple                   
-                                    weak.AddColumn(ac.name, ac.DataType, ac.Length, ac.AllowNull, ac.Description);
+                                    weakTable.AddColumn(ac);
                                 if (isTypeColumn)//PK
-                                    weak.AddPrimaryKey(ac.name, ac.DataType, ac.Length, ac.Description);
+                                    weakTable.AddPrimaryKey(ac.name, ac.DataType, ac.Length, ac.Description);
                             }
                         }
                         //Key, Simple, Multi Attribute
@@ -252,22 +252,36 @@ namespace ERDesigner
                             switch (ad.type)
                             {
                                 case AttributeType.Key:
-                                    weak.AddPrimaryKey(ad.name, ad.DataType, ad.Length, ad.Description);
+                                    weakTable.AddPrimaryKey(ad.name, ad.DataType, ad.Length, ad.Description);
                                     break;
                                 case AttributeType.Simple:
-                                    weak.AddColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
+                                    weakTable.AddColumn(ad);
+                                    break;
+                                //Chưa xử lý chỉ gắn tạm thời trường hợp đa trị
+                                case AttributeType.MultiValued:
+                                    multiAttribute = ad;
                                     break;
                             }
                         }
                     }
 
                     //Chuyển PK bảng Parent thành FK bảng Weak
-                    List<Column> pkParent = parent.GetPrimaryKey();
-                    weak.AddPrimaryKeyForeignKey(pkParent);
+                    List<Column> pkParent = parentTable.GetPrimaryKey();
+                    weakTable.AddPrimaryKeyForeignKey(pkParent);
                     //Add bảng Weak vào MetaDataPhysical
-                    mdp.AddTable(weak);
+                    mdp.AddTable(weakTable);
                     //Tạo quan hệ khóa ngoại cho bảng Parent và Weak
-                    mdp.AddForeignKey("", parent, pkParent, weak, pkParent);
+                    mdp.AddForeignKey("fk_" + parentTable.name + "_" + weakTable.name, parentTable, pkParent, weakTable, pkParent);
+
+                    //Xử lý Weak có thuộc tính đa trị
+                    if (multiAttribute.name != String.Empty)
+                    {
+                        Table multivalueTable = new Table(weakTable.name + "_" + (multiAttribute.name).ToUpper(), multiAttribute.x, multiAttribute.y, multiAttribute.w, multiAttribute.h);
+                        multivalueTable.AddPrimaryKeyForeignKey(weakTable.GetPrimaryKey());
+                        multivalueTable.AddPrimaryKey(multiAttribute.name, multiAttribute.DataType, multiAttribute.Length, multiAttribute.Description);
+                        mdp.AddTable(multivalueTable);
+                        mdp.AddForeignKey("fk_" + weakTable.name + "_" + multivalueTable.name, weakTable, weakTable.GetPrimaryKey(), multivalueTable, weakTable.GetPrimaryKey());
+                    }
                 }
                 #endregion
             }//End Entities
@@ -323,7 +337,7 @@ namespace ERDesigner
                 }
 
                 #region Trường hợp 1 ngôi
-                if (rd.Cardinalities.Count == 1)
+                if (rd.Cardinalities.Count == 1 && nameTable1 == nameTable2)
                 {
                     //Trường hợp 1:n, n:1
                     if ((cardinalityMax1 == "1" && cardinalityMax2 == "-1") || (cardinalityMax1 == "-1" && cardinalityMax2 == "1") || (cardinalityMax1 == "1" && cardinalityMax2 == "1") || (cardinalityMax1 == "0" && cardinalityMax2 == "1") || (cardinalityMax1 == "1" && cardinalityMax2 == "0"))
@@ -338,11 +352,11 @@ namespace ERDesigner
                                 if (adChild.AttributeChilds.Count > 0)//Compsite
                                 {
                                     foreach (AttributeData var in adChild.AttributeChilds)
-                                        t1.AddColumn(var.name, var.DataType, var.Length, var.AllowNull, var.Description);
+                                        t1.AddColumn(adChild);
                                 }
                                 else//Simple
                                     if (adChild.type == AttributeType.Simple)
-                                        t1.AddColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, adChild.Description);
+                                        t1.AddColumn(adChild);
                             }
                         }//end if
                         List<Column> listFK = new List<Column>();
@@ -392,14 +406,14 @@ namespace ERDesigner
                                     if (adChild.AttributeChilds.Count > 0)//Compsite
                                     {
                                         foreach (AttributeData var in adChild.AttributeChilds)
-                                            t2.AddColumn(var.name, var.DataType, var.Length, var.AllowNull, var.Description);
+                                            t2.AddColumn(adChild);
                                     }
                                     else//Simple
                                         if (adChild.type == AttributeType.Simple)
-                                            t2.AddColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, adChild.Description);
+                                            t2.AddColumn(adChild);
                                         else
                                             if (adChild.type == AttributeType.MultiValued)
-                                                t2.AddColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, adChild.Description);
+                                                t2.AddColumn(adChild);
 
                                 }
                             }//end if
@@ -417,7 +431,7 @@ namespace ERDesigner
                 #endregion
 
                 #region Trường hợp 2 ngôi
-                if (rd.Cardinalities.Count == 2)
+                if (rd.Cardinalities.Count == 2 && nameTable1 != nameTable2)
                 {
                     #region Normal Relationship
                     //Trường hợp relationship bình thường
@@ -444,13 +458,13 @@ namespace ERDesigner
                                 {
                                     //Simple Attribute
                                     if (ad.type == AttributeType.Simple && ad.AttributeChilds.Count == 0)
-                                        t2.AddColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
+                                        t2.AddColumn(ad);
 
                                     //Composite Attribute
                                     if (ad.AttributeChilds.Count > 0)
                                     {
                                         foreach (AttributeData adChild in ad.AttributeChilds)
-                                            t2.AddColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, adChild.Description);
+                                            t2.AddColumn(adChild);
                                     }
                                 }
                             }
@@ -472,13 +486,13 @@ namespace ERDesigner
                                 {
                                     //Simple Attribute
                                     if (ad.type == AttributeType.Simple && ad.AttributeChilds.Count == 0)
-                                        t2.AddColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
+                                        t2.AddColumn(ad);
 
                                     //Composite Attribute
                                     if (ad.AttributeChilds.Count > 0)
                                     {
                                         foreach (AttributeData adChild in ad.AttributeChilds)
-                                            t2.AddColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, adChild.Description);
+                                            t2.AddColumn(adChild);
                                     }
                                 }
                             }
@@ -498,7 +512,7 @@ namespace ERDesigner
                             List<Column> pk1 = t1.GetPrimaryKey();
                             List<Column> pk2 = t2.GetPrimaryKey();
 
-                            Table temp = new Table((t1.name).ToUpper() + "_" + (t2.name).ToUpper(), rd.x, rd.y, rd.w, rd.h);
+                            Table temp = new Table(nameRelationship.ToUpper(), rd.x, rd.y, rd.w, rd.h);
 
                             temp.AddPrimaryKeyForeignKey(pk1);
                             temp.AddPrimaryKeyForeignKey(pk2);
@@ -510,12 +524,12 @@ namespace ERDesigner
                                 {
                                     //Simple Attribute
                                     if (ad.type == AttributeType.Simple && ad.AttributeChilds.Count == 0)
-                                        temp.AddColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
+                                        temp.AddColumn(ad);
                                     //Composite Attribute
                                     if (ad.AttributeChilds.Count > 0)
                                     {
                                         foreach (AttributeData adChild in ad.AttributeChilds)
-                                            temp.AddColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, ad.Description);
+                                            temp.AddColumn(adChild);
                                     }
                                 }
                             }
@@ -539,12 +553,12 @@ namespace ERDesigner
                                     {
                                         //Simple Attribute
                                         if (ad.type == AttributeType.Simple && ad.AttributeChilds.Count == 0)
-                                            t2.AddColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
+                                            t2.AddColumn(ad);
                                         //Composite Attribute
                                         if (ad.AttributeChilds.Count > 0)
                                         {
                                             foreach (AttributeData adChild in ad.AttributeChilds)
-                                                t2.AddColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, adChild.Description);
+                                                t2.AddColumn(adChild);
                                         }
                                     }
                                 }
@@ -565,12 +579,12 @@ namespace ERDesigner
                                     {
                                         //Simple Attribute
                                         if (ad.type == AttributeType.Simple && ad.AttributeChilds.Count == 0)
-                                            t2.AddColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
+                                            t2.AddColumn(ad);
                                         //Composite Attribute
                                         if (ad.AttributeChilds.Count > 0)
                                         {
                                             foreach (AttributeData adChild in ad.AttributeChilds)
-                                                t2.AddColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, adChild.Description);
+                                                t2.AddColumn(adChild);
                                         }
                                     }
                                 }
@@ -591,12 +605,12 @@ namespace ERDesigner
                                     {
                                         //Simple Attribute
                                         if (ad.type == AttributeType.Simple && ad.AttributeChilds.Count == 0)
-                                            t2.AddColumn(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
+                                            t2.AddColumn(ad);
                                         //Composite Attribute
                                         if (ad.AttributeChilds.Count > 0)
                                         {
                                             foreach (AttributeData adChild in ad.AttributeChilds)
-                                                t2.AddColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, adChild.Description);
+                                                t2.AddColumn(adChild);
                                         }
                                     }
                                 }
@@ -779,7 +793,7 @@ namespace ERDesigner
                 if (ad.AttributeChilds.Count > 0)
                 {
                     foreach (AttributeData adChild in ad.AttributeChilds)
-                        t4.AddColumn(adChild.name, adChild.DataType, adChild.Length, adChild.AllowNull, adChild.Description);
+                        t4.AddColumn(adChild);
                 }
                 else
                 {
@@ -823,15 +837,7 @@ namespace ERDesigner
         {
             ProcessTernary(rd, nameRalationship, t1, t2, t3, false);
         }
-
-        #region EERD
-        //Kiểm tra Entity này có SupTypeConnector hay ko
-        //Nếu có thì nó chính là supper, còn những thằng ở trong là sub
-        //Gọi làm chuyển đổi EERD
-        //Nếu không ta vẫn làm công việc bình thường: kiểm tra nó là Strong hay Weak (keke) thế là OK
-
-
-        #endregion
+      
         private EntityData SearchEntityData(string nameWeakTable)
         {
             EntityData temp = new EntityData();
