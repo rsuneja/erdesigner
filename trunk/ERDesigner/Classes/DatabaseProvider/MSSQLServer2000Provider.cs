@@ -81,7 +81,9 @@ namespace ERDesigner
         public bool CreateDatabase(string DatabaseName, string FolderPath)
         {
             SqlConnection tmpConn = new SqlConnection(getConnectionString("master"));
-            string sqlCreateDBQuery = " CREATE DATABASE "
+            string sqlCreateDBQuery = "";
+            if (FolderPath != "")
+                sqlCreateDBQuery = " CREATE DATABASE "
                                + DatabaseName
                                + " ON PRIMARY "
                                + " (NAME = " + DatabaseName + ", "
@@ -90,7 +92,9 @@ namespace ERDesigner
                                + " LOG ON (NAME =" + DatabaseName + "LOG, "
                                + " FILENAME = '" + FolderPath + "\\" + DatabaseName + "_LOG.LDF', "
                                + " SIZE = 1MB) ";
-            
+            else
+                sqlCreateDBQuery = " CREATE DATABASE " + DatabaseName;
+
             try
             {
                 tmpConn.Open();
@@ -110,7 +114,7 @@ namespace ERDesigner
         {
             try
             {
-                sqlQuery = sqlQuery.Replace(";", "");
+                sqlQuery = sqlQuery.Replace("GO", ";");
                 SqlCommand Command = new SqlCommand(sqlQuery, conn);
                 Command.ExecuteNonQuery();
                 return true;

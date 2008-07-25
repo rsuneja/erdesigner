@@ -23,10 +23,6 @@ namespace ERDesigner
 
             foreach (Table table in mdp.Tables)
             {
-                foreach (Column col in table.columns)
-                {
-                    col.DataType = database.getDataType(col.DataType);
-                }
                 string strCreateTable = CreateTable(table.name, table.columns);
 
                 listCreateTable.Add(strCreateTable);               
@@ -86,7 +82,7 @@ namespace ERDesigner
             script += temp2;
             script += temp1;
             script += DropTable(tableName);
-            script += "CREATE TABLE " + tableName + "\r\n";
+            script += "Create table \"" + tableName + "\"\r\n";
             script += "(" + "\r\n";
             int i;
             string dataType = "";
@@ -94,10 +90,10 @@ namespace ERDesigner
             {
                 Column col = listColumn[i];
                 string strAlowNull = getAlowNull(col.AlowNull);
-                dataType = DataTypeLenght(col.DataType, col.Length.ToString());
+                dataType = DataTypeLenght(col.DBMSDataType, col.Length.ToString());
                 script += "\t" + col.Name + " " + dataType + " " + strAlowNull + " ," + "\r\n";
             }
-            dataType = DataTypeLenght(listColumn[i].DataType, listColumn[i].Length.ToString());
+            dataType = DataTypeLenght(listColumn[i].DBMSDataType, listColumn[i].Length.ToString());
             script += "\t" + listColumn[i].Name + " " + dataType + " " + getAlowNull(listColumn[i].AlowNull) + "\r\n";
             script += ")" + "\r\n";
             script += ";" + "\r\n\r\n";
@@ -106,7 +102,7 @@ namespace ERDesigner
         private string CreatePrimaryKey(string tableName, List<string> columnName)
         {
             string script = "";
-            script += "Alter table " + tableName + "\r\n";
+            script += "Alter table \"" + tableName + "\"\r\n";
             script += "   add constraint " + "PK_" + tableName + " primary key (";
             int i = 0;
             for (i = 0; i < columnName.Count - 1; i++)
@@ -120,14 +116,14 @@ namespace ERDesigner
         private string CreateForeignKey(string fkName, string parentTable, List<string> parentColumn, string childTable, List<string> childColumn)
         {
             string script = "";
-            script += "Alter table " + childTable + "\r\n";
+            script += "Alter table \"" + childTable + "\"\r\n";
             script += "   add constraint " + fkName + " foreign key (";
             int i = 0, j = 0;
             for (i = 0; i < childColumn.Count - 1; i++)
             {
                 script += childColumn[i] + ",";
             }
-            script += childColumn[i] + ") references " + parentTable + " (";
+            script += childColumn[i] + ") references \"" + parentTable + "\" (";
             for (j = 0; j < parentColumn.Count - 1; j++)
             {
                 script += parentColumn[j] + ",";

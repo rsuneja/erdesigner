@@ -239,7 +239,7 @@ namespace ERDesigner
             this.repositoryItemCheckEdit2,
             this.repositoryItemCheckEdit3,
             this.repositoryItemMRUEdit1});
-            this.ribbon.SelectedPage = this.ribbonHome;
+            this.ribbon.SelectedPage = this.ribbonTool;
             this.ribbon.Size = new System.Drawing.Size(784, 149);
             this.ribbon.Toolbar.ItemLinks.Add(this.btnOpenProject);
             this.ribbon.Toolbar.ItemLinks.Add(this.btnSaveModelAs);
@@ -614,6 +614,7 @@ namespace ERDesigner
             this.chkDirect.EditValue = true;
             this.chkDirect.Id = 53;
             this.chkDirect.Name = "chkDirect";
+            this.chkDirect.EditValueChanged += new System.EventHandler(this.chkDirect_EditValueChanged);
             // 
             // repositoryItemCheckEdit2
             // 
@@ -628,6 +629,7 @@ namespace ERDesigner
             this.chkFile.Id = 54;
             this.chkFile.Name = "chkFile";
             this.chkFile.Width = 30;
+            this.chkFile.EditValueChanged += new System.EventHandler(this.chkFile_EditValueChanged);
             // 
             // repositoryItemCheckEdit3
             // 
