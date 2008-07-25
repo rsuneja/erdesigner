@@ -275,13 +275,7 @@ namespace ERDesigner
 
                     //Xử lý Weak có thuộc tính đa trị
                     if (multiAttribute.name != String.Empty)
-                    {
-                        Table multivalueTable = new Table(weakTable.name + "_" + (multiAttribute.name).ToUpper(), multiAttribute.x, multiAttribute.y, multiAttribute.w, multiAttribute.h);
-                        multivalueTable.AddPrimaryKeyForeignKey(weakTable.GetPrimaryKey());
-                        multivalueTable.AddPrimaryKey(multiAttribute.name, multiAttribute.DataType, multiAttribute.Length, multiAttribute.Description);
-                        mdp.AddTable(multivalueTable);
-                        mdp.AddForeignKey("fk_" + weakTable.name + "_" + multivalueTable.name, weakTable, weakTable.GetPrimaryKey(), multivalueTable, weakTable.GetPrimaryKey());
-                    }
+                        EntityHasMultivalueAttribute(weakTable, multiAttribute);
                 }
                 #endregion
             }//End Entities
@@ -337,7 +331,7 @@ namespace ERDesigner
                 }
 
                 #region Trường hợp 1 ngôi
-                if (rd.Cardinalities.Count == 1 && nameTable1 == nameTable2)
+                if (rd.Cardinalities.Count == 2 && nameTable1 == nameTable2)
                 {
                     //Trường hợp 1:n, n:1
                     if ((cardinalityMax1 == "1" && cardinalityMax2 == "-1") || (cardinalityMax1 == "-1" && cardinalityMax2 == "1") || (cardinalityMax1 == "1" && cardinalityMax2 == "1") || (cardinalityMax1 == "0" && cardinalityMax2 == "1") || (cardinalityMax1 == "1" && cardinalityMax2 == "0"))
@@ -382,49 +376,53 @@ namespace ERDesigner
                     //Trường hợp n:n
                     if (cardinalityMax1 == "-1" && cardinalityMax2 == "-1")
                     {
-                        if (rd.type == RelationshipType.Normal)
+                        Table t1 = mdp.SearchTable(nameTable1);
+                        List<Column> pk1 = t1.GetPrimaryKey();
+
+                        Table t2 = new Table(nameRelationship, rd.x, rd.y, rd.w, rd.h);
+
+                        AttributeData multiAttribute = new AttributeData();
+                        t2.AddPrimaryKeyForeignKey(pk1);
+                        List<Column> pk2 = new List<Column>();
+                        for (int i = 0; i < pk1.Count; i++)
                         {
-                            Table t1 = mdp.SearchTable(nameTable1);
-                            List<Column> pk1 = t1.GetPrimaryKey();
-
-                            Table t2 = new Table(nameRelationship, rd.x, rd.y, rd.w, rd.h);
-
-                            t2.AddPrimaryKeyForeignKey(pk1);
-                            List<Column> pk2 = new List<Column>();
-                            for (int i = 0; i < pk1.Count; i++)
-                            {
-                                Column c = new Column(pk1[i].Name + "_" + i, pk1[i].DataType, pk1[i].Length, pk1[i].AlowNull, pk1[i].PrimaryKey, pk1[i].ForeignKey, pk1[i].Description);
-                                pk2.Add(c);
-                            }
-                            t2.AddPrimaryKeyForeignKey(pk2);
-
-                            //Add tất cả các Attribute có trên thuộc tính vào bên bản mới sinh
-                            if (rd.Attributes.Count > 0)
-                            {
-                                foreach (AttributeData adChild in rd.Attributes)
-                                {
-                                    if (adChild.AttributeChilds.Count > 0)//Compsite
-                                    {
-                                        foreach (AttributeData var in adChild.AttributeChilds)
-                                            t2.AddColumn(adChild);
-                                    }
-                                    else//Simple
-                                        if (adChild.type == AttributeType.Simple)
-                                            t2.AddColumn(adChild);
-                                        else
-                                            if (adChild.type == AttributeType.MultiValued)
-                                                t2.AddColumn(adChild);
-
-                                }
-                            }//end if
-                            mdp.AddTable(t2);
-                            mdp.AddForeignKey(nameRelationship + "_1", t1, pk1, t2, pk1);
-                            mdp.AddForeignKey(nameRelationship + "_2", t1, pk1, t2, pk2);
-
+                            Column c = new Column(pk1[i].Name + "_" + i, pk1[i].DataType, pk1[i].Length, pk1[i].AlowNull, pk1[i].PrimaryKey, pk1[i].ForeignKey, pk1[i].Description);
+                            pk2.Add(c);
                         }
-                        if (rd.type == RelationshipType.AssociativeEntity)
-                        {
+                        t2.AddPrimaryKeyForeignKey(pk2);
 
+                        //Add tất cả các Attribute có trên thuộc tính vào bên bản mới sinh
+                        if (rd.Attributes.Count > 0)
+                        {
+                            foreach (AttributeData adChild in rd.Attributes)
+                            {
+                                if (adChild.AttributeChilds.Count > 0)//Compsite
+                                {
+                                    foreach (AttributeData var in adChild.AttributeChilds)
+                                        t2.AddColumn(adChild);
+                                }
+                                else//Simple
+                                {
+                                    if (adChild.type == AttributeType.Simple)
+                                        t2.AddColumn(adChild);
+
+                                    if (adChild.type == AttributeType.MultiValued)
+                                        multiAttribute = adChild;
+
+                                    if (adChild.type == AttributeType.Key)
+                                        t2.AddPrimaryKey(adChild.name, adChild.DataType, adChild.Length, adChild.Description);
+                                }
+
+                            }
+                        }//end if
+                        mdp.AddTable(t2);
+                        mdp.AddForeignKey(nameRelationship + "_1", t1, pk1, t2, pk1);
+                        mdp.AddForeignKey(nameRelationship + "_2", t1, pk1, t2, pk2);
+
+                        //Xử lý trường hớp có multivalue attribute
+                        if (multiAttribute.name != String.Empty)
+                        {
+                            EntityHasMultivalueAttribute(t2, multiAttribute);
                         }
                     }
                 }//End 1 ngôi
@@ -761,6 +759,20 @@ namespace ERDesigner
         }//End Method Process
 
         /// <summary>
+        /// Xử lý entity có thuộc tính đa trị -> Kết quả tạo ra hai Table và đưa vào Physical Model
+        /// </summary>
+        /// <param name="table">Table có thuộc tính Multivalue</param>
+        /// <param name="multiAttribute">Thuộc tính Multivalue (kiểu AttributeData)</param>
+        private void EntityHasMultivalueAttribute(Table table, AttributeData multiAttribute)
+        {
+            Table multivalueTable = new Table(table.name + "_" + multiAttribute.name.ToUpper(), multiAttribute.x, multiAttribute.y, multiAttribute.w, multiAttribute.h);
+            multivalueTable.AddPrimaryKeyForeignKey(table.GetPrimaryKey());
+            multivalueTable.AddPrimaryKey(multiAttribute.name, multiAttribute.DataType, multiAttribute.Length, multiAttribute.Description);
+            mdp.AddTable(multivalueTable);
+            mdp.AddForeignKey("fk_" + table.name + "_" + multivalueTable.name, table, table.GetPrimaryKey(), multivalueTable, table.GetPrimaryKey());
+        }
+
+        /// <summary>
         /// Xử lý các trường hợp mối liên kết ba ngôi: 1-1-1, 1-1-n, 1-n-m, n-m-l, associative entity
         /// Lưu ý: Thứ tự t1,t2,t3 ảnh hưởng/tác dụng tới từng trường hợp cụ thể
         ///     1-1-1: t1,t2,t3   |   
@@ -786,7 +798,7 @@ namespace ERDesigner
             bool hasPrimaryKey = false;
 
             Table t4 = new Table(nameRelationship, rd.x, rd.y, rd.w, rd.h);
-
+            AttributeData mulAttribute = new AttributeData();
             foreach (AttributeData ad in rd.Attributes)
             {
                 //Composite Attribute
@@ -797,7 +809,7 @@ namespace ERDesigner
                 }
                 else
                 {
-                    if (ad.type == AttributeType.Simple || ad.type == AttributeType.MultiValued)
+                    if (ad.type == AttributeType.Simple)
                     {
                         Column c = new Column(ad.name, ad.DataType, ad.Length, ad.AllowNull, ad.Description);
                         t4.AddColumn(c);
@@ -808,6 +820,8 @@ namespace ERDesigner
                         Column c = new Column(ad.name, ad.DataType, ad.Length, ad.AllowNull, true, false, ad.Description);
                         t4.AddPrimaryKey(c);
                     }
+                    if (ad.type == AttributeType.MultiValued)
+                        mulAttribute = ad;
                 }
             }
 
@@ -831,13 +845,17 @@ namespace ERDesigner
             mdp.AddForeignKey(nameRelationship + "1", t1, pk1, t4, pk1);
             mdp.AddForeignKey(nameRelationship + "2", t2, pk2, t4, pk2);
             mdp.AddForeignKey(nameRelationship + "3", t3, pk3, t4, pk3);
+
+            //Xử lý trường hợp Multivalue
+            if (mulAttribute.name != String.Empty)
+                EntityHasMultivalueAttribute(t4, mulAttribute);
         }
 
         private void ProcessTernary(RelationshipData rd, string nameRalationship, Table t1, Table t2, Table t3)
         {
             ProcessTernary(rd, nameRalationship, t1, t2, t3, false);
         }
-      
+
         private EntityData SearchEntityData(string nameWeakTable)
         {
             EntityData temp = new EntityData();
