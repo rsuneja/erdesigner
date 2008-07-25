@@ -22,6 +22,8 @@ namespace ERDesigner
         public static bool DB_GenerateScriptFile = true;
         public static bool DB_GenerateDirect = true;
 
+        public static bool checkIsolation = true;
+
         public static Pen getDashPen()
         {
             Pen daspen = (Pen)JPen.Clone();
