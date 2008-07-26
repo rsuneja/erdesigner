@@ -14,6 +14,7 @@ namespace ERDesigner.Shape
         public List<AttributeShape> attributes;
         public List<CardinalityShape>[] cardinalities;
         SubTypeConnector subtypeconnector;
+        public SubTypeConnector supertypeconnector;
         public bool isSubType = false;
 
         private void InitializeComponent()
@@ -71,6 +72,8 @@ namespace ERDesigner.Shape
                 attributes[i].Dispose();
                 i--;
             }
+            if(subtypeconnector != null)
+                subtypeconnector.Dispose();
         }
 
         public string Type

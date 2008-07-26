@@ -976,6 +976,7 @@ namespace ERDesigner
                     if (s is EntityShape && s.sName == subtypeconnectordata.SuperType)
                     {
                         subtypeconnector.supertype = (EntityShape)s;
+                        ((EntityShape)s).SubtypeConnector = subtypeconnector;
                     }
                 }
                 foreach (string subtypename in subtypeconnectordata.SubTypes)
@@ -1093,9 +1094,9 @@ namespace ERDesigner
             }
 
             //Kiểm tra đồ thị liên thông
-            if(ThongSo.checkIsolation)
+            if (ThongSo.checkIsolation)
                 errorList.AddRange(CheckConnectivity());
-            
+
             return errorList;
         }
         public List<string> CheckConnectivity()
@@ -1119,7 +1120,7 @@ namespace ERDesigner
                         break;
                     }
                 }
-                
+
                 while (listChecking.Count > 0)
                 {
                     ShapeBase shape = listChecking.Dequeue();
@@ -1130,7 +1131,7 @@ namespace ERDesigner
                             EntityShape entity = (EntityShape)shape;
                             foreach (AttributeShape att in entity.attributes)
                             {
-                                if(att.isComposite)
+                                if (att.isComposite)
                                 {
                                     foreach (AttributeShape attChild in att.attributeChilds)
                                     {
@@ -1153,8 +1154,16 @@ namespace ERDesigner
                                     if (!listChecking.Contains((ShapeBase)subtype) && listShape.Contains((ShapeBase)subtype))
                                         listChecking.Enqueue((ShapeBase)subtype);
                                 }
+                                listShape.Remove((ShapeBase)entity.SubtypeConnector);
                             }
-                            
+
+                            if (entity.supertypeconnector != null)
+                            {
+                                EntityShape supertype = (EntityShape)entity.supertypeconnector.supertype;
+                                if (!listChecking.Contains((ShapeBase)supertype) && listShape.Contains((ShapeBase)supertype))
+                                    listChecking.Enqueue((ShapeBase)supertype);
+                            }
+
                             listShape.Remove((ShapeBase)entity);
                             break;
                         case "RelationshipShape":

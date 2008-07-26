@@ -81,6 +81,7 @@ namespace ERDesigner.Shape
             {
                 subtypes.Add(entity);
                 entity.isSubType = true;
+                entity.supertypeconnector = this;
                 entity.Disposed += new EventHandler(subtype_Disposed);
             }
         }
