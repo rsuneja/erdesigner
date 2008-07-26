@@ -542,15 +542,15 @@ namespace ERDesigner
             // 
             this.btnGeneratePhysical.Caption = "Generate Physical Data Model";
             this.btnGeneratePhysical.Id = 32;
-            this.btnGeneratePhysical.LargeImageIndex = 14;
+            this.btnGeneratePhysical.LargeImageIndex = 12;
             this.btnGeneratePhysical.Name = "btnGeneratePhysical";
             this.btnGeneratePhysical.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnGeneratePhysical_ItemClick);
             // 
             // btnGenerateSQl
             // 
-            this.btnGenerateSQl.Caption = "Generate SQL script for MS SQL 2000";
+            this.btnGenerateSQl.Caption = "Generate DDL for DBMS";
             this.btnGenerateSQl.Id = 33;
-            this.btnGenerateSQl.LargeImageIndex = 15;
+            this.btnGenerateSQl.LargeImageIndex = 13;
             this.btnGenerateSQl.Name = "btnGenerateSQl";
             this.btnGenerateSQl.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnGenerateSQl_ItemClick);
             // 
@@ -558,7 +558,7 @@ namespace ERDesigner
             // 
             this.btnVerifyModel.Caption = "Verify Model";
             this.btnVerifyModel.Id = 34;
-            this.btnVerifyModel.LargeImageIndex = 13;
+            this.btnVerifyModel.LargeImageIndex = 11;
             this.btnVerifyModel.Name = "btnVerifyModel";
             this.btnVerifyModel.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnVerifyModel_ItemClick);
             // 
@@ -582,7 +582,7 @@ namespace ERDesigner
             this.chkSkin.Caption = "Enable Skin";
             this.chkSkin.Checked = true;
             this.chkSkin.Id = 40;
-            this.chkSkin.LargeImageIndex = 12;
+            this.chkSkin.LargeImageIndex = 10;
             this.chkSkin.Name = "chkSkin";
             this.chkSkin.CheckedChanged += new DevExpress.XtraBars.ItemClickEventHandler(this.chkApplySkin_CheckedChanged);
             // 
@@ -607,7 +607,7 @@ namespace ERDesigner
             this.btnConnect.Caption = "Connect to Database...";
             this.btnConnect.Id = 50;
             this.btnConnect.ImageIndex = 31;
-            this.btnConnect.LargeImageIndex = 16;
+            this.btnConnect.LargeImageIndex = 14;
             this.btnConnect.LargeWidth = 100;
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.ItemClick += new DevExpress.XtraBars.ItemClickEventHandler(this.btnConnect_ItemClick);
@@ -671,6 +671,7 @@ namespace ERDesigner
             this.chkTotal.Caption = "Total Specialization";
             this.chkTotal.Down = true;
             this.chkTotal.Id = 68;
+            this.chkTotal.LargeImageIndex = 15;
             this.chkTotal.LargeWidth = 100;
             this.chkTotal.Name = "chkTotal";
             this.chkTotal.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
@@ -688,6 +689,7 @@ namespace ERDesigner
             this.chkPartial.ButtonStyle = DevExpress.XtraBars.BarButtonStyle.Check;
             this.chkPartial.Caption = "Partial Specialization";
             this.chkPartial.Id = 70;
+            this.chkPartial.LargeImageIndex = 16;
             this.chkPartial.LargeWidth = 100;
             this.chkPartial.Name = "chkPartial";
             this.chkPartial.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
@@ -699,6 +701,7 @@ namespace ERDesigner
             this.chkDisjoint.Caption = "Disjoint Constraint";
             this.chkDisjoint.Down = true;
             this.chkDisjoint.Id = 71;
+            this.chkDisjoint.LargeImageIndex = 17;
             this.chkDisjoint.LargeWidth = 100;
             this.chkDisjoint.Name = "chkDisjoint";
             this.chkDisjoint.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
@@ -709,6 +712,7 @@ namespace ERDesigner
             this.chkOverlap.ButtonStyle = DevExpress.XtraBars.BarButtonStyle.Check;
             this.chkOverlap.Caption = "Overlap Constraint";
             this.chkOverlap.Id = 72;
+            this.chkOverlap.LargeImageIndex = 18;
             this.chkOverlap.LargeWidth = 100;
             this.chkOverlap.Name = "chkOverlap";
             this.chkOverlap.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
@@ -718,6 +722,7 @@ namespace ERDesigner
             // 
             this.btnAddSubType.Caption = "Add Subtype";
             this.btnAddSubType.Id = 73;
+            this.btnAddSubType.LargeImageIndex = 19;
             this.btnAddSubType.LargeWidth = 100;
             this.btnAddSubType.Name = "btnAddSubType";
             this.btnAddSubType.RibbonStyle = DevExpress.XtraBars.Ribbon.RibbonItemStyles.Large;
