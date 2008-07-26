@@ -69,19 +69,17 @@ namespace ERDesigner
             // 
             // labEntity2
             // 
-            this.labEntity2.AutoSize = true;
             this.labEntity2.Location = new System.Drawing.Point(284, 25);
             this.labEntity2.Name = "labEntity2";
-            this.labEntity2.Size = new System.Drawing.Size(39, 13);
+            this.labEntity2.Size = new System.Drawing.Size(34, 13);
             this.labEntity2.TabIndex = 10;
             this.labEntity2.Text = "Entity2";
             // 
             // labEntity11
             // 
-            this.labEntity11.AutoSize = true;
             this.labEntity11.Location = new System.Drawing.Point(284, 26);
             this.labEntity11.Name = "labEntity11";
-            this.labEntity11.Size = new System.Drawing.Size(39, 13);
+            this.labEntity11.Size = new System.Drawing.Size(34, 13);
             this.labEntity11.TabIndex = 10;
             this.labEntity11.Text = "Entity1";
             // 
@@ -124,19 +122,17 @@ namespace ERDesigner
             // 
             // labRel
             // 
-            this.labRel.AutoSize = true;
             this.labRel.Location = new System.Drawing.Point(6, 25);
             this.labRel.Name = "labRel";
-            this.labRel.Size = new System.Drawing.Size(65, 13);
+            this.labRel.Size = new System.Drawing.Size(58, 13);
             this.labRel.TabIndex = 10;
             this.labRel.Text = "Relationship";
             // 
             // labRel2
             // 
-            this.labRel2.AutoSize = true;
             this.labRel2.Location = new System.Drawing.Point(6, 26);
             this.labRel2.Name = "labRel2";
-            this.labRel2.Size = new System.Drawing.Size(65, 13);
+            this.labRel2.Size = new System.Drawing.Size(58, 13);
             this.labRel2.TabIndex = 10;
             this.labRel2.Text = "Relationship";
             // 
@@ -188,7 +184,7 @@ namespace ERDesigner
             this.Name = "AddCardinality";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Cardinalities";
+            this.Text = "Edit Relationship";
             ((System.ComponentModel.ISupportInitialize)(this.imageComboBoxEdit2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageComboBoxEdit1.Properties)).EndInit();

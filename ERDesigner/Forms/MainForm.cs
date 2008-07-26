@@ -138,21 +138,66 @@ namespace ERDesigner
         }
         private void btnGeneratePhysical_ItemClick(object sender, ItemClickEventArgs e)
         {
+            LoadPhyicalForm();
+        }
+
+        private void LoadPhyicalForm()
+        {
             if (ActiveMdiChild != null && ActiveMdiChild.GetType().Name == "frmDrawBoard")
             {
                 if (verifyModel())
                 {
                     ((frmDrawBoard)ActiveMdiChild).pnlDrawBoard.EndEditDataType();
-
                     MetaData ERD = ((frmDrawBoard)ActiveMdiChild).pnlDrawBoard.getMetaData();
+
+                    string formName = ActiveMdiChild.Text + "Physical";
+                    Form f = findForm(formName);
+
+                    if (f != null)
+                    {
+                        f.Close();
+                    }
+
                     frmPhysicalDrawBoard frmPhysical = new frmPhysicalDrawBoard(ERD);
-                    frmPhysical.Text = ActiveMdiChild.Text+"Physical";
+                    frmPhysical.Text = formName;
                     frmPhysical.MdiParent = this;
                     frmPhysical.Show();
 
-                    frmPhysical.FormClosing += new FormClosingEventHandler(drawboard_FormClosing);
+                    //frmPhysical.FormClosing += new FormClosingEventHandler(drawboard_FormClosing);
                 }
             }
+        }
+        private void LoadDDLForm()
+        {
+            LoadPhyicalForm();
+            if (ActiveMdiChild != null && ActiveMdiChild.GetType().Name == "frmPhysicalDrawBoard")
+            {
+                MetaDataPhysical mdp = ((frmPhysicalDrawBoard)ActiveMdiChild).pnlPhysical.getMetaDataPhysical();
+
+                string formName = ActiveMdiChild.Text.Substring(0, ActiveMdiChild.Text.IndexOf("Physical")) + " Generate DDL";
+                Form f = findForm(formName);
+
+                if (f != null)
+                {
+                    f.Close();
+                }
+
+                GenerateScriptSQL gpm = new GenerateScriptSQL(this, mdp);
+                gpm.Text = formName;
+                gpm.MdiParent = this;
+                gpm.Show();
+            }
+        }
+        private Form findForm(string FormName)
+        {
+            foreach (Form f in this.MdiChildren)
+            {
+                if (FormName == f.Text)
+                {
+                    return f;
+                }
+            }
+            return null;
         }
 
         //My function
@@ -326,16 +371,14 @@ namespace ERDesigner
             {
                 string model = treeView1.SelectedNode.Text;
                 bool isOpened = false;
-                foreach (Form f in this.MdiChildren)
-                {
-                    if (model == f.Text)
-                    {
-                        f.Focus();
-                        isOpened = true;
-                        break;
-                    }
-                }
 
+                Form f = findForm(model);
+                if(f != null)
+                {
+                    f.Focus();
+                    isOpened = true;
+                }
+                
                 if (!isOpened)
                 {
                     foreach (Model m in currentProject.Models)
@@ -529,34 +572,9 @@ namespace ERDesigner
         }
         private void btnGenerateSQl_ItemClick(object sender, ItemClickEventArgs e)
         {
-            if(ActiveMdiChild != null && ActiveMdiChild.GetType().Name == "frmPhysicalDrawBoard")
-            {
-                MetaDataPhysical mdp = ((frmPhysicalDrawBoard)ActiveMdiChild).pnlPhysical.getMetaDataPhysical();
-                GenerateScriptSQL gpm = new GenerateScriptSQL(this, mdp);
-                gpm.MdiParent = this;
-                gpm.Show();
-            }
-            else if (ActiveMdiChild != null && ActiveMdiChild.GetType().Name == "frmDrawBoard")
-            {
-                if (verifyModel())
-                {
-                    ((frmDrawBoard)ActiveMdiChild).pnlDrawBoard.EndEditDataType();
-
-                    MetaData ERD = ((frmDrawBoard)ActiveMdiChild).pnlDrawBoard.getMetaData();
-                    frmPhysicalDrawBoard frmPhysical = new frmPhysicalDrawBoard(ERD);
-                    frmPhysical.Text = ActiveMdiChild.Text + "Physical";
-                    frmPhysical.MdiParent = this;
-                    frmPhysical.Show();
-
-                    frmPhysical.FormClosing += new FormClosingEventHandler(drawboard_FormClosing);
-
-                    MetaDataPhysical mdp = frmPhysical.pnlPhysical.getMetaDataPhysical();
-                    GenerateScriptSQL gpm = new GenerateScriptSQL(this, mdp);
-                    gpm.MdiParent = this;
-                    gpm.Show();
-                }
-            }
+            LoadDDLForm();
         }
+
         private void btnCloseProject_ItemClick(object sender, ItemClickEventArgs e)
         {
             foreach (Form f in this.MdiChildren)

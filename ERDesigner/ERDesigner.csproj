@@ -36,6 +36,8 @@
     <Reference Include="DevExpress.XtraBars.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=63213b87812c7912, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraEditors.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=63213b87812c7912, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraNavBar.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=63213b87812c7912, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraReports.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=63213b87812c7912, processorArchitecture=MSIL" />
+    <Reference Include="DevExpress.XtraVerticalGrid.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=63213b87812c7912" />
     <Reference Include="Microsoft.SqlServer.ConnectionInfo, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\Microsoft.SqlServer.ConnectionInfo.dll</HintPath>
@@ -119,6 +121,12 @@
     <Compile Include="Dialogs\AddConnection.Designer.cs">
       <DependentUpon>AddConnection.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\EditSubtypeConnector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\EditSubtypeConnector.Designer.cs">
+      <DependentUpon>EditSubtypeConnector.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\EditTernaryRelationship.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -199,6 +207,10 @@
       <DependentUpon>AddConnection.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\EditSubtypeConnector.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EditSubtypeConnector.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\EditTernaryRelationship.resx">
       <DependentUpon>EditTernaryRelationship.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -232,9 +244,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="ShapePhysical\ShapBase.resx">
       <DependentUpon>ShapBase.cs</DependentUpon>
@@ -264,20 +276,11 @@
       <DependentUpon>SubTypeConnector.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="ClassDiagram1.cd" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
-    </Compile>
-    <None Include="ClassDiagram1.cd" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ShapePhysical\FKShape.cs" />
     <Compile Include="ShapePhysical\ShapBase.cs">

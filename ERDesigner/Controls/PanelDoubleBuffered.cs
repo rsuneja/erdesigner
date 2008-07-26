@@ -162,8 +162,6 @@ namespace ERDesigner
 
             if (!isNaming)
             {
-                //Focus để làm mất selection hoặc kết thúc đặt tên
-                this.Focus();
                 AffectingShape = null;
                 this.Invalidate();
             }
@@ -484,13 +482,28 @@ namespace ERDesigner
                     break;
                 case "Identifier Relationship": ((RelationshipShape)AffectingShape).type = RelationshipType.Identifier;
                     break;
-                case "Associative Entity": ((RelationshipShape)AffectingShape).type = RelationshipType.AssociativeEntity;
+                case "Associative Entity": 
+                    ((RelationshipShape)AffectingShape).type = RelationshipType.AssociativeEntity;
+                    break;
+                case "Total Specialization":
+                    ((SubTypeConnector)AffectingShape).completeness = SubTypeConnectorType.TotalSpecialization;
+                    this.Invalidate();
+                    break;
+                case "Partial Specialization":
+                    ((SubTypeConnector)AffectingShape).completeness = SubTypeConnectorType.PartialSpecialization;
+                    this.Invalidate();
+                    break;
+                case "Disjoint Constraint":
+                    ((SubTypeConnector)AffectingShape).disjointness = SubTypeConnectorType.DisjointConstraint;
+                    break;
+                case "Overlap Constraint":
+                    ((SubTypeConnector)AffectingShape).disjointness = SubTypeConnectorType.OverlapConstraint;
                     break;
 
             }
             AffectingShape.Invalidate();
         }
-        void editCardi_Click(object sender, EventArgs e)
+        void editRel_Click(object sender, EventArgs e)
         {
             //hiển thị Dialog
             RelationshipShape relationship = null;
@@ -540,6 +553,22 @@ namespace ERDesigner
             }
 
         }
+        void editSub_Click(object sender, EventArgs e)
+        {
+            //hiển thị Dialog
+            if (AffectingShape != null && AffectingShape is SubTypeConnector)
+            {
+                SubTypeConnector sub = (SubTypeConnector)AffectingShape;
+                EditSubtypeConnector editSub = new EditSubtypeConnector(sub);
+                if (editSub.ShowDialog() == DialogResult.OK)
+                {
+                    sub.discriminators = editSub.Discriminators;
+                    sub.AttributeDiscriminator = editSub.attDis;
+                    this.Invalidate();
+                }
+            }
+        }
+        
         void addAtt_Click(object sender, EventArgs e)
         {
             CancelDrawing();
@@ -1084,6 +1113,27 @@ namespace ERDesigner
                                 errorList.Add("Relationship '" + rel.sName + "' must not have any key attributes");
                         }
 
+
+                        //supertype không được nối với subtype
+                        foreach (CardinalityShape cardi in rel.cardinalities)
+                        {
+                            EntityShape supertype = cardi.Entity;
+                            if (supertype.SubtypeConnector != null)
+                            {
+                                foreach (CardinalityShape cardi2 in rel.cardinalities)
+                                {
+                                    EntityShape subtype = cardi2.Entity;
+                                    if (subtype != supertype)
+                                    {
+                                        if (supertype.SubtypeConnector.subtypes.Contains(subtype))
+                                        {
+                                            errorList.Add("Supertype '" + supertype.sName + "' and subtype '" + subtype.sName + "' must not have any other relationships except supertype/subtype relationship");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
                         break;
                     case "AttributeShape": AttributeShape attribute = (AttributeShape)c;
                         //Kiểm tra thuộc tính composite có ít nhất 2 con
@@ -1229,9 +1279,6 @@ namespace ERDesigner
             ToolStripMenuItem del = new ToolStripMenuItem("Delete");
             del.Click += new EventHandler(del_Click);
 
-            ToolStripMenuItem addCardi = new ToolStripMenuItem("Edit Cardinalitiy");
-            addCardi.Click += new EventHandler(editCardi_Click);
-
             if (control is EntityShape)
             {
                 ToolStripMenuItem StrongEntity = new ToolStripMenuItem("Strong Entity Type");
@@ -1243,6 +1290,8 @@ namespace ERDesigner
                 ctmn.Items.Add(StrongEntity);
                 ctmn.Items.Add(WeakEntity);
                 ctmn.Items.Add(new ToolStripSeparator());
+
+                ctmn.Items.Add(del);
             }
 
             if (control is RelationshipShape)
@@ -1262,7 +1311,11 @@ namespace ERDesigner
 
                 ctmn.Items.Add(new ToolStripSeparator());
 
-                ctmn.Items.Add(addCardi);
+                ToolStripMenuItem editRel = new ToolStripMenuItem("Properties");
+                editRel.Click += new EventHandler(editRel_Click);
+                
+                ctmn.Items.Add(del);
+                ctmn.Items.Add(editRel);
             }
 
             if (control is AttributeShape && ((AttributeShape)control).isComposite)
@@ -1287,9 +1340,36 @@ namespace ERDesigner
                     ctmn.Items.Add(DerivedAtt);
                 }
                 ctmn.Items.Add(new ToolStripSeparator());
+                ctmn.Items.Add(del);
             }
 
-            ctmn.Items.Add(del);
+            if (control is SubTypeConnector)
+            {
+                ToolStripMenuItem Total = new ToolStripMenuItem("Total Specialization");
+                Total.Click += new EventHandler(Change_Type_Click);
+
+                ToolStripMenuItem Partial = new ToolStripMenuItem("Partial Specialization");
+                Partial.Click += new EventHandler(Change_Type_Click);
+
+                ToolStripMenuItem Disjoint = new ToolStripMenuItem("Disjoint Constraint");
+                Disjoint.Click += new EventHandler(Change_Type_Click);
+
+                ToolStripMenuItem Overlap = new ToolStripMenuItem("Overlap Constraint");
+                Overlap.Click += new EventHandler(Change_Type_Click);
+
+                ctmn.Items.Add(Total);
+                ctmn.Items.Add(Partial);
+                ctmn.Items.Add(Disjoint);
+                ctmn.Items.Add(Overlap);
+
+                ctmn.Items.Add(new ToolStripSeparator());
+
+                ToolStripMenuItem editSub = new ToolStripMenuItem("Properties");
+                editSub.Click += new EventHandler(editSub_Click);
+
+                ctmn.Items.Add(del);
+                ctmn.Items.Add(editSub);
+            }
 
             return ctmn;
         }

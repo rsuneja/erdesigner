@@ -15,6 +15,7 @@ namespace ERDesigner.Shape
         public EntityShape supertype;
         public List<EntityShape> subtypes;
         public List<string> discriminators;
+        public string AttributeDiscriminator;
 
         public SubTypeConnector(EntityShape super, EntityShape sub, Point loc, string comp, string disj)
         {
@@ -80,6 +81,7 @@ namespace ERDesigner.Shape
             if (entity != null)
             {
                 subtypes.Add(entity);
+                discriminators.Add("");
                 entity.isSubType = true;
                 entity.supertypeconnector = this;
                 entity.Disposed += new EventHandler(subtype_Disposed);
@@ -129,6 +131,14 @@ namespace ERDesigner.Shape
 
         public void DrawConnectiveLines(Graphics g)
         {
+            //Attribute Disriminator
+            if(AttributeDiscriminator != "")
+            {
+                Point pointAtt = new Point((supertype.CenterPoint.X + this.CenterPoint.X) / 2 + 15, (supertype.CenterPoint.Y + this.CenterPoint.Y) / 2);
+                g.DrawString(AttributeDiscriminator, ThongSo.JFont, ThongSo.JBrush, pointAtt);
+
+            }
+            
             if (completeness == SubTypeConnectorType.TotalSpecialization)
             {
                 double Dx = supertype.CenterPoint.X - this.CenterPoint.X;
@@ -154,13 +164,24 @@ namespace ERDesigner.Shape
                 g.DrawLine(ThongSo.JPen, supertype.CenterPoint, this.CenterPoint);
             }
 
-            foreach (EntityShape sub in subtypes)
+            for(int i=0; i<subtypes.Count; i++)
             {
-                g.DrawLine(ThongSo.JPen, this.CenterPoint, sub.CenterPoint);
-                Point midline = new Point((this.CenterPoint.X + sub.CenterPoint.X) / 2, (this.CenterPoint.Y + sub.CenterPoint.Y) / 2);
+                //Connect Line
+                g.DrawLine(ThongSo.JPen, this.CenterPoint, subtypes[i].CenterPoint);
                 
-                double Dx = sub.CenterPoint.X - this.CenterPoint.X;
-                double Dy = sub.CenterPoint.Y - this.CenterPoint.Y;
+                //Disriminator
+                if(discriminators[i] != "")
+                {
+                    Point pointString = new Point((this.CenterPoint.X + subtypes[i].CenterPoint.X) / 2 + 10, (this.CenterPoint.Y + subtypes[i].CenterPoint.Y) / 2 + 5 );
+                    g.DrawString("\"" + discriminators[i] + "\"", ThongSo.JFont, ThongSo.JBrush, pointString);
+
+                }
+                
+                //Circle
+                Point midline = new Point((this.CenterPoint.X + subtypes[i].CenterPoint.X) / 2, (this.CenterPoint.Y + subtypes[i].CenterPoint.Y) / 2);
+                
+                double Dx = subtypes[i].CenterPoint.X - this.CenterPoint.X;
+                double Dy = subtypes[i].CenterPoint.Y - this.CenterPoint.Y;
                 double distance = Math.Sqrt(Dx * Dx + Dy * Dy);
 
                 Matrix X = new Matrix();
@@ -183,6 +204,7 @@ namespace ERDesigner.Shape
         {
             SubTypeConnectorData subtypeconnector = new SubTypeConnectorData(this.completeness, this.disjointness, this.Location.X, this.Location.Y, this.Width, this.Height);
             subtypeconnector.SuperType = this.supertype.sName;
+            subtypeconnector.AttributeDiscriminator = this.AttributeDiscriminator;
 
             foreach (EntityShape subtype in this.subtypes)
                 subtypeconnector.SubTypes.Add(subtype.sName);
