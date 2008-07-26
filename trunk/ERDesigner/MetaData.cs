@@ -50,6 +50,7 @@ namespace ERDesigner
         public string Completeness;
         public string Disjointness;
         public string SuperType;
+        public string AttributeDiscriminator;
         public List<string> SubTypes;
         public List<string> Discriminators;
 
@@ -77,11 +78,14 @@ namespace ERDesigner
         public INotation createNotation()
         {
             SubTypeConnector subtypeconnector = new SubTypeConnector(new Point(this.x, this.y), Completeness, Disjointness);
-            
+            subtypeconnector.AttributeDiscriminator = this.AttributeDiscriminator;
+            subtypeconnector.Location = new Point(this.x, this.y);
+
             foreach (string des in this.Discriminators)
             {
                 subtypeconnector.discriminators.Add(des);
             }
+
             return (INotation)subtypeconnector;
         }
 

@@ -182,7 +182,7 @@ namespace ERDesigner
             this.ClientSize = new System.Drawing.Size(509, 240);
             this.Controls.Add(this.groupBox1);
             this.Name = "GenerateScriptSQL";
-            this.Text = "GenerateScriptSQL";
+            this.Text = "Generate DDL";
             this.Load += new System.EventHandler(this.GenerateScriptSQL_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

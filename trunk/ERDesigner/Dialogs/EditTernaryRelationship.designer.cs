@@ -182,7 +182,8 @@ namespace ERDesigner
             this.Name = "EditTernaryRelationship";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Cardinalities";
+            this.Text = "Edit Tenary Relationship";
+            ((System.ComponentModel.ISupportInitialize)(this.imageComboBoxEdit2.Properties)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageComboBoxEdit1.Properties)).EndInit();
             this.labEntity1.ResumeLayout(false);

@@ -283,8 +283,9 @@ namespace ERDesigner
             //    else
             //        nameFK = "fk" + "_" + childTable.name.Substring(0, 5) + "_" + parentTable.name.Substring(0, 5) + "_" + listColumnPK.Count;
             //}
+            int min = (parentTable.name.Length > 5) ? 5 : parentTable.name.Length - 1;
 
-            nameFK = "fk" + "_" + parentTable.name.Substring(0, 5) + System.Guid.NewGuid().ToString().Replace("-","").Substring(10);
+            nameFK = "fk" + "_" + parentTable.name.Substring(0, min) + System.Guid.NewGuid().ToString().Replace("-", "").Substring(10);
             
             
             ForeignKey fk = new ForeignKey();
