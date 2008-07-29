@@ -87,6 +87,8 @@ namespace ERDesigner
             this.btnAddSubType = new DevExpress.XtraBars.BarButtonItem();
             this.chkIsolate = new DevExpress.XtraBars.BarEditItem();
             this.repositoryItemCheckEdit4 = new DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit();
+            this.grpSkinMode = new DevExpress.XtraBars.BarEditItem();
+            this.reposSkinMode = new DevExpress.XtraEditors.Repository.RepositoryItemRadioGroup();
             this.imageCollection1 = new DevExpress.Utils.ImageCollection(this.components);
             this.ribbonHome = new DevExpress.XtraBars.Ribbon.RibbonPage();
             this.ribbonFile = new DevExpress.XtraBars.Ribbon.RibbonPageGroup();
@@ -158,6 +160,7 @@ namespace ERDesigner
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.reposSkinMode)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemMRUEdit1)).BeginInit();
@@ -227,10 +230,11 @@ namespace ERDesigner
             this.chkDisjoint,
             this.chkOverlap,
             this.btnAddSubType,
-            this.chkIsolate});
+            this.chkIsolate,
+            this.grpSkinMode});
             this.ribbon.LargeImages = this.imageCollection1;
             this.ribbon.Location = new System.Drawing.Point(0, 0);
-            this.ribbon.MaxItemId = 76;
+            this.ribbon.MaxItemId = 82;
             this.ribbon.Name = "ribbon";
             this.ribbon.PageHeaderItemLinks.Add(this.btnAbout);
             this.ribbon.Pages.AddRange(new DevExpress.XtraBars.Ribbon.RibbonPage[] {
@@ -243,7 +247,8 @@ namespace ERDesigner
             this.repositoryItemCheckEdit2,
             this.repositoryItemCheckEdit3,
             this.repositoryItemMRUEdit1,
-            this.repositoryItemCheckEdit4});
+            this.repositoryItemCheckEdit4,
+            this.reposSkinMode});
             this.ribbon.SelectedPage = this.ribbonHome;
             this.ribbon.Size = new System.Drawing.Size(784, 149);
             this.ribbon.Toolbar.ItemLinks.Add(this.btnOpenProject);
@@ -463,6 +468,7 @@ namespace ERDesigner
             this.galColor.GalleryDropDown = this.gddColor;
             this.galColor.Id = 15;
             this.galColor.Name = "galColor";
+            this.galColor.GalleryItemClick += new DevExpress.XtraBars.Ribbon.GalleryItemClickEventHandler(this.galColor_GalleryItemClick);
             // 
             // gddColor
             // 
@@ -486,6 +492,7 @@ namespace ERDesigner
             this.gddColor.Gallery.SizeMode = DevExpress.XtraBars.Ribbon.GallerySizeMode.Both;
             this.gddColor.Gallery.CustomDrawItemImage += new DevExpress.XtraBars.Ribbon.GalleryItemCustomDrawEventHandler(this.gddColor_GalleryCustomDrawItemImage);
             this.gddColor.Name = "gddColor";
+            this.gddColor.GalleryItemClick += new DevExpress.XtraBars.Ribbon.GalleryItemClickEventHandler(this.gddColor_GalleryItemClick);
             // 
             // btnAbout
             // 
@@ -743,6 +750,23 @@ namespace ERDesigner
             this.repositoryItemCheckEdit4.AutoHeight = false;
             this.repositoryItemCheckEdit4.Name = "repositoryItemCheckEdit4";
             // 
+            // grpSkinMode
+            // 
+            this.grpSkinMode.Edit = this.reposSkinMode;
+            this.grpSkinMode.EditHeight = 70;
+            this.grpSkinMode.EditValue = true;
+            this.grpSkinMode.Id = 78;
+            this.grpSkinMode.Name = "grpSkinMode";
+            this.grpSkinMode.Width = 100;
+            this.grpSkinMode.EditValueChanged += new System.EventHandler(this.grpSkinMode_EditValueChanged);
+            // 
+            // reposSkinMode
+            // 
+            this.reposSkinMode.Items.AddRange(new DevExpress.XtraEditors.Controls.RadioGroupItem[] {
+            new DevExpress.XtraEditors.Controls.RadioGroupItem(true, "General Mode"),
+            new DevExpress.XtraEditors.Controls.RadioGroupItem(false, "Separate Mode")});
+            this.reposSkinMode.Name = "reposSkinMode";
+            // 
             // imageCollection1
             // 
             this.imageCollection1.ImageSize = new System.Drawing.Size(32, 32);
@@ -787,6 +811,7 @@ namespace ERDesigner
             // ribbonStyle
             // 
             this.ribbonStyle.ItemLinks.Add(this.chkSkin);
+            this.ribbonStyle.ItemLinks.Add(this.grpSkinMode);
             this.ribbonStyle.ItemLinks.Add(this.galColor);
             this.ribbonStyle.KeyTip = "";
             this.ribbonStyle.Name = "ribbonStyle";
@@ -1439,6 +1464,7 @@ namespace ERDesigner
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.reposSkinMode)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageCollection1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemCheckEdit1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.repositoryItemMRUEdit1)).EndInit();
@@ -1579,5 +1605,7 @@ namespace ERDesigner
         private DevExpress.XtraBars.Ribbon.RibbonPageGroup ribbonPageGroup2;
         private DevExpress.XtraBars.BarEditItem chkIsolate;
         private DevExpress.XtraEditors.Repository.RepositoryItemCheckEdit repositoryItemCheckEdit4;
+        private DevExpress.XtraBars.BarEditItem grpSkinMode;
+        private DevExpress.XtraEditors.Repository.RepositoryItemRadioGroup reposSkinMode;
     }
 }

@@ -94,9 +94,15 @@ namespace ERDesigner
         private void chkApplySkin_CheckedChanged(object sender, ItemClickEventArgs e)
         {
             if (((BarCheckItem)sender).Checked)
+            {
                 ShapeBase.skin = true;
+                grpSkinMode.Enabled = true;
+            }
             else
+            {
                 ShapeBase.skin = false;
+                grpSkinMode.Enabled = false;
+            }
 
             if (ActiveMdiChild != null)
             {
@@ -742,6 +748,70 @@ namespace ERDesigner
             }
             else
                 ThongSo.checkIsolation = false;
+        }
+
+        private void grpSkinMode_EditValueChanged(object sender, EventArgs e)
+        {
+            if ((bool)grpSkinMode.EditValue) //General
+            {
+                ThongSo.EntityColor = ThongSo.GeneralModeColor;
+                ThongSo.AttributeColor = ThongSo.GeneralModeColor;
+                ThongSo.RelationshipColor = ThongSo.GeneralModeColor;
+            }
+            else
+            {
+                ThongSo.EntityColor = ThongSo.EntitySeparateModeColor;
+                ThongSo.AttributeColor = ThongSo.AttributeSeparateModeColor;
+                ThongSo.RelationshipColor = ThongSo.RelationshipSeparateModeColor;
+            }
+            if (ActiveMdiChild != null)
+            {
+                ActiveMdiChild.Refresh();
+            }
+        }
+
+        private void galColor_GalleryItemClick(object sender, GalleryItemClickEventArgs e)
+        {
+            setColor(e);
+        }
+        private void gddColor_GalleryItemClick(object sender, GalleryItemClickEventArgs e)
+        {
+            setColor(e);
+        }
+        private void setColor(GalleryItemClickEventArgs e)
+        {
+            if (ActiveMdiChild != null && ActiveMdiChild is frmDrawBoard)
+            {
+                if ((bool)grpSkinMode.EditValue) //General
+                {
+                    ThongSo.EntityColor = (Color)e.Item.Tag;
+                    ThongSo.AttributeColor = (Color)e.Item.Tag;
+                    ThongSo.RelationshipColor = (Color)e.Item.Tag;
+
+                    ThongSo.GeneralModeColor = (Color)e.Item.Tag;
+                }
+                else if (((frmDrawBoard)ActiveMdiChild).pnlDrawBoard.AffectingShape != null)
+                {
+                    ShapeBase shape = ((frmDrawBoard)ActiveMdiChild).pnlDrawBoard.AffectingShape;
+                    switch (shape.GetType().Name)
+                    {
+                        case "EntityShape":
+                            ThongSo.EntityColor = ThongSo.EntitySeparateModeColor = (Color)e.Item.Tag;
+                            break;
+                        case "AttributeShape":
+                            ThongSo.AttributeColor = ThongSo.AttributeSeparateModeColor = (Color)e.Item.Tag;
+                            break;
+                        case "RelationshipShape":
+                            ThongSo.RelationshipColor = ThongSo.RelationshipSeparateModeColor = (Color)e.Item.Tag;
+                            break;
+                        case "SubtypeConnector":
+                            ThongSo.RelationshipColor = ThongSo.RelationshipSeparateModeColor = (Color)e.Item.Tag;
+                            break;
+                    }
+                }
+
+                ActiveMdiChild.Refresh();
+            }
         }
     }
 }

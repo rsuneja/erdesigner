@@ -15,7 +15,7 @@ namespace ERDesigner.Shape
         public EntityShape supertype;
         public List<EntityShape> subtypes;
         public List<string> discriminators;
-        public string AttributeDiscriminator;
+        public AttributeShape AttributeDiscriminator;
 
         public SubTypeConnector(EntityShape super, EntityShape sub, Point loc, string comp, string disj)
         {
@@ -109,7 +109,16 @@ namespace ERDesigner.Shape
         }
         public override void DrawSelf(Graphics g)
         {
-            refreshPath();
+            g.SmoothingMode = SmoothingMode.HighQuality;
+
+            if (skin)
+            {
+                LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, Color.White, ThongSo.RelationshipColor, LinearGradientMode.Vertical);
+
+                g.FillPath(brush, path);
+            }
+            else
+                g.FillPath(new SolidBrush(Color.White), path);
 
             Rectangle rect = new Rectangle(this.ClientRectangle.X + 1, this.ClientRectangle.Y + 1, this.ClientRectangle.Width - 2, this.ClientRectangle.Height - 2);
 
@@ -132,10 +141,10 @@ namespace ERDesigner.Shape
         public void DrawConnectiveLines(Graphics g)
         {
             //Attribute Disriminator
-            if(AttributeDiscriminator != "")
+            if(AttributeDiscriminator != null)
             {
                 Point pointAtt = new Point((supertype.CenterPoint.X + this.CenterPoint.X) / 2 + 15, (supertype.CenterPoint.Y + this.CenterPoint.Y) / 2);
-                g.DrawString(AttributeDiscriminator, ThongSo.JFont, ThongSo.JBrush, pointAtt);
+                g.DrawString(AttributeDiscriminator.sName, ThongSo.JFont, ThongSo.JBrush, pointAtt);
 
             }
             
@@ -204,7 +213,9 @@ namespace ERDesigner.Shape
         {
             SubTypeConnectorData subtypeconnector = new SubTypeConnectorData(this.completeness, this.disjointness, this.Location.X, this.Location.Y, this.Width, this.Height);
             subtypeconnector.SuperType = this.supertype.sName;
-            subtypeconnector.AttributeDiscriminator = this.AttributeDiscriminator;
+
+            if (this.AttributeDiscriminator != null)
+                subtypeconnector.AttributeDiscriminator = this.AttributeDiscriminator.sName;
 
             foreach (EntityShape subtype in this.subtypes)
                 subtypeconnector.SubTypes.Add(subtype.sName);

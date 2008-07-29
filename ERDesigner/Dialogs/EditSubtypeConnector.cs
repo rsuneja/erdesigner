@@ -14,7 +14,7 @@ namespace ERDesigner
         SubTypeConnector connector;
         List<DevExpress.XtraEditors.TextEdit> listTextBox = new List<DevExpress.XtraEditors.TextEdit>();
         public List<string> Discriminators = new List<string>();
-        public string attDis = "";
+        public AttributeShape attDis;
 
         public EditSubtypeConnector(SubTypeConnector con)
         {
@@ -32,8 +32,8 @@ namespace ERDesigner
             }
             if (cboSubtypeDis.Properties.Items.Count > 0)
             {
-                if (connector.AttributeDiscriminator != "")
-                    cboSubtypeDis.SelectedItem = connector.AttributeDiscriminator;
+                if (connector.AttributeDiscriminator != null)
+                    cboSubtypeDis.SelectedItem = connector.AttributeDiscriminator.sName;
                 else
                     cboSubtypeDis.SelectedIndex = 0;
             }
@@ -70,7 +70,7 @@ namespace ERDesigner
             for (int i = 0; i < listTextBox.Count -1; i++ )
             {
                 for (int j = i + 1; j < listTextBox.Count; j++ )
-                    if(listTextBox[i].Text == listTextBox[j].Text)
+                    if (listTextBox[i].Text != "" && listTextBox[i].Text == listTextBox[j].Text)
                     {
                         DevExpress.XtraEditors.XtraMessageBox.Show("Discriminator is duplicated");
                         listTextBox[i].Focus();
@@ -78,8 +78,15 @@ namespace ERDesigner
                     }
             }
 
-            attDis = cboSubtypeDis.EditValue.ToString();
-
+            foreach (AttributeShape att in connector.supertype.attributes)
+            {
+                if (att.sName == cboSubtypeDis.EditValue.ToString())
+                {
+                    attDis = att;
+                    break;
+                }
+            }
+            
             foreach (DevExpress.XtraEditors.TextEdit txtDiscriminator in listTextBox)
             {
                 Discriminators.Add(txtDiscriminator.Text);

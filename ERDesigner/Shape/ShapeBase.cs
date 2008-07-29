@@ -73,21 +73,8 @@ namespace ERDesigner.Shape
             {
                 e.Graphics.SmoothingMode = SmoothingMode.HighQuality;
 
-                if (this.ClientRectangle.Width != 0 && this.ClientRectangle.Height != 0 && skin)
-                {
-                    LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, Color.White, Color.CornflowerBlue, LinearGradientMode.Vertical);
-
-                    //PathGradientBrush brush = new PathGradientBrush(path);
-                    //brush.WrapMode = WrapMode.Tile;
-                    //brush.SurroundColors = new Color[] { Color.White };
-                    //brush.CenterColor = Color.Violet;
-
-                    e.Graphics.FillPath(brush, path);
-                }
-                else
-                    e.Graphics.FillPath(new SolidBrush(Color.White), path);
-
                 e.Graphics.DrawPath(new Pen(Color.White, 1), path); //vẽ dùm class con
+                DrawSelf(e.Graphics);
 
                 // vẽ tên ở giữa hình
                 StringFormat st = new StringFormat();
@@ -99,7 +86,6 @@ namespace ERDesigner.Shape
                 if (!(this.GetType().Name == "AttributeShape" && ((AttributeShape)this).type == AttributeType.Key))
                     e.Graphics.DrawString(sName, ThongSo.JFont, ThongSo.JBrush, new RectangleF(rect.Location.X + 10, rect.Y, rect.Width - 20, rect.Height), st);
 
-                DrawSelf(e.Graphics);
             }
         }
 

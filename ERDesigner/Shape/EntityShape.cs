@@ -182,6 +182,17 @@ namespace ERDesigner.Shape
         }
         public override void DrawSelf(Graphics g)
         {
+            g.SmoothingMode = SmoothingMode.HighQuality;
+
+            if (skin)
+            {
+                LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, Color.White, ThongSo.EntityColor, LinearGradientMode.Vertical);
+
+                g.FillPath(brush, path);
+            }
+            else
+                g.FillPath(new SolidBrush(Color.White), path);
+
             Rectangle rect = new Rectangle(this.ClientRectangle.X, this.ClientRectangle.Y, this.ClientRectangle.Width - 1, this.ClientRectangle.Height - 1);
             Rectangle rect1 = new Rectangle(this.ClientRectangle.X + 5, this.ClientRectangle.Y + 5, this.ClientRectangle.Width - 11, this.ClientRectangle.Height - 11);
 

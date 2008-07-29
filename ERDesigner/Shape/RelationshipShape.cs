@@ -276,6 +276,17 @@ namespace ERDesigner.Shape
         {
             refreshPath();
 
+            g.SmoothingMode = SmoothingMode.HighQuality;
+
+            if (skin)
+            {
+                LinearGradientBrush brush = new LinearGradientBrush(this.ClientRectangle, Color.White, ThongSo.RelationshipColor, LinearGradientMode.Vertical);
+
+                g.FillPath(brush, path);
+            }
+            else
+                g.FillPath(new SolidBrush(Color.White), path);
+
             Rectangle rect = new Rectangle(this.ClientRectangle.X + 1, this.ClientRectangle.Y + 1, this.ClientRectangle.Width - 2, this.ClientRectangle.Height - 2);
 
             Point p1 = new Point(rect.Width / 2, rect.Y);

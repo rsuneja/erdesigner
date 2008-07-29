@@ -78,7 +78,7 @@ namespace ERDesigner
         public INotation createNotation()
         {
             SubTypeConnector subtypeconnector = new SubTypeConnector(new Point(this.x, this.y), Completeness, Disjointness);
-            subtypeconnector.AttributeDiscriminator = this.AttributeDiscriminator;
+            
             subtypeconnector.Location = new Point(this.x, this.y);
 
             foreach (string des in this.Discriminators)
