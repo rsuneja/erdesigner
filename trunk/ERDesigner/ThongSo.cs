@@ -24,6 +24,16 @@ namespace ERDesigner
 
         public static bool checkIsolation = true;
 
+        public static Color EntitySeparateModeColor = Color.Lavender;
+        public static Color AttributeSeparateModeColor = Color.MistyRose;
+        public static Color RelationshipSeparateModeColor = Color.MintCream;
+
+        public static Color GeneralModeColor = Color.CornflowerBlue;
+
+        public static Color EntityColor = Color.CornflowerBlue;
+        public static Color AttributeColor = Color.CornflowerBlue;
+        public static Color RelationshipColor = Color.CornflowerBlue;
+
         public static Pen getDashPen()
         {
             Pen daspen = (Pen)JPen.Clone();
