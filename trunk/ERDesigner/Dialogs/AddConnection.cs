@@ -58,5 +58,25 @@ namespace ERDesigner
             else
                 btnOK.Enabled = false;
         }
+
+        private void cboDatasource_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if ((DBMS)cboDatasource.SelectedIndex == DBMS.Access)
+            {
+                btnOK.Enabled = true;
+                txtServer.Enabled = false;
+                btnTest.Enabled = false;
+                txtUserName.Enabled = false;
+                txtPassword.Enabled = false;
+            }
+            else
+            {
+                btnOK.Enabled = false;
+                txtServer.Enabled = true;
+                btnTest.Enabled = true;
+                txtUserName.Enabled = true;
+                txtPassword.Enabled = true;
+            }
+        }
     }
 }

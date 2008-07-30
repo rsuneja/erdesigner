@@ -165,6 +165,7 @@
             this.cboDatasource.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cboDatasource.Size = new System.Drawing.Size(289, 20);
             this.cboDatasource.TabIndex = 2;
+            this.cboDatasource.SelectedIndexChanged += new System.EventHandler(this.cboDatasource_SelectedIndexChanged);
             // 
             // AddConnection
             // 

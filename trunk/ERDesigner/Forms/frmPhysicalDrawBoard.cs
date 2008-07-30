@@ -16,7 +16,7 @@ namespace ERDesigner
         {
             InitializeComponent();
             generate = new GeneratePhysicalModel(md);
-            generate.process();           
+            generate.Process();           
             pnlPhysical.drawMetaDataPhysical(generate.mdp); 
         }
 

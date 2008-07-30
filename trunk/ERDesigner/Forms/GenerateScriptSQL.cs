@@ -15,22 +15,22 @@ namespace ERDesigner
         MSSQLServer2000 = 0,
         Oracle,
         MySql,
-        Access        
+        Access
     }
-    public partial class GenerateScriptSQL : Form
+    public partial class GenerateScriptSQL : DevExpress.XtraEditors.XtraForm
     {
         private MetaDataPhysical mdp;
         private MainForm frmMain;
         private string urlFile;
-       
+
         //Constructor
-        public GenerateScriptSQL(MainForm f,MetaDataPhysical mdPhysical)
-        {                
+        public GenerateScriptSQL(MainForm f, MetaDataPhysical mdPhysical)
+        {
             InitializeComponent();
             frmMain = f;
-            mdp = mdPhysical;           
+            mdp = mdPhysical;
         }
-                       
+
         //My Method
 
         public void SaveScript(string FilePath, string script)
@@ -46,42 +46,74 @@ namespace ERDesigner
         }
         public void GenerateDirect(string FolderPath, string dbName, string script)
         {
-            if(ThongSo.DB_Server != "" && ThongSo.DB_Server != null)
+            if (ThongSo.DB_Mode == DBMS.Access)
             {
                 DBProviderBase database = new DBProviderBase();
-
-                if (database.TestConnection())
-                {
-                    if (!database.Connect(dbName))
+                FileInfo fi = new FileInfo(FolderPath + "\\" + dbName + ".mdb");
+                if (fi.Exists)
+                    if (DevExpress.XtraEditors.XtraMessageBox.Show(String.Format("Existing file {0}\n Do you want delete it?", dbName + ".mdb"), "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
                     {
-                        database.CreateDatabase(dbName, FolderPath);
-                        if (database.Connect(dbName))
-                        {
-                            database.Execute(script);
-                        }
+                        fi.Delete();
                     }
                     else
-                    {
-                        if (ThongSo.DB_Mode == DBMS.Oracle)
-                        {
-                            database.Execute(script);
-                        }
-                        else if (DevExpress.XtraEditors.XtraMessageBox.Show("This database already existed\nDo you want to overwrite it ?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                        {
-                            database.Execute(script);
-                        }
-                    }
+                        return;
 
-                    database.Close();
+                if (database.CreateDatabase(dbName, FolderPath))
+                {
+                    if (database.Connect(FolderPath + "\\" + dbName))
+                    {
+                        if (!database.Execute(script))
+                            DevExpress.XtraEditors.XtraMessageBox.Show("Execute script ddl error!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    else
+                        DevExpress.XtraEditors.XtraMessageBox.Show("Connected to database is fail", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    DevExpress.XtraEditors.XtraMessageBox.Show("Create Database is successful", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
-                    DevExpress.XtraEditors.XtraMessageBox.Show("Cannot connect to database\nYou must start the database first", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    DevExpress.XtraEditors.XtraMessageBox.Show("Create Database is not successful", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            else
+
+            if (ThongSo.DB_Mode == DBMS.MSSQLServer2000 || ThongSo.DB_Mode == DBMS.MySql || ThongSo.DB_Mode == DBMS.Oracle)
             {
-                DevExpress.XtraEditors.XtraMessageBox.Show("Cannot connect to database\nPlease specify connection setting", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (ThongSo.DB_Server != "" && ThongSo.DB_Server != null)
+                {
+                    DBProviderBase database = new DBProviderBase();
+
+                    if (database.TestConnection())
+                    {
+                        if (!database.Connect(dbName))
+                        {
+                            database.CreateDatabase(dbName, FolderPath);
+                            if (database.Connect(dbName))
+                            {
+                                database.Execute(script);
+                            }
+                        }
+                        else
+                        {
+                            if (ThongSo.DB_Mode == DBMS.Oracle)
+                            {
+                                database.Execute(script);
+                            }
+                            else if (DevExpress.XtraEditors.XtraMessageBox.Show("This database already existed\nDo you want to overwrite it ?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            {
+                                database.Execute(script);
+                            }
+                        }
+
+                        database.Close();
+                    }
+                    else
+                    {
+                        DevExpress.XtraEditors.XtraMessageBox.Show("Cannot connect to database\nYou must start the database first", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
+                else
+                {
+                    DevExpress.XtraEditors.XtraMessageBox.Show("Cannot connect to database\nPlease specify connection setting", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
         }
         private void DisabledTextField()
@@ -147,7 +179,7 @@ namespace ERDesigner
         private void btnBrowser_Click(object sender, EventArgs e)
         {
             if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
-            {                
+            {
                 txtDirectory.Text = folderBrowserDialog1.SelectedPath;
             }
         }
@@ -161,9 +193,9 @@ namespace ERDesigner
             }
 
             GenerateDDL generate = new GenerateDDL(mdp, ThongSo.DB_Mode, txtDBName.Text);
-            List<string> listScript = generate.Process(); 
+            List<string> listScript = generate.Process();
 
-            if(ThongSo.DB_GenerateScriptFile)
+            if (ThongSo.DB_GenerateScriptFile)
             {
                 if (txtDirectory.Text != "" && txtDBName.Text != "" && txtFileName.Text != "")
                 {
@@ -173,11 +205,11 @@ namespace ERDesigner
                     btnPreview.Enabled = true;
                 }
             }
-            if(ThongSo.DB_GenerateDirect)
+            if (ThongSo.DB_GenerateDirect)
             {
                 GenerateDirect(txtDirectory.Text, txtDBName.Text, listScript[1] + listScript[2]);
             }
-            btnGenerate.Enabled = false;            
+            btnGenerate.Enabled = false;
         }
 
         private void btnPreview_Click(object sender, EventArgs e)
@@ -188,6 +220,6 @@ namespace ERDesigner
                 Process.Start(info);
             }
         }
-          
+
     }
 }
