@@ -93,7 +93,7 @@ namespace ERDesigner
     }
     public class AttributeData : IMetaData
     {
-        public String name;
+        public String name="";
         public bool isComposite;
         public String type;
         public int x, y;

@@ -37,6 +37,8 @@ namespace ERDesigner
             }
             if (nameDBMS == DBMS.Access)
             {
+                ScriptMSAccess access = new ScriptMSAccess(mdp, dbName);
+                listScript = access.Process();
             }
             if (nameDBMS == DBMS.MySql)
             {

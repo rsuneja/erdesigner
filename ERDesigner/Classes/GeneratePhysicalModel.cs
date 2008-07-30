@@ -22,7 +22,7 @@ namespace ERDesigner
         }
 
         //Methods        
-        public void preProcess()
+        public void PreProcess()
         {
             foreach (RelationshipData rd in erd.Relationships)
             {
@@ -136,9 +136,9 @@ namespace ERDesigner
                 }//End if rd.Attributes.Count>0              
             }//End Foreach
         }
-        public void process()
+        public void Process()
         {
-            preProcess();
+            PreProcess();
 
             #region Variables
             List<string> entityHadCreated = new List<string>();
@@ -149,10 +149,11 @@ namespace ERDesigner
             {
                 string supperTypeName = st.SuperType;
                 List<string> listSubTypeName = new List<string>();
+                List<string> listDiscriminators = new List<string>();
                 foreach (string sub in st.SubTypes)
-                {
                     listSubTypeName.Add(sub);
-                }
+                foreach (string dis in st.Discriminators)
+                    listDiscriminators.Add(dis);
 
                 //Tạo Table SupperType
                 if (!SearchInList(entityHadCreated, supperTypeName))
@@ -177,11 +178,31 @@ namespace ERDesigner
                 Table supperTable = mdp.SearchTable(supperTypeName);
                 List<Column> listPK = supperTable.GetPrimaryKey();
 
-                foreach (string subTypeName in listSubTypeName)
+
+                for (int i = 0; i < listSubTypeName.Count; i++)
                 {
+                    string subTypeName = listSubTypeName[i];
                     Table subTable = mdp.SearchTable(subTypeName);
-                    subTable.AddPrimaryKeyForeignKey(listPK);
-                    mdp.AddForeignKey("fk_" + supperTypeName , supperTable, listPK, subTable, listPK);
+                    if (st.Discriminators.Count > 0)
+                    {
+                        List<Column> listPkNew = new List<Column>();
+                        foreach (Column c in listPK)
+                        {
+                            Column tempColumn = new Column();
+                            tempColumn.Name = listDiscriminators[i].ToUpper() + "_" + c.Name;
+                            tempColumn.DataType = c.DataType;
+                            tempColumn.Length = c.Length;
+                            tempColumn.AlowNull = c.AlowNull;
+                            tempColumn.Description = c.Description;
+                            tempColumn.PrimaryKey = c.PrimaryKey;
+                            tempColumn.ForeignKey = c.ForeignKey;
+                            listPkNew.Add(tempColumn);
+                        }
+                        subTable.AddPrimaryKeyForeignKey(listPkNew);
+                    }
+                    else
+                        subTable.AddPrimaryKeyForeignKey(listPK);
+                    mdp.AddForeignKey("fk_" + supperTypeName, supperTable, listPK, subTable, listPK);
                 }
             }
             #endregion
@@ -271,7 +292,7 @@ namespace ERDesigner
                     //Add bảng Weak vào MetaDataPhysical
                     mdp.AddTable(weakTable);
                     //Tạo quan hệ khóa ngoại cho bảng Parent và Weak
-                    mdp.AddForeignKey("fk_" + parentTable.name , parentTable, pkParent, weakTable, pkParent);
+                    mdp.AddForeignKey("fk_" + parentTable.name, parentTable, pkParent, weakTable, pkParent);
 
                     //Xử lý Weak có thuộc tính đa trị
                     if (multiAttribute.name != String.Empty)
@@ -769,7 +790,7 @@ namespace ERDesigner
             multivalueTable.AddPrimaryKeyForeignKey(table.GetPrimaryKey());
             multivalueTable.AddPrimaryKey(multiAttribute.name, multiAttribute.DataType, multiAttribute.Length, multiAttribute.Description);
             mdp.AddTable(multivalueTable);
-            mdp.AddForeignKey("fk_" + table.name , table, table.GetPrimaryKey(), multivalueTable, table.GetPrimaryKey());
+            mdp.AddForeignKey("fk_" + table.name, table, table.GetPrimaryKey(), multivalueTable, table.GetPrimaryKey());
         }
 
         /// <summary>

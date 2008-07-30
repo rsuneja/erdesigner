@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\DatabaseProvider\DBProviderBase.cs" />
+    <Compile Include="Classes\DatabaseProvider\MSAccessProvider.cs" />
     <Compile Include="Classes\DatabaseProvider\OracleProvider.cs" />
     <Compile Include="Classes\DatabaseProvider\MySQLProvider.cs" />
     <Compile Include="Classes\DatabaseProvider\MSSQLServer2000Provider.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Classes\GenerateDDL.cs" />
     <Compile Include="Classes\GeneratePhysicalModel.cs" />
     <Compile Include="Classes\JSerializer.cs" />
+    <Compile Include="Classes\ScriptMSAccess.cs" />
     <Compile Include="Classes\ScriptMySql.cs" />
     <Compile Include="Classes\ScriptOracle.cs" />
     <Compile Include="Classes\ScriptSQL.cs" />
@@ -257,7 +259,6 @@
       <DependentUpon>SubTypeConnector.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <None Include="ClassDiagram1.cd" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -293,6 +294,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Icon 3.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="ADOX">
+      <Guid>{00000600-0000-0010-8000-00AA006D2EA4}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+    </COMReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

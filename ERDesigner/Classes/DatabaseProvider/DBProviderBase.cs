@@ -21,7 +21,7 @@ namespace ERDesigner
                     database = new MySQLProvider();
                     break;
                 case DBMS.Access:
-                    //database = new MSAccessProvider();
+                    database = new MSAccessProvider();
                     break;
                 default:
                     database = new MSSQLServer2000Provider();
