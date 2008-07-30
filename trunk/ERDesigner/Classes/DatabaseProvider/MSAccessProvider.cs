@@ -17,7 +17,7 @@ namespace ERDesigner
 
         private string GetStringCreateDB(string dbName)
         {
-            return "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + dbName + ";Jet OLEDB:Engine Type=5";
+            return "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + dbName + ";Jet OLEDB:Engine Type=5;Jet OLEDB:Database Password=" + ThongSo.DB_Password + ";";
         }
         private string getConnectionString(string DatabaseName)
         {
@@ -28,7 +28,16 @@ namespace ERDesigner
 
         public bool TestConnection()
         {
-            return true;
+            try
+            {
+                conn = new OleDbConnection(getConnectionString(ThongSo.DB_AccessFile));
+                conn.Open();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public string getDataType(string datatype)
@@ -53,6 +62,9 @@ namespace ERDesigner
                     break;
                 case StandardDataType.Binary:
                     newdatatype = "binary";
+                    break;
+                case StandardDataType.Boolean:
+                    newdatatype = "bit";
                     break;
                 default:
                     newdatatype = datatype;

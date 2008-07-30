@@ -137,7 +137,7 @@ namespace ERDesigner
             // 
             // lblDBMS
             // 
-            this.lblDBMS.Location = new System.Drawing.Point(144, 38);
+            this.lblDBMS.Location = new System.Drawing.Point(147, 38);
             this.lblDBMS.Name = "lblDBMS";
             this.lblDBMS.Size = new System.Drawing.Size(128, 13);
             this.lblDBMS.TabIndex = 4;

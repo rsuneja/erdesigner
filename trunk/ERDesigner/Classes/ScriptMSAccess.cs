@@ -198,6 +198,7 @@ namespace ERDesigner
                 case "int":
                 case "text":
                 case "memo":
+                case "bit":
                     temp = dataType;
                     break;
 

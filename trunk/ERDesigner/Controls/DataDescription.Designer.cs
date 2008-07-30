@@ -55,6 +55,7 @@ namespace ERDesigner
             "LongText",
             "Decimal",
             "DateTime",
+            "Boolean",
             "Binary"});
             this.cboDataType.Properties.TextEditStyle = DevExpress.XtraEditors.Controls.TextEditStyles.DisableTextEditor;
             this.cboDataType.Size = new System.Drawing.Size(128, 20);

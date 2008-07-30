@@ -17,6 +17,8 @@ namespace ERDesigner
 
         public static DBMS DB_Mode;
         public static string DB_Server;
+        public static string DB_AccessFile;
+        public static bool DB_IsNewDatabase;
         public static string DB_UserName;
         public static string DB_Password;
         public static bool DB_GenerateScriptFile = true;
@@ -84,6 +86,7 @@ namespace ERDesigner
         public const string LongText = "LongText";
         public const string Decimal = "Decimal";
         public const string DateTime = "DateTime";
+        public const string Boolean = "Boolean";
         public const string Binary = "Binary";
     }
 }

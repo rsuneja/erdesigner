@@ -8,18 +8,18 @@ using System.Windows.Forms;
 
 namespace ERDesigner
 {
-    public partial class BrowseFileControl : UserControl
+    public partial class BrowseFolderControl : UserControl
     {
-        public BrowseFileControl()
+        public BrowseFolderControl()
         {
             InitializeComponent();
         }
 
         private void btnBrowse_Click(object sender, EventArgs e)
         {
-            if (openFileDialog1.ShowDialog() == DialogResult.OK)
+            if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
             {
-                txtFileName.Text = openFileDialog1.FileName;
+                txtFileName.Text = folderBrowserDialog1.SelectedPath;
             }
         }
     }
