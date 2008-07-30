@@ -9,8 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ERDesigner</RootNamespace>
     <AssemblyName>ERDesigner</AssemblyName>
-    <ApplicationIcon>
-    </ApplicationIcon>
+    <ApplicationIcon>Icon 3.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,24 +35,6 @@
     <Reference Include="DevExpress.XtraBars.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=63213b87812c7912, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraEditors.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=63213b87812c7912, processorArchitecture=MSIL" />
     <Reference Include="DevExpress.XtraNavBar.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=63213b87812c7912, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraReports.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=63213b87812c7912, processorArchitecture=MSIL" />
-    <Reference Include="DevExpress.XtraVerticalGrid.v7.3, Version=7.3.4.0, Culture=neutral, PublicKeyToken=63213b87812c7912" />
-    <Reference Include="Microsoft.SqlServer.ConnectionInfo, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\Microsoft.SqlServer.ConnectionInfo.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.SqlServer.Smo, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\Microsoft.SqlServer.Smo.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.SqlServer.SmoEnum, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\Microsoft.SqlServer.SmoEnum.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.SqlServer.SqlEnum, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\Debug\Microsoft.SqlServer.SqlEnum.dll</HintPath>
-    </Reference>
     <Reference Include="MySql.Data, Version=5.1.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\MySql.Data.dll</HintPath>
