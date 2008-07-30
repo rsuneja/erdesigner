@@ -74,8 +74,7 @@ namespace ERDesigner
                     DevExpress.XtraEditors.XtraMessageBox.Show("Create Database is not successful", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-
-            if (ThongSo.DB_Mode == DBMS.MSSQLServer2000 || ThongSo.DB_Mode == DBMS.MySql || ThongSo.DB_Mode == DBMS.Oracle)
+            else
             {
                 if (ThongSo.DB_Server != "" && ThongSo.DB_Server != null)
                 {

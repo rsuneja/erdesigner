@@ -200,6 +200,7 @@ namespace ERDesigner
                 case "decimal":
                 case "blob":
                 case "integer":
+                case "boolean":
                     temp = dataType;
                     break;
 

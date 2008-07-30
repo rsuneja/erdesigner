@@ -30,6 +30,12 @@ namespace ERDesigner
             ThongSo.DB_UserName = txtUserName.Text;
             ThongSo.DB_Password = txtPassword.Text;
 
+            if (ThongSo.DB_Mode == DBMS.Access)
+            {
+                if (!ThongSo.DB_IsNewDatabase)
+                    ThongSo.DB_AccessFile = bfcFileBrowse.txtFileName.Text;
+            }
+
             this.Close();
         }
 
@@ -39,6 +45,7 @@ namespace ERDesigner
             ThongSo.DB_Server = txtServer.Text;
             ThongSo.DB_UserName = txtUserName.Text;
             ThongSo.DB_Password = txtPassword.Text;
+            ThongSo.DB_AccessFile = bfcFileBrowse.txtFileName.Text;
 
             DBProviderBase database = new DBProviderBase();
             if(database.TestConnection())
@@ -64,18 +71,29 @@ namespace ERDesigner
             if ((DBMS)cboDatasource.SelectedIndex == DBMS.Access)
             {
                 btnOK.Enabled = true;
-                txtServer.Enabled = false;
-                btnTest.Enabled = false;
-                txtUserName.Enabled = false;
-                txtPassword.Enabled = false;
+                txtServer.Visible = false;
+                pnlAccess.Visible = true;
             }
             else
             {
-                btnOK.Enabled = false;
-                txtServer.Enabled = true;
+                txtServer.Visible = true;
+                pnlAccess.Visible = false;
+            }
+        }
+
+        private void radFile_CheckedChanged(object sender, EventArgs e)
+        {
+            if(radFile.Checked)
+            {
+                bfcFileBrowse.Enabled = true;
+                ThongSo.DB_IsNewDatabase = false;
                 btnTest.Enabled = true;
-                txtUserName.Enabled = true;
-                txtPassword.Enabled = true;
+            }
+            else
+            {
+                bfcFileBrowse.Enabled = false;
+                ThongSo.DB_IsNewDatabase = true;
+                btnTest.Enabled = false;
             }
         }
     }

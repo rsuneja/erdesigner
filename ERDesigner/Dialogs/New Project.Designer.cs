@@ -36,7 +36,7 @@ namespace ERDesigner
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnCancel = new DevExpress.XtraEditors.SimpleButton();
             this.label2 = new DevExpress.XtraEditors.LabelControl();
-            this.browseFileControl1 = new ERDesigner.BrowseFileControl();
+            this.browseFileControl1 = new ERDesigner.BrowseFolderControl();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -144,7 +144,7 @@ namespace ERDesigner
         private System.Windows.Forms.GroupBox groupBox1;
         private DevExpress.XtraEditors.SimpleButton btnCancel;
         private DevExpress.XtraEditors.LabelControl label2;
-        public BrowseFileControl browseFileControl1;
+        public BrowseFolderControl browseFileControl1;
 
     }
 }

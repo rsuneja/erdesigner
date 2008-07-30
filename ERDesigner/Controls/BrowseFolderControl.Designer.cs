@@ -1,6 +1,6 @@
 namespace ERDesigner
 {
-    partial class BrowseFileControl
+    partial class BrowseFolderControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,9 +28,9 @@ namespace ERDesigner
         /// </summary>
         private void InitializeComponent()
         {
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.txtFileName = new System.Windows.Forms.TextBox();
             this.btnBrowse = new DevExpress.XtraEditors.SimpleButton();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.SuspendLayout();
             // 
             // txtFileName
@@ -52,10 +52,6 @@ namespace ERDesigner
             this.btnBrowse.Text = "Browse";
             this.btnBrowse.Click += new System.EventHandler(this.btnBrowse_Click);
             // 
-            // openFileDialog1
-            // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            // 
             // BrowseFileControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -71,8 +67,8 @@ namespace ERDesigner
 
         #endregion
 
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
         public System.Windows.Forms.TextBox txtFileName;
         private DevExpress.XtraEditors.SimpleButton btnBrowse;
-        private System.Windows.Forms.OpenFileDialog openFileDialog1;
     }
 }

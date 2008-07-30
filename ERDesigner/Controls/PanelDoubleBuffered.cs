@@ -1018,6 +1018,13 @@ namespace ERDesigner
                         }
                     }
                 }
+                foreach (ShapeBase s in this.Controls)
+                {
+                    if (s is AttributeShape && s.sName == subtypeconnectordata.AttributeDiscriminator)
+                    {
+                        subtypeconnector.AttributeDiscriminator = (AttributeShape)s;
+                    }
+                }
                 this.Controls.Add(subtypeconnector);
 
             }

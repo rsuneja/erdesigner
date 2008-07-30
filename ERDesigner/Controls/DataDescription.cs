@@ -89,6 +89,9 @@ namespace ERDesigner
                 case "DateTime":
                     txtLength.Text = "8"; txtLength.Enabled = false;
                     break;
+                case "Boolean":
+                    txtLength.Text = "1"; txtLength.Enabled = false;
+                    break;
                 case "Binary":
                     txtLength.Text = "8000"; txtLength.Enabled = false;
                     break;

@@ -54,6 +54,9 @@ namespace ERDesigner
                 case StandardDataType.DateTime:
                     newdatatype = "datetime";
                     break;
+                case StandardDataType.Boolean:
+                    newdatatype = "boolean";
+                    break;
                 case StandardDataType.Binary:
                     newdatatype = "blob";
                     break;
