@@ -20,8 +20,8 @@ namespace ERDesigner
             return "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + dbName + ";Jet OLEDB:Engine Type=5;Jet OLEDB:Database Password=" + ThongSo.DB_Password + ";";
         }
         private string getConnectionString(string DatabaseName)
-        {
-            return "Provider=Microsoft.Jet.OLEDB.4.0; Data Source=" + DatabaseName + ";User Id=" + ThongSo.DB_UserName + ";Password=" + ThongSo.DB_Password + ";";
+        {            
+            return "Provider=Microsoft.Jet.OLEDB.4.0; Data Source=" + DatabaseName + ";Jet OLEDB:Database Password="+ThongSo.DB_Password+";";
         }
 
         #region IDatabase Members
@@ -89,7 +89,6 @@ namespace ERDesigner
 
         public bool CreateDatabase(string DatabaseName, string FilePath)
         {
-
             try
             {
                 ADOX.CatalogClass cat = new ADOX.CatalogClass();
@@ -112,7 +111,6 @@ namespace ERDesigner
 
             foreach (string query in listQuery)
             {
-                //Replace "\t"
                 if (query.Length > 10)
                 {
                     try

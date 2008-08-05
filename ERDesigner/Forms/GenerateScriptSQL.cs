@@ -50,28 +50,44 @@ namespace ERDesigner
             {
                 DBProviderBase database = new DBProviderBase();
                 FileInfo fi = new FileInfo(FolderPath + "\\" + dbName + ".mdb");
-                if (fi.Exists)
-                    if (DevExpress.XtraEditors.XtraMessageBox.Show(String.Format("Existing file {0}\n Do you want delete it?", dbName + ".mdb"), "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                    {
-                        fi.Delete();
-                    }
-                    else
-                        return;
-
-                if (database.CreateDatabase(dbName, FolderPath))
+                if (ThongSo.DB_AccessFile == String.Empty)
                 {
-                    if (database.Connect(FolderPath + "\\" + dbName))
+                    if (fi.Exists)
+                        if (DevExpress.XtraEditors.XtraMessageBox.Show(String.Format("Existing file {0}\n Do you want delete it?", dbName + ".mdb"), "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                        {
+                            fi.Delete();
+                        }
+                        else
+                            return;
+
+                    if (database.CreateDatabase(dbName, FolderPath))
                     {
-                        if (!database.Execute(script))
-                            DevExpress.XtraEditors.XtraMessageBox.Show("Execute script ddl error!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        if (database.Connect(FolderPath + "\\" + dbName))
+                        {
+                            if (!database.Execute(script))
+                                DevExpress.XtraEditors.XtraMessageBox.Show("Execute script ddl error!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                        else
+                            DevExpress.XtraEditors.XtraMessageBox.Show("Connected to database is fail", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        DevExpress.XtraEditors.XtraMessageBox.Show("Create Database is successful", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
-                        DevExpress.XtraEditors.XtraMessageBox.Show("Connected to database is fail", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    DevExpress.XtraEditors.XtraMessageBox.Show("Create Database is successful", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    {
+                        DevExpress.XtraEditors.XtraMessageBox.Show("Create Database is not successful", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
                 }
                 else
                 {
-                    DevExpress.XtraEditors.XtraMessageBox.Show("Create Database is not successful", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    if (!database.Connect(ThongSo.DB_AccessFile))
+                    {
+                        if (!database.Execute(script))
+                            DevExpress.XtraEditors.XtraMessageBox.Show("Script DDL execute error!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        else
+                            DevExpress.XtraEditors.XtraMessageBox.Show("Script DDL execute successful!", "Infomation", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else                    
+                        DevExpress.XtraEditors.XtraMessageBox.Show("Connected to database is fail", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    
                 }
             }
             else
