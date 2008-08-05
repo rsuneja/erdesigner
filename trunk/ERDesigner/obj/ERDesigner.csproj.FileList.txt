@@ -30,3 +30,4 @@ obj\Debug\ERDesigner.EditSubtypeConnector.resources
 obj\Debug\Interop.ADOX.dll
 obj\Debug\ERDesigner.csproj.ResolveComReference.cache
 bin\Debug\Interop.ADOX.dll
+obj\Debug\ERDesigner.BrowseFolderControl.resources

@@ -17,7 +17,7 @@ namespace ERDesigner
 
         public static DBMS DB_Mode;
         public static string DB_Server;
-        public static string DB_AccessFile;
+        public static string DB_AccessFile="";
         public static bool DB_IsNewDatabase;
         public static string DB_UserName;
         public static string DB_Password;
