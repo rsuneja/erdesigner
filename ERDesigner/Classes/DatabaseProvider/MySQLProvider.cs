@@ -26,6 +26,7 @@ namespace ERDesigner
             {
                 MySqlConnection tmpConn = new MySqlConnection(getConnectionString("mysql"));
                 tmpConn.Open();
+                tmpConn.Close();
                 return true;
             }
             catch
@@ -91,6 +92,7 @@ namespace ERDesigner
                 tmpConn.Open();
                 MySqlCommand Command = new MySqlCommand(sqlCreateDBQuery, tmpConn);
                 Command.ExecuteNonQuery();
+                tmpConn.Close();
             }
             catch
             {

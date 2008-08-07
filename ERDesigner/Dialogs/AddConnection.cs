@@ -17,10 +17,22 @@ namespace ERDesigner
 
         private void AddConnection_Load(object sender, EventArgs e)
         {
+            bfcFileBrowse.txtFileName.ReadOnly = true;
+
             cboDatasource.SelectedIndex = (int)ThongSo.DB_Mode;
             txtServer.Text = ThongSo.DB_Server;
             txtUserName.Text = ThongSo.DB_UserName;
             txtPassword.Text = ThongSo.DB_Password;
+
+            if (ThongSo.DB_IsNewDatabase)
+            {
+                radNewDatabase.Checked = true;
+            }
+            else
+            {
+                radFile.Checked = true;
+                bfcFileBrowse.txtFileName.Text = ThongSo.DB_AccessFile;
+            }
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -33,7 +45,15 @@ namespace ERDesigner
             if (ThongSo.DB_Mode == DBMS.Access)
             {
                 if (!ThongSo.DB_IsNewDatabase)
+                {
+                    if (bfcFileBrowse.txtFileName.Text == "")
+                    {
+                        DevExpress.XtraEditors.XtraMessageBox.Show("The File path must be specified", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
+
                     ThongSo.DB_AccessFile = bfcFileBrowse.txtFileName.Text;
+                }
             }
 
             this.Close();

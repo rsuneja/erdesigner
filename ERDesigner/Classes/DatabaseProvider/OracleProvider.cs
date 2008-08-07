@@ -26,6 +26,7 @@ namespace ERDesigner
             {
                 OracleConnection tmpConn = new OracleConnection(getConnectionString("oracle"));
                 tmpConn.Open();
+                tmpConn.Close();
                 return true;
             }
             catch

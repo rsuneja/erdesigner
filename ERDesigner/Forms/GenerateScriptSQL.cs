@@ -46,56 +46,47 @@ namespace ERDesigner
         }
         public void GenerateDirect(string FolderPath, string dbName, string script)
         {
-            if (ThongSo.DB_Mode == DBMS.Access)
+            if (ThongSo.DB_Server != "" && ThongSo.DB_Server != null || ThongSo.DB_Mode == DBMS.Access)
             {
                 DBProviderBase database = new DBProviderBase();
-                FileInfo fi = new FileInfo(FolderPath + "\\" + dbName + ".mdb");
-                if (ThongSo.DB_AccessFile == String.Empty)
+
+                if (ThongSo.DB_Mode == DBMS.Access)
                 {
+                    string filePath = "";
+                    if (!ThongSo.DB_IsNewDatabase)
+                    {
+                        filePath = ThongSo.DB_AccessFile;
+                    }
+                    else
+                        filePath = FolderPath + "\\" + dbName + ".mdb";
+
+                    FileInfo fi = new FileInfo(filePath);
                     if (fi.Exists)
-                        if (DevExpress.XtraEditors.XtraMessageBox.Show(String.Format("Existing file {0}\n Do you want delete it?", dbName + ".mdb"), "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                    {
+                        if (DevExpress.XtraEditors.XtraMessageBox.Show("This database already existed\nDo you want to overwrite it ?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
                             fi.Delete();
                         }
-                        else
-                            return;
-
+                    }
                     if (database.CreateDatabase(dbName, FolderPath))
                     {
-                        if (database.Connect(FolderPath + "\\" + dbName))
+                        if (database.Connect(filePath))
                         {
-                            if (!database.Execute(script))
-                                DevExpress.XtraEditors.XtraMessageBox.Show("Execute script ddl error!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            if (database.Execute(script))
+                            {
+                                database.Close();
+                            }
+                            else
+                                DevExpress.XtraEditors.XtraMessageBox.Show("Generate Failed, please manual check the generated script !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
-                        else
-                            DevExpress.XtraEditors.XtraMessageBox.Show("Connected to database is fail", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        DevExpress.XtraEditors.XtraMessageBox.Show("Create Database is successful", "Error", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
-                        DevExpress.XtraEditors.XtraMessageBox.Show("Create Database is not successful", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        DevExpress.XtraEditors.XtraMessageBox.Show("Cannot create the database\nMay be the file name is duplicated with write protected file", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    if (!database.Connect(ThongSo.DB_AccessFile))
-                    {
-                        if (!database.Execute(script))
-                            DevExpress.XtraEditors.XtraMessageBox.Show("Script DDL execute error!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        else
-                            DevExpress.XtraEditors.XtraMessageBox.Show("Script DDL execute successful!", "Infomation", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else                    
-                        DevExpress.XtraEditors.XtraMessageBox.Show("Connected to database is fail", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    
-                }
-            }
-            else
-            {
-                if (ThongSo.DB_Server != "" && ThongSo.DB_Server != null)
-                {
-                    DBProviderBase database = new DBProviderBase();
-
                     if (database.TestConnection())
                     {
                         if (!database.Connect(dbName))
@@ -125,11 +116,12 @@ namespace ERDesigner
                         DevExpress.XtraEditors.XtraMessageBox.Show("Cannot connect to database\nYou must start the database first", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
-                else
-                {
-                    DevExpress.XtraEditors.XtraMessageBox.Show("Cannot connect to database\nPlease specify connection setting", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
             }
+            else
+            {
+                DevExpress.XtraEditors.XtraMessageBox.Show("Cannot connect to database\nPlease specify connection setting", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
         }
         private void DisabledTextField()
         {
