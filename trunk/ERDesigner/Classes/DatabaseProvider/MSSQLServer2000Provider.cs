@@ -26,6 +26,7 @@ namespace ERDesigner
             {
                 SqlConnection tmpConn = new SqlConnection(getConnectionString("master"));
                 tmpConn.Open();
+                tmpConn.Close();
                 return true;
             }
             catch
@@ -103,6 +104,7 @@ namespace ERDesigner
                 tmpConn.Open();
                 SqlCommand Command = new SqlCommand(sqlCreateDBQuery, tmpConn);
                 Command.ExecuteNonQuery();
+                tmpConn.Close();
             }
             catch
             {

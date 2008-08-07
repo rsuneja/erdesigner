@@ -32,6 +32,7 @@ namespace ERDesigner
             {
                 conn = new OleDbConnection(getConnectionString(ThongSo.DB_AccessFile));
                 conn.Open();
+                conn.Close();
                 return true;
             }
             catch
@@ -77,7 +78,7 @@ namespace ERDesigner
         {
             try
             {
-                conn = new OleDbConnection(getConnectionString(DatabaseName+".mdb"));
+                conn = new OleDbConnection(getConnectionString(DatabaseName));
                 conn.Open();
                 return true;
             }
@@ -89,6 +90,7 @@ namespace ERDesigner
 
         public bool CreateDatabase(string DatabaseName, string FilePath)
         {
+
             try
             {
                 ADOX.CatalogClass cat = new ADOX.CatalogClass();
@@ -111,6 +113,7 @@ namespace ERDesigner
 
             foreach (string query in listQuery)
             {
+                //Replace "\t"
                 if (query.Length > 10)
                 {
                     try
